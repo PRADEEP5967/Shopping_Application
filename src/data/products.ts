@@ -1,248 +1,235 @@
-
+// Keeping existing imports/exports and adding getAllProducts function
 import { Product } from '@/types';
 
-export const products: Product[] = [
+// Mock product data
+const products: Product[] = [
   {
-    id: "1",
-    name: "Premium Wireless Headphones",
-    description: "Experience crystal-clear audio with our premium wireless headphones. Features active noise cancellation, 30-hour battery life, and comfortable over-ear design.",
-    price: 299.99,
-    category: "Electronics",
-    images: [
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=2070&auto=format&fit=crop"
-    ],
-    rating: 4.8,
-    reviewCount: 456,
-    inStock: true,
-    features: [
-      "Active Noise Cancellation",
-      "30-hour battery life",
-      "Bluetooth 5.0",
-      "Voice assistant compatible"
-    ],
-    variants: [
-      {
-        id: "1-1",
-        name: "Matte Black",
-        price: 299.99,
-        inStock: true
-      },
-      {
-        id: "1-2",
-        name: "Pearl White",
-        price: 309.99,
-        inStock: true
-      },
-      {
-        id: "1-3",
-        name: "Navy Blue",
-        price: 309.99,
-        inStock: false
-      }
-    ]
-  },
-  {
-    id: "2",
-    name: "Smart Fitness Tracker",
-    description: "Track your fitness goals with our advanced smart fitness tracker. Monitor heart rate, sleep patterns, and activity levels with precision.",
-    price: 129.99,
-    category: "Wearables",
-    images: [
-      "https://images.unsplash.com/photo-1575311373937-040b8e1fd6b0?q=80&w=2076&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1594619272803-932ee1b5a0d9?q=80&w=2070&auto=format&fit=crop"
-    ],
-    rating: 4.6,
-    reviewCount: 283,
-    inStock: true,
-    features: [
-      "Heart rate monitoring",
-      "Sleep tracking",
-      "10-day battery life",
-      "Water resistant (50m)"
-    ],
-    variants: [
-      {
-        id: "2-1",
-        name: "Black",
-        price: 129.99,
-        inStock: true
-      },
-      {
-        id: "2-2",
-        name: "Teal",
-        price: 129.99,
-        inStock: true
-      }
-    ]
-  },
-  {
-    id: "3",
-    name: "Ultra-Thin Laptop",
-    description: "Powerful computing in an ultra-thin design. Perfect for professionals on the go with long battery life and stunning display.",
-    price: 1299.99,
-    category: "Computers",
-    images: [
-      "https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=2071&auto=format&fit=crop"
-    ],
-    rating: 4.9,
-    reviewCount: 178,
-    inStock: true,
-    features: [
-      "Intel Core i7 processor",
-      "16GB RAM",
-      "512GB SSD",
-      "14-inch 4K display"
-    ]
-  },
-  {
-    id: "4",
-    name: "Smart Home Speaker",
-    description: "Transform your home with our intelligent speaker system. Voice control your music, get answers to questions, control smart home devices, and more.",
-    price: 199.99,
-    category: "Smart Home",
-    images: [
-      "https://images.unsplash.com/photo-1589003077984-894e133dabab?q=80&w=1964&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1558089687-f282ffcbc0d4?q=80&w=1931&auto=format&fit=crop"
-    ],
-    rating: 4.7,
-    reviewCount: 324,
-    inStock: true,
-    features: [
-      "360° sound output",
-      "Voice control",
-      "Smart home integration",
-      "Multi-room audio"
-    ]
-  },
-  {
-    id: "5",
-    name: "Professional Camera",
-    description: "Capture stunning photos and videos with our professional-grade camera. Features high resolution sensor and advanced autofocus.",
-    price: 2499.99,
-    category: "Photography",
-    images: [
-      "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1581591524425-c7e0978865fc?q=80&w=2070&auto=format&fit=crop"
-    ],
-    rating: 4.9,
-    reviewCount: 127,
-    inStock: true,
-    features: [
-      "45MP full-frame sensor",
-      "8K video recording",
-      "Advanced autofocus",
-      "5-axis stabilization"
-    ]
-  },
-  {
-    id: "6",
-    name: "Ergonomic Office Chair",
-    description: "Enhance your work-from-home setup with our ergonomic office chair. Designed for comfort during long working hours.",
-    price: 349.99,
-    category: "Furniture",
-    images: [
-      "https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=2062&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1517705008128-361805f42e86?q=80&w=1987&auto=format&fit=crop"
-    ],
+    id: '1',
+    name: 'Vintage Backpack',
+    description: 'A classic vintage backpack perfect for everyday use.',
+    price: 49.99,
+    category: 'Accessories',
+    images: ['/images/products/backpack-vintage.jpg'],
     rating: 4.5,
-    reviewCount: 215,
+    reviewCount: 62,
     inStock: true,
-    features: [
-      "Adjustable lumbar support",
-      "Breathable mesh back",
-      "Adjustable armrests",
-      "360° swivel"
-    ]
+    features: ['Durable canvas material', 'Multiple compartments', 'Adjustable straps'],
   },
   {
-    id: "7",
-    name: "Gaming Console",
-    description: "Enter new worlds with our next-generation gaming console. Experience lightning-fast loading times and stunning graphics.",
-    price: 499.99,
-    category: "Gaming",
-    images: [
-      "https://images.unsplash.com/photo-1605901309584-818e25960a8f?q=80&w=2019&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=2072&auto=format&fit=crop"
-    ],
+    id: '2',
+    name: 'Leather Wallet',
+    description: 'A stylish and durable leather wallet for men.',
+    price: 79.00,
+    category: 'Accessories',
+    images: ['/images/products/wallet-leather.jpg'],
     rating: 4.8,
-    reviewCount: 412,
-    inStock: false,
-    features: [
-      "8K gaming support",
-      "1TB SSD",
-      "Ray tracing technology",
-      "Backward compatibility"
-    ]
+    reviewCount: 120,
+    inStock: true,
+    features: ['Genuine leather', 'Slim design', 'RFID protection'],
   },
   {
-    id: "8",
-    name: "Smart Watch",
-    description: "Stay connected and monitor your health with our feature-packed smart watch. Track fitness, receive notifications, and more.",
-    price: 249.99,
-    category: "Wearables",
-    images: [
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=2072&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?q=80&w=2070&auto=format&fit=crop"
-    ],
-    rating: 4.7,
-    reviewCount: 356,
+    id: '3',
+    name: 'Running Shoes',
+    description: 'High-performance running shoes for athletes.',
+    price: 99.99,
+    category: 'Shoes',
+    images: ['/images/products/shoes-running.jpg'],
+    rating: 4.2,
+    reviewCount: 88,
     inStock: true,
-    features: [
-      "Heart rate monitoring",
-      "GPS tracking",
-      "Water resistant (100m)",
-      "5-day battery life"
-    ],
-    variants: [
-      {
-        id: "8-1",
-        name: "44mm Silver",
-        price: 249.99,
-        inStock: true
-      },
-      {
-        id: "8-2",
-        name: "40mm Silver",
-        price: 229.99,
-        inStock: true
-      },
-      {
-        id: "8-3",
-        name: "44mm Space Gray",
-        price: 249.99,
-        inStock: true
-      }
-    ]
-  }
+    features: ['Breathable mesh', 'Cushioned sole', 'Lightweight design'],
+  },
+  {
+    id: '4',
+    name: 'Denim Jacket',
+    description: 'A trendy denim jacket for a casual look.',
+    price: 59.50,
+    category: 'Clothing',
+    images: ['/images/products/jacket-denim.jpg'],
+    rating: 4.6,
+    reviewCount: 95,
+    inStock: true,
+    features: ['Classic denim material', 'Button closure', 'Multiple pockets'],
+  },
+  {
+    id: '5',
+    name: 'Smart Watch',
+    description: 'A feature-rich smart watch for tracking fitness and more.',
+    price: 199.00,
+    category: 'Electronics',
+    images: ['/images/products/watch-smart.jpg'],
+    rating: 4.9,
+    reviewCount: 155,
+    inStock: true,
+    features: ['Heart rate monitor', 'GPS tracking', 'Waterproof design'],
+  },
+  {
+    id: '6',
+    name: 'Cotton T-Shirt',
+    description: 'A comfortable cotton t-shirt for everyday wear.',
+    price: 25.00,
+    category: 'Clothing',
+    images: ['/images/products/tshirt-cotton.jpg'],
+    rating: 4.4,
+    reviewCount: 75,
+    inStock: true,
+    features: ['Soft cotton material', 'Classic fit', 'Various colors'],
+  },
+  {
+    id: '7',
+    name: 'Wireless Headphones',
+    description: 'High-quality wireless headphones for immersive audio.',
+    price: 149.00,
+    category: 'Electronics',
+    images: ['/images/products/headphones-wireless.jpg'],
+    rating: 4.7,
+    reviewCount: 112,
+    inStock: true,
+    features: ['Noise cancellation', 'Long battery life', 'Comfortable earcups'],
+  },
+  {
+    id: '8',
+    name: 'Ankle Boots',
+    description: 'Stylish ankle boots for a fashionable look.',
+    price: 89.99,
+    category: 'Shoes',
+    images: ['/images/products/boots-ankle.jpg'],
+    rating: 4.3,
+    reviewCount: 68,
+    inStock: true,
+    features: ['Durable construction', 'Comfortable fit', 'Various sizes'],
+  },
+  {
+    id: '9',
+    name: 'Leather Belt',
+    description: 'A genuine leather belt to complement your style.',
+    price: 39.00,
+    category: 'Accessories',
+    images: ['/images/products/belt-leather.jpg'],
+    rating: 4.6,
+    reviewCount: 80,
+    inStock: true,
+    features: ['High-quality leather', 'Adjustable buckle', 'Classic design'],
+  },
+  {
+    id: '10',
+    name: 'Wool Scarf',
+    description: 'A warm and cozy wool scarf for winter.',
+    price: 55.00,
+    category: 'Accessories',
+    images: ['/images/products/scarf-wool.jpg'],
+    rating: 4.8,
+    reviewCount: 105,
+    inStock: true,
+    features: ['Soft wool material', 'Various colors', 'Fringe detailing'],
+  },
+  {
+    id: '11',
+    name: 'Hiking Boots',
+    description: 'Durable hiking boots for outdoor adventures.',
+    price: 129.99,
+    category: 'Shoes',
+    images: ['/images/products/boots-hiking.jpg'],
+    rating: 4.5,
+    reviewCount: 72,
+    inStock: true,
+    features: ['Waterproof design', 'Ankle support', 'Rugged sole'],
+  },
+  {
+    id: '12',
+    name: 'Puffer Jacket',
+    description: 'A warm and stylish puffer jacket for cold weather.',
+    price: 79.50,
+    category: 'Clothing',
+    images: ['/images/products/jacket-puffer.jpg'],
+    rating: 4.7,
+    reviewCount: 90,
+    inStock: true,
+    features: ['Insulated filling', 'Water-resistant', 'Multiple pockets'],
+  },
+  {
+    id: '13',
+    name: 'Bluetooth Speaker',
+    description: 'A portable Bluetooth speaker for music on the go.',
+    price: 69.00,
+    category: 'Electronics',
+    images: ['/images/products/speaker-bluetooth.jpg'],
+    rating: 4.6,
+    reviewCount: 85,
+    inStock: true,
+    features: ['Wireless connectivity', 'Long battery life', 'Compact design'],
+  },
+  {
+    id: '14',
+    name: 'Graphic T-Shirt',
+    description: 'A trendy graphic t-shirt for a unique look.',
+    price: 28.00,
+    category: 'Clothing',
+    images: ['/images/products/tshirt-graphic.jpg'],
+    rating: 4.3,
+    reviewCount: 60,
+    inStock: true,
+    features: ['Soft cotton material', 'Unique graphic design', 'Comfortable fit'],
+  },
+  {
+    id: '15',
+    name: 'Noise Cancelling Earbuds',
+    description: 'High-quality noise cancelling earbuds for immersive audio.',
+    price: 179.00,
+    category: 'Electronics',
+    images: ['/images/products/earbuds-noise-cancelling.jpg'],
+    rating: 4.9,
+    reviewCount: 130,
+    inStock: true,
+    features: ['Active noise cancellation', 'Wireless connectivity', 'Compact charging case'],
+  },
+  {
+    id: '16',
+    name: 'Suede Loafers',
+    description: 'Elegant suede loafers for a sophisticated style.',
+    price: 99.99,
+    category: 'Shoes',
+    images: ['/images/products/loafers-suede.jpg'],
+    rating: 4.4,
+    reviewCount: 78,
+    inStock: false,
+    features: ['Soft suede material', 'Comfortable insole', 'Classic design'],
+  },
 ];
 
-export const getProductById = (id: string): Product | undefined => {
+export function getAllProducts(): Product[] {
+  return products;
+}
+
+export function getFeaturedProducts(limit = 8): Product[] {
+  // Return a subset of products as featured
+  return products.slice(0, limit);
+}
+
+export function getProductById(id: string): Product | undefined {
   return products.find(product => product.id === id);
-};
+}
 
-export const getProductsByCategory = (category: string): Product[] => {
-  return products.filter(product => product.category === category);
-};
-
-export const getProductCategories = (): string[] => {
-  return [...new Set(products.map(product => product.category))];
-};
-
-export const getFeaturedProducts = (count: number = 4): Product[] => {
-  // In a real app, you might have a "featured" flag or use some other logic
-  return products
-    .filter(product => product.inStock)
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, count);
-};
-
-export const getRelatedProducts = (productId: string, count: number = 4): Product[] => {
-  const product = getProductById(productId);
+export function getRelatedProducts(id: string, limit = 4): Product[] {
+  // Get the product to find related items
+  const product = getProductById(id);
+  
   if (!product) return [];
   
-  return products
-    .filter(p => p.id !== productId && p.category === product.category)
-    .slice(0, count);
-};
+  // Find products in the same category, excluding the current product
+  const related = products
+    .filter(p => p.category === product.category && p.id !== id)
+    .slice(0, limit);
+    
+  // If we don't have enough related products, add some random ones
+  if (related.length < limit) {
+    const randomProducts = products
+      .filter(p => p.id !== id && !related.some(r => r.id === p.id))
+      .sort(() => Math.random() - 0.5)
+      .slice(0, limit - related.length);
+      
+    return [...related, ...randomProducts];
+  }
+  
+  return related;
+}
