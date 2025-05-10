@@ -1,5 +1,4 @@
-
-import { Product } from '@/types';
+import { Product, Order } from '@/types';
 import { products } from './productsData';
 
 export function getAllProducts(): Product[] {
@@ -43,4 +42,71 @@ export function getRelatedProducts(id: string, limit = 4): Product[] {
   }
   
   return related;
+}
+
+// Sample orders data - in a real application, this would come from your backend
+const sampleOrders: Order[] = [
+  {
+    id: "ord-001",
+    items: [
+      {
+        product: products[0],
+        quantity: 2
+      },
+      {
+        product: products[1],
+        quantity: 1
+      }
+    ],
+    totalAmount: products[0].price * 2 + products[1].price,
+    status: "delivered",
+    shippingAddress: {
+      fullName: "John Doe",
+      addressLine1: "123 Main St",
+      city: "San Francisco",
+      state: "CA",
+      postalCode: "94105",
+      country: "USA"
+    },
+    createdAt: "2023-05-10T10:00:00Z"
+  },
+  {
+    id: "ord-002",
+    items: [
+      {
+        product: products[2],
+        quantity: 1,
+        variant: products[2].variants ? products[2].variants[0] : undefined
+      }
+    ],
+    totalAmount: products[2].variants ? products[2].variants[0].price : products[2].price,
+    status: "shipped",
+    shippingAddress: {
+      fullName: "Jane Smith",
+      addressLine1: "456 Market St",
+      addressLine2: "Apt 4B",
+      city: "San Francisco",
+      state: "CA",
+      postalCode: "94107",
+      country: "USA"
+    },
+    createdAt: "2023-06-15T14:30:00Z"
+  }
+];
+
+/**
+ * Get an order by ID
+ * @param id Order ID
+ * @returns The order if found, otherwise undefined
+ */
+export function getOrderById(id: string): Order | undefined {
+  return sampleOrders.find(order => order.id === id);
+}
+
+/**
+ * Get all orders
+ * @returns Array of all orders
+ */
+export function getAllOrders(): Order[] {
+  return sampleOrders;
 }
