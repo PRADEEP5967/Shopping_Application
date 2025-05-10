@@ -206,6 +206,12 @@ export function getFeaturedProducts(limit = 8): Product[] {
   return products.slice(0, limit);
 }
 
+export function getProductCategories(): string[] {
+  // Extract unique categories from products
+  const categories = products.map(product => product.category);
+  return Array.from(new Set(categories));
+}
+
 export function getProductById(id: string): Product | undefined {
   return products.find(product => product.id === id);
 }
