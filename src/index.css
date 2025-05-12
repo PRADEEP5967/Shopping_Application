@@ -107,3 +107,69 @@
 .hero-gradient {
   @apply bg-gradient-to-r from-blue-600 to-indigo-600;
 }
+
+/* Additional Animations */
+.hover-scale {
+  @apply transition-transform duration-200 hover:scale-105;
+}
+
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+}
+
+.pulse-animation {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Flipkart-inspired styles */
+.flipkart-card {
+  @apply bg-white rounded-md shadow hover:shadow-md transition-shadow p-4;
+}
+
+.flipkart-button {
+  @apply bg-[#ff9f00] text-white rounded px-4 py-2 hover:bg-[#ff9f00]/90 transition-colors;
+}
+
+.flipkart-badge {
+  @apply bg-[#388e3c] text-white text-xs px-1.5 py-0.5 rounded;
+}
+
+.flipkart-deal {
+  @apply text-[#388e3c] font-medium;
+}
+
+/* Mobile menu animation */
+.mobile-menu-enter {
+  @apply opacity-0 -translate-y-4;
+}
+
+.mobile-menu-enter-active {
+  @apply opacity-100 translate-y-0 transition-all duration-300;
+}
+
+.mobile-menu-exit {
+  @apply opacity-100 translate-y-0;
+}
+
+.mobile-menu-exit-active {
+  @apply opacity-0 -translate-y-4 transition-all duration-300;
+}
+
+/* Scrollbar styling */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
