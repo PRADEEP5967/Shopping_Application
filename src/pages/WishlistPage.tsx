@@ -12,18 +12,18 @@ import { useCart } from '@/contexts/CartContext';
 import { useToast } from '@/components/ui/use-toast';
 
 const WishlistPage = () => {
-  const { wishlist, clearWishlist } = useWishlist();
+  const { items, clearWishlist } = useWishlist();
   const { addItem } = useCart();
   const { toast } = useToast();
   
   const handleAddAllToCart = () => {
-    wishlist.forEach(product => {
+    items.forEach(product => {
       addItem(product, 1);
     });
     
     toast({
       title: "Added to cart",
-      description: `${wishlist.length} items added to your cart.`,
+      description: `${items.length} items added to your cart.`,
     });
   };
   
@@ -37,11 +37,11 @@ const WishlistPage = () => {
           <div>
             <h1 className="text-3xl font-bold">My Wishlist</h1>
             <p className="text-gray-600 mt-1">
-              {wishlist.length} {wishlist.length === 1 ? 'item' : 'items'}
+              {items.length} {items.length === 1 ? 'item' : 'items'}
             </p>
           </div>
           
-          {wishlist.length > 0 && (
+          {items.length > 0 && (
             <div className="flex gap-2">
               <Button 
                 variant="outline" 
@@ -63,9 +63,9 @@ const WishlistPage = () => {
           )}
         </div>
         
-        {wishlist.length > 0 ? (
+        {items.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {wishlist.map(product => (
+            {items.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

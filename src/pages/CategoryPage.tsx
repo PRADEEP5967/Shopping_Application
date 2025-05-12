@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -103,6 +102,7 @@ const CategoryPage = () => {
   const handlePriceChange = (value: number[]) => {
     setPriceRange(value);
   };
+  
   
   return (
     <div className="min-h-screen flex flex-col">

@@ -11,6 +11,9 @@ export type Product = {
   inStock: boolean;
   features?: string[];
   variants?: ProductVariant[];
+  brand?: string;
+  originalPrice?: number;
+  salePercentage?: number;
 };
 
 export type ProductVariant = {
