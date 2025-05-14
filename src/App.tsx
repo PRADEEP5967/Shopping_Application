@@ -23,7 +23,15 @@ import FAQ from "./pages/FAQ";
 import NewArrivals from "./pages/NewArrivals";
 import DealsDiscounts from "./pages/DealsDiscounts";
 
-const queryClient = new QueryClient();
+// Create and configure the QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

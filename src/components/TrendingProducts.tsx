@@ -13,6 +13,9 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
   const [visibleProducts, setVisibleProducts] = useState<Product[]>([]);
   const [productsPerView, setProductsPerView] = useState(4);
 
+  // Handle empty products array
+  const hasProducts = Array.isArray(products) && products.length > 0;
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -35,15 +38,19 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
   }, []);
 
   useEffect(() => {
-    updateVisibleProducts();
+    if (hasProducts) {
+      updateVisibleProducts();
+    }
   }, [currentIndex, productsPerView, products]);
 
   const updateVisibleProducts = () => {
-    const endIndex = currentIndex + productsPerView;
-    const visibleItems = [];
+    if (!hasProducts) return;
     
-    for (let i = currentIndex; i < endIndex; i++) {
-      const index = i % products.length;
+    const visibleItems = [];
+    const maxProducts = Math.min(productsPerView, products.length);
+    
+    for (let i = 0; i < maxProducts; i++) {
+      const index = (currentIndex + i) % products.length;
       visibleItems.push(products[index]);
     }
     
@@ -51,12 +58,18 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
   };
 
   const nextSlide = () => {
+    if (!hasProducts) return;
     setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
   };
 
   const prevSlide = () => {
+    if (!hasProducts) return;
     setCurrentIndex((prevIndex) => (prevIndex - 1 + products.length) % products.length);
   };
+
+  if (!hasProducts) {
+    return null;
+  }
 
   return (
     <section className="py-12 bg-gradient-to-b from-gray-50 to-white">

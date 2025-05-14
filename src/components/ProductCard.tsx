@@ -29,17 +29,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
     toggleWishlist(product);
   };
 
+  // Ensure product has all required fields
+  const productImage = product.images && product.images.length > 0 
+    ? product.images[0] 
+    : 'https://placehold.co/300x300?text=No+Image';
+
   return (
     <Link 
       to={`/product/${product.id}`} 
       className={cn(
-        "product-card group block relative rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md",
+        "product-card group block relative rounded-lg overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow",
         className
       )}
     >
-      <div className="product-image-container aspect-square">
+      <div className="product-image-container aspect-square relative">
         <img 
-          src={product.images[0]} 
+          src={productImage} 
           alt={product.name}
           className="product-image w-full h-full object-cover"
         />
@@ -47,7 +52,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         {/* Wishlist button */}
         <button 
           onClick={handleToggleWishlist}
-          className="wishlist-button"
+          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center z-10 hover:bg-white transition-colors"
           aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
         >
           <Heart 
@@ -78,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
               {[...Array(5)].map((_, i) => (
                 <svg 
                   key={i}
-                  className={`w-4 h-4 ${i < Math.round(product.rating) ? "text-yellow-400" : "text-gray-300"}`}
+                  className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? "text-yellow-400" : "text-gray-300"}`}
                   fill="currentColor" 
                   viewBox="0 0 20 20"
                 >
@@ -86,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-gray-500 ml-1">({product.reviewCount})</span>
+            <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
           </div>
         </div>
         
