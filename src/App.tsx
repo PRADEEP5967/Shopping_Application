@@ -22,6 +22,7 @@ import ReturnPolicy from "./pages/ReturnPolicy";
 import FAQ from "./pages/FAQ";
 import NewArrivals from "./pages/NewArrivals";
 import DealsDiscounts from "./pages/DealsDiscounts";
+import AdminDashboard from "./pages/AdminDashboard";
 
 // Create and configure the QueryClient
 const queryClient = new QueryClient({
@@ -57,6 +58,7 @@ const App = () => (
               <Route path="/faq" element={<FAQ />} />
               <Route path="/new-arrivals" element={<NewArrivals />} />
               <Route path="/deals" element={<DealsDiscounts />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
