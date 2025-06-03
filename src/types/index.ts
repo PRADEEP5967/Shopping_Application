@@ -50,8 +50,11 @@ export type Address = {
 
 export type User = {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  address: string;
+  gender: 'male' | 'female' | 'other';
   role: 'user' | 'admin';
   orders: Order[];
   wishlists: Product[];

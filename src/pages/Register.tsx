@@ -5,14 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserPlus, Package } from 'lucide-react';
 
 const Register = () => {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [gender, setGender] = useState<'male' | 'female' | 'other'>('other');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,9 +34,17 @@ const Register = () => {
     
     setIsLoading(true);
     
-    const success = await register(email, password, name);
+    const success = await register({
+      firstName,
+      lastName,
+      email,
+      address,
+      gender,
+      password
+    });
+    
     if (success) {
-      navigate('/');
+      navigate('/login');
     }
     
     setIsLoading(false);
@@ -42,7 +55,7 @@ const Register = () => {
       <Navbar />
       
       <main className="flex-grow flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-lg">
           <CardHeader className="text-center">
             <div className="flex justify-center mb-4">
               <Package className="h-12 w-12 text-primary" />
@@ -54,16 +67,30 @@ const Register = () => {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <Input
+                    id="firstName"
+                    type="text"
+                    placeholder="Enter your first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <Input
+                    id="lastName"
+                    type="text"
+                    placeholder="Enter your last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
               
               <div className="space-y-2">
@@ -76,6 +103,31 @@ const Register = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="address">Address</Label>
+                <Textarea
+                  id="address"
+                  placeholder="Enter your full address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="gender">Gender</Label>
+                <Select value={gender} onValueChange={(value: 'male' | 'female' | 'other') => setGender(value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your gender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               
               <div className="space-y-2">

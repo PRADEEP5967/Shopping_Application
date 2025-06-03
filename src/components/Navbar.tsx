@@ -94,7 +94,7 @@ const Navbar = () => {
           
           {isAuthenticated ? (
             <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Hello, {user?.name}</span>
+              <span className="text-sm text-gray-600">Hello, {user?.firstName}</span>
               <Button size="sm" variant="outline" onClick={handleLogout} className="flex items-center gap-1">
                 <LogOut className="h-4 w-4" />
                 Logout
@@ -148,7 +148,7 @@ const Navbar = () => {
             
             {isAuthenticated ? (
               <>
-                <div className="py-2 text-sm text-gray-600">Hello, {user?.name}</div>
+                <div className="py-2 text-sm text-gray-600">Hello, {user?.firstName}</div>
                 <Button 
                   variant="outline" 
                   onClick={() => {

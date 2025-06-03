@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -26,6 +25,7 @@ import FAQ from "./pages/FAQ";
 import NewArrivals from "./pages/NewArrivals";
 import DealsDiscounts from "./pages/DealsDiscounts";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminProductAdd from "./pages/AdminProductAdd";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -70,6 +70,7 @@ const App: React.FC = () => {
                   <Route path="/new-arrivals" element={<NewArrivals />} />
                   <Route path="/deals" element={<DealsDiscounts />} />
                   <Route path="/admin" element={<AdminDashboard />} />
+                  <Route path="/admin/add-product" element={<AdminProductAdd />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>

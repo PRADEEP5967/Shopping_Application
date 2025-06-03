@@ -4,16 +4,28 @@ import { toast } from 'sonner';
 
 type User = {
   id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  name: string;
+  address: string;
+  gender: 'male' | 'female' | 'other';
 };
 
 type AuthContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (email: string, password: string, name: string) => Promise<boolean>;
+  register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+};
+
+type RegisterData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address: string;
+  gender: 'male' | 'female' | 'other';
+  password: string;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,8 +60,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (email && password.length >= 6) {
       const mockUser: User = {
         id: Math.random().toString(36).substr(2, 9),
+        firstName: email.split('@')[0],
+        lastName: 'User',
         email,
-        name: email.split('@')[0]
+        address: '123 Main St',
+        gender: 'other'
       };
       setUser(mockUser);
       toast.success('Successfully logged in!');
@@ -60,19 +75,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (email: string, password: string, name: string): Promise<boolean> => {
+  const register = async (userData: RegisterData): Promise<boolean> => {
     // Mock registration - in a real app this would call an API
-    if (email && password.length >= 6 && name) {
+    if (userData.email && userData.password.length >= 6 && userData.firstName && userData.lastName) {
       const mockUser: User = {
         id: Math.random().toString(36).substr(2, 9),
-        email,
-        name
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        address: userData.address,
+        gender: userData.gender
       };
       setUser(mockUser);
       toast.success('Successfully registered and logged in!');
       return true;
     } else {
-      toast.error('Please fill all fields. Password must be at least 6 characters.');
+      toast.error('Please fill all required fields. Password must be at least 6 characters.');
       return false;
     }
   };
