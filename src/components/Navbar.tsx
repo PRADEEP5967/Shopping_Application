@@ -1,9 +1,10 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   ShoppingCart, 
   Heart, 
@@ -12,13 +13,16 @@ import {
   Menu, 
   X,
   LogIn,
+  LogOut,
   Package
 } from 'lucide-react';
 
 const Navbar = () => {
   const { totalItems, toggleCart } = useCart();
+  const { user, logout, isAuthenticated } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -26,6 +30,11 @@ const Navbar = () => {
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -66,7 +75,7 @@ const Navbar = () => {
           <Link to="/wishlist" className="text-gray-600 hover:text-primary">
             <Heart className="h-5 w-5" />
           </Link>
-          <Link to="/account" className="text-gray-600 hover:text-primary">
+          <Link to="/my-account" className="text-gray-600 hover:text-primary">
             <User className="h-5 w-5" />
           </Link>
           <Button 
@@ -82,12 +91,23 @@ const Navbar = () => {
               </span>
             )}
           </Button>
-          <Link to="/login">
-            <Button size="sm" variant="outline" className="ml-4 flex items-center gap-1">
-              <LogIn className="h-4 w-4" />
-              Login
-            </Button>
-          </Link>
+          
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-gray-600">Hello, {user?.name}</span>
+              <Button size="sm" variant="outline" onClick={handleLogout} className="flex items-center gap-1">
+                <LogOut className="h-4 w-4" />
+                Logout
+              </Button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <Button size="sm" variant="outline" className="flex items-center gap-1">
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -122,12 +142,31 @@ const Navbar = () => {
             <Link to="/wishlist" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
               Wishlist
             </Link>
-            <Link to="/account" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+            <Link to="/my-account" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
               Account
             </Link>
-            <Link to="/login" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-              Login
-            </Link>
+            
+            {isAuthenticated ? (
+              <>
+                <div className="py-2 text-sm text-gray-600">Hello, {user?.name}</div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full justify-start"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link to="/login" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+                Login
+              </Link>
+            )}
+            
             <div className="pt-2">
               <Input
                 type="search"

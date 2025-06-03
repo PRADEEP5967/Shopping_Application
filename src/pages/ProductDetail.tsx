@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, 
   ShieldCheck, 
@@ -18,8 +18,10 @@ import ProductGrid from '@/components/ProductGrid';
 import { getProductById, getRelatedProducts } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { ProductVariant } from '@/types';
 import { cn, formatCurrency } from '@/lib/utils';
+import { toast } from 'sonner';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +30,8 @@ const ProductDetail = () => {
   
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -58,6 +62,11 @@ const ProductDetail = () => {
   const displayPrice = selectedVariant ? selectedVariant.price : product.price;
   
   const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to add items to cart');
+      navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
+      return;
+    }
     addItem(product, quantity, selectedVariant);
   };
   
@@ -141,6 +150,15 @@ const ProductDetail = () => {
                 <p className="text-gray-700">{product.description}</p>
               </div>
               
+              {/* Authentication Notice */}
+              {!isAuthenticated && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-blue-800 text-sm">
+                    Please <Link to="/login" className="font-medium underline">login</Link> to add items to your cart.
+                  </p>
+                </div>
+              )}
+              
               {/* Variants */}
               {product.variants && product.variants.length > 0 && (
                 <div className="mb-6">
@@ -196,7 +214,7 @@ const ProductDetail = () => {
                   className="flex-1"
                   size="lg"
                 >
-                  {isInStock ? "Add to Cart" : "Out of Stock"}
+                  {!isInStock ? "Out of Stock" : !isAuthenticated ? "Login to Add to Cart" : "Add to Cart"}
                 </Button>
                 
                 <Button
