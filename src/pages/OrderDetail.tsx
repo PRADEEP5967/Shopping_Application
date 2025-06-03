@@ -16,9 +16,10 @@ import {
 } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { downloadInvoice } from '@/utils/invoiceGenerator';
+import { Order } from '@/types';
 
 // Mock order data - in a real app this would come from an API
-const MOCK_ORDER = {
+const MOCK_ORDER: Order = {
   id: 'ORD-5612',
   createdAt: '2023-05-15T08:30:00Z',
   status: 'delivered',
@@ -28,8 +29,13 @@ const MOCK_ORDER = {
       product: { 
         id: '1', 
         name: 'Laptop Pro 13"', 
+        description: 'High-performance laptop with advanced features',
         price: 1299.98,
-        images: ['https://images.unsplash.com/photo-1496181133206-80ce9b88a853'] 
+        category: 'Electronics',
+        images: ['https://images.unsplash.com/photo-1496181133206-80ce9b88a853'],
+        rating: 4.5,
+        reviewCount: 128,
+        inStock: true
       }, 
       quantity: 1 
     }
