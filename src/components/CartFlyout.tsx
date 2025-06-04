@@ -3,9 +3,10 @@ import React from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { X, Minus, Plus, ShoppingBag, LogIn } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { X, Minus, Plus, ShoppingBag, LogIn, Lock, ShieldCheck } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 const CartFlyout = () => {
   const { 
@@ -15,17 +16,35 @@ const CartFlyout = () => {
     removeItem, 
     updateQuantity, 
     subtotal,
-    totalItems
+    totalItems,
+    clearCart
   } = useCart();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   if (!isCartOpen) return null;
 
+  const handleLogin = () => {
+    toggleCart();
+    navigate('/login', { state: { from: location.pathname } });
+  };
+
+  const accessDenied = !isAuthenticated;
+  
   return (
-    <div className={`cart-flyout ${isCartOpen ? 'cart-visible' : 'cart-hidden'}`}>
+    <motion.div
+      className={`fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-xl z-50 flex flex-col`}
+      initial={{ x: '100%' }}
+      animate={{ x: 0 }}
+      exit={{ x: '100%' }}
+      transition={{ type: 'tween', duration: 0.3 }}
+    >
       {/* Cart Header */}
       <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-lg font-semibold">Your Cart ({totalItems})</h2>
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <ShoppingBag className="h-5 w-5" />
+          Your Cart ({totalItems})
+        </h2>
         <Button variant="ghost" size="icon" onClick={toggleCart}>
           <X className="h-5 w-5" />
         </Button>
@@ -33,20 +52,23 @@ const CartFlyout = () => {
 
       {/* Cart Content */}
       <div className="flex-1 overflow-auto p-4">
-        {!isAuthenticated ? (
+        {accessDenied ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-8">
-            <LogIn className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">Please Login</h3>
-            <p className="text-gray-500 mt-1">You need to be logged in to view your cart.</p>
-            <Link to="/login" onClick={toggleCart}>
-              <Button className="mt-6">
-                Login to Continue
-              </Button>
-            </Link>
+            <div className="bg-red-50 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <Lock className="h-8 w-8 text-red-500" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900">Access Restricted</h3>
+            <p className="text-gray-500 mt-2 mb-6">You need to be logged in to view your cart.</p>
+            <Button onClick={handleLogin} className="w-full">
+              <LogIn className="h-4 w-4 mr-2" />
+              Login to Continue
+            </Button>
           </div>
         ) : items.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-8">
-            <ShoppingBag className="h-12 w-12 text-gray-300 mb-4" />
+            <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+              <ShoppingBag className="h-8 w-8 text-gray-400" />
+            </div>
             <h3 className="text-lg font-medium text-gray-900">Your cart is empty</h3>
             <p className="text-gray-500 mt-1">Looks like you haven't added any products yet.</p>
             <Button 
@@ -132,19 +154,36 @@ const CartFlyout = () => {
             <p>{formatCurrency(subtotal)}</p>
           </div>
           <p className="text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
+          
+          {isAdmin && (
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-3 flex items-start mb-2">
+              <ShieldCheck className="h-5 w-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-blue-700">Admin mode: You can view and manage this cart for testing purposes.</p>
+            </div>
+          )}
+          
           <div className="space-y-2">
             <Link to="/checkout" onClick={toggleCart} className="w-full">
-              <Button className="w-full">
-                Checkout
+              <Button className="w-full flex items-center gap-2">
+                Checkout Now
               </Button>
             </Link>
-            <Button variant="outline" className="w-full" onClick={toggleCart}>
-              Continue Shopping
-            </Button>
+            <div className="grid grid-cols-2 gap-2">
+              <Button variant="outline" className="w-full" onClick={toggleCart}>
+                Continue Shopping
+              </Button>
+              <Button 
+                variant="outline"
+                className="w-full text-red-500 border-red-200 hover:bg-red-50"
+                onClick={clearCart}
+              >
+                Clear Cart
+              </Button>
+            </div>
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 
