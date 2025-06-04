@@ -9,6 +9,7 @@ type User = {
   email: string;
   address: string;
   gender: 'male' | 'female' | 'other';
+  role: 'user' | 'admin';
 };
 
 type AuthContextType = {
@@ -17,6 +18,7 @@ type AuthContextType = {
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
   isAuthenticated: boolean;
+  isAdmin: boolean;
 };
 
 type RegisterData = {
@@ -58,16 +60,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string): Promise<boolean> => {
     // Mock login - in a real app this would call an API
     if (email && password.length >= 6) {
+      // Check if it's an admin login
+      const isAdmin = email === 'admin@admin.com' || email.includes('admin');
+      
       const mockUser: User = {
         id: Math.random().toString(36).substr(2, 9),
         firstName: email.split('@')[0],
-        lastName: 'User',
+        lastName: isAdmin ? 'Admin' : 'User',
         email,
         address: '123 Main St',
-        gender: 'other'
+        gender: 'other',
+        role: isAdmin ? 'admin' : 'user'
       };
       setUser(mockUser);
-      toast.success('Successfully logged in!');
+      toast.success(`Successfully logged in as ${isAdmin ? 'Admin' : 'User'}!`);
       return true;
     } else {
       toast.error('Invalid email or password');
@@ -84,7 +90,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         lastName: userData.lastName,
         email: userData.email,
         address: userData.address,
-        gender: userData.gender
+        gender: userData.gender,
+        role: 'user'
       };
       setUser(mockUser);
       toast.success('Successfully registered and logged in!');
@@ -108,6 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         logout,
         isAuthenticated: !!user,
+        isAdmin: !!user && user.role === 'admin',
       }}
     >
       {children}

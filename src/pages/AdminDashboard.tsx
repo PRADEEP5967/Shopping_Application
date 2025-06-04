@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AdminStats } from '@/components/admin/AdminStats';
@@ -12,13 +14,20 @@ import { SettingsPanel } from '@/components/admin/SettingsPanel';
 import { AdminNavbar } from '@/components/admin/AdminNavbar';
 
 const AdminDashboard = () => {
+  const { isAdmin, isAuthenticated } = useAuth();
+
+  // Redirect if not authenticated or not admin
+  if (!isAuthenticated || !isAdmin) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage your e-commerce platform</p>
+          <p className="text-gray-600">Manage your e-commerce platform with full CRUD operations</p>
         </div>
 
         <AdminStats />
@@ -35,7 +44,44 @@ const AdminDashboard = () => {
           </TabsList>
 
           <TabsContent value="overview" className="mt-6">
-            <AnalyticsDashboard />
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">$45,231.89</div>
+                  <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Orders</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">+2350</div>
+                  <p className="text-xs text-muted-foreground">+180.1% from last month</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Products</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">+12,234</div>
+                  <p className="text-xs text-muted-foreground">+19% from last month</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">+573</div>
+                  <p className="text-xs text-muted-foreground">+201 since last hour</p>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="products" className="mt-6">

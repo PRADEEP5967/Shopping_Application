@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { X, Minus, Plus, ShoppingBag } from 'lucide-react';
+import { X, Minus, Plus, ShoppingBag, LogIn } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 const CartFlyout = () => {
@@ -16,6 +17,9 @@ const CartFlyout = () => {
     subtotal,
     totalItems
   } = useCart();
+  const { isAuthenticated } = useAuth();
+
+  if (!isCartOpen) return null;
 
   return (
     <div className={`cart-flyout ${isCartOpen ? 'cart-visible' : 'cart-hidden'}`}>
@@ -29,7 +33,18 @@ const CartFlyout = () => {
 
       {/* Cart Content */}
       <div className="flex-1 overflow-auto p-4">
-        {items.length === 0 ? (
+        {!isAuthenticated ? (
+          <div className="h-full flex flex-col items-center justify-center text-center p-8">
+            <LogIn className="h-12 w-12 text-gray-300 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900">Please Login</h3>
+            <p className="text-gray-500 mt-1">You need to be logged in to view your cart.</p>
+            <Link to="/login" onClick={toggleCart}>
+              <Button className="mt-6">
+                Login to Continue
+              </Button>
+            </Link>
+          </div>
+        ) : items.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-8">
             <ShoppingBag className="h-12 w-12 text-gray-300 mb-4" />
             <h3 className="text-lg font-medium text-gray-900">Your cart is empty</h3>
@@ -110,7 +125,7 @@ const CartFlyout = () => {
       </div>
 
       {/* Cart Footer */}
-      {items.length > 0 && (
+      {isAuthenticated && items.length > 0 && (
         <div className="border-t p-4 space-y-4">
           <div className="flex justify-between text-base font-medium text-gray-900">
             <p>Subtotal</p>

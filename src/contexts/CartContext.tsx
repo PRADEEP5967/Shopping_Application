@@ -21,6 +21,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
   
   // Calculate total items in cart
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
@@ -33,23 +34,36 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Load cart from localStorage on initial render
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        setItems(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Failed to parse cart from localStorage', error);
+    if (isAuthenticated) {
+      const savedCart = localStorage.getItem('cart');
+      if (savedCart) {
+        try {
+          setItems(JSON.parse(savedCart));
+        } catch (error) {
+          console.error('Failed to parse cart from localStorage', error);
+        }
       }
+    } else {
+      // Clear cart if user is not authenticated
+      setItems([]);
+      setIsCartOpen(false);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
-  }, [items]);
+    if (isAuthenticated) {
+      localStorage.setItem('cart', JSON.stringify(items));
+    }
+  }, [items, isAuthenticated]);
 
   // Add item to cart
   const addItem = (product: Product, quantity: number, variant?: ProductVariant) => {
+    if (!isAuthenticated) {
+      toast.error('Please login to add items to cart');
+      return;
+    }
+
     setItems(prevItems => {
       // Check if product is already in cart
       const existingItemIndex = prevItems.findIndex(item => 
@@ -73,6 +87,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Remove item from cart
   const removeItem = (productId: string) => {
+    if (!isAuthenticated) {
+      toast.error('Please login to manage cart');
+      return;
+    }
+
     setItems(prevItems => {
       const updatedItems = prevItems.filter(item => item.product.id !== productId);
       toast.info('Item removed from cart');
@@ -82,6 +101,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Update quantity of item in cart
   const updateQuantity = (productId: string, quantity: number) => {
+    if (!isAuthenticated) {
+      toast.error('Please login to manage cart');
+      return;
+    }
+
     if (quantity < 1) {
       removeItem(productId);
       return;
@@ -96,12 +120,21 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Clear the entire cart
   const clearCart = () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to manage cart');
+      return;
+    }
+
     setItems([]);
     toast.info('Cart cleared');
   };
 
   // Toggle cart open/closed
   const toggleCart = () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to view cart');
+      return;
+    }
     setIsCartOpen(!isCartOpen);
   };
 
