@@ -3,7 +3,7 @@ import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import { Info, Users, History, Award, Globe } from 'lucide-react';
+import { Info, Users, History, Award, Globe, Zap, Shield, Heart } from 'lucide-react';
 
 const About = () => {
   return (
@@ -13,47 +13,89 @@ const About = () => {
       
       <main className="flex-grow">
         {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-          <div className="absolute inset-0 overflow-hidden opacity-20">
-            <img 
-              src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?q=80&w=2070&auto=format&fit=crop"
-              alt="Team"
-              className="w-full h-full object-cover"
-            />
+        <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-1/3 right-1/4 w-48 h-48 bg-white/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
           </div>
-          <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-3xl md:text-5xl font-bold mb-6">About Our Company</h1>
-              <p className="text-lg md:text-xl">We're on a mission to make technology accessible to everyone with high-quality products and exceptional service.</p>
+          <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-flex items-center space-x-2 bg-white/10 rounded-full px-6 py-2 mb-6 backdrop-blur-sm">
+                <Zap className="h-4 w-4" />
+                <span className="text-sm font-medium">Established 2010</span>
+              </div>
+              <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
+                Revolutionizing Commerce
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
+                  One Product at a Time
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto leading-relaxed">
+                We're passionate about connecting people with products that enhance their lives, 
+                backed by technology that makes shopping effortless and enjoyable.
+              </p>
             </div>
           </div>
         </div>
         
-        {/* Our Story */}
-        <section className="py-16 bg-white">
+        {/* Stats Section */}
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center gap-12">
-              <div className="md:w-1/2">
-                <h2 className="text-3xl font-bold mb-6 flex items-center">
-                  <History className="mr-3 text-primary" />
-                  Our Story
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {[
+                { number: '500K+', label: 'Happy Customers', icon: Users },
+                { number: '50+', label: 'Countries Served', icon: Globe },
+                { number: '99.9%', label: 'Uptime', icon: Zap },
+                { number: '4.9★', label: 'Average Rating', icon: Award }
+              ].map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <stat.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
+                  <div className="text-gray-600">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        
+        {/* Our Story */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              <div className="lg:w-1/2">
+                <div className="inline-flex items-center space-x-2 text-blue-600 mb-4">
+                  <History className="h-5 w-5" />
+                  <span className="font-medium">Our Journey</span>
+                </div>
+                <h2 className="text-4xl font-bold mb-8 text-gray-900">
+                  From Vision to Reality
                 </h2>
-                <p className="text-gray-700 mb-4">
-                  Founded in 2010, our company began with a simple idea: create a one-stop shop for quality electronics at fair prices. What started as a small online store has grown into a trusted retailer serving customers nationwide.
-                </p>
-                <p className="text-gray-700 mb-4">
-                  Our team of passionate tech enthusiasts works tirelessly to curate the best selection of products, ranging from everyday essentials to cutting-edge innovations.
-                </p>
-                <p className="text-gray-700">
-                  Throughout our journey, we've remained committed to our core values: quality, affordability, and exceptional customer service. We believe technology should enhance your life, not complicate it.
-                </p>
+                <div className="space-y-6 text-gray-700 text-lg leading-relaxed">
+                  <p>
+                    Founded in 2010, our company began with a revolutionary idea: create an e-commerce 
+                    platform that puts customer experience at the center of everything we do.
+                  </p>
+                  <p>
+                    What started as a small team of tech enthusiasts has grown into a global marketplace 
+                    serving over 500,000 customers across 50+ countries, powered by cutting-edge technology 
+                    and an unwavering commitment to quality.
+                  </p>
+                  <p>
+                    Today, we continue to innovate, ensuring that every interaction with our platform 
+                    is seamless, secure, and delightful. We believe technology should enhance human 
+                    connection, not replace it.
+                  </p>
+                </div>
               </div>
-              <div className="md:w-1/2">
-                <div className="rounded-lg overflow-hidden shadow-xl">
+              <div className="lg:w-1/2">
+                <div className="relative">
+                  <div className="absolute -top-4 -left-4 w-full h-full bg-gradient-to-br from-blue-100 to-purple-100 rounded-3xl"></div>
                   <img 
-                    src="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?q=80&w=2047&auto=format&fit=crop"
-                    alt="Our team"
-                    className="w-full h-auto object-cover"
+                    src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1000&auto=format&fit=crop"
+                    alt="Modern office workspace"
+                    className="relative rounded-3xl shadow-2xl w-full h-auto object-cover"
                   />
                 </div>
               </div>
@@ -62,90 +104,121 @@ const About = () => {
         </section>
         
         {/* Values */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Our Core Values</h2>
-              <p className="text-gray-700">The principles that guide everything we do</p>
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">Our Core Values</h2>
+              <p className="text-xl text-gray-600">The principles that guide every decision we make</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <Award className="h-7 w-7 text-primary" />
+              {[
+                {
+                  icon: Award,
+                  title: 'Quality Excellence',
+                  description: 'We meticulously curate every product, ensuring exceptional quality and performance that exceeds expectations.',
+                  color: 'from-blue-500 to-cyan-500'
+                },
+                {
+                  icon: Heart,
+                  title: 'Customer Obsession',
+                  description: 'Your satisfaction drives everything we do. We listen, adapt, and continuously improve to serve you better.',
+                  color: 'from-purple-500 to-pink-500'
+                },
+                {
+                  icon: Shield,
+                  title: 'Trust & Security',
+                  description: 'We protect your data and privacy with enterprise-grade security, ensuring every transaction is safe and secure.',
+                  color: 'from-green-500 to-emerald-500'
+                }
+              ].map((value, index) => (
+                <div key={index} className="group">
+                  <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-2">
+                    <div className={`w-16 h-16 bg-gradient-to-br ${value.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                      <value.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold mb-4 text-gray-900">{value.title}</h3>
+                    <p className="text-gray-600 leading-relaxed">{value.description}</p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-center">Quality First</h3>
-                <p className="text-gray-600 text-center">
-                  We carefully select each product in our inventory, ensuring it meets our high standards for performance and durability.
-                </p>
-              </div>
-              
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <Users className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-center">Customer Focus</h3>
-                <p className="text-gray-600 text-center">
-                  Your satisfaction is our priority. We're committed to providing exceptional service from browsing to delivery and beyond.
-                </p>
-              </div>
-              
-              <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 mx-auto">
-                  <Globe className="h-7 w-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2 text-center">Sustainability</h3>
-                <p className="text-gray-600 text-center">
-                  We're committed to reducing our environmental impact through responsible packaging and energy-efficient operations.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </section>
         
         {/* Team Section */}
-        <section className="py-16 bg-white">
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Meet Our Leadership</h2>
-              <p className="text-gray-700">The experts behind our success</p>
+            <div className="max-w-3xl mx-auto text-center mb-16">
+              <h2 className="text-4xl font-bold mb-6 text-gray-900">Meet Our Leadership</h2>
+              <p className="text-xl text-gray-600">The visionaries behind our success</p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
-                  name: "Alex Morgan",
+                  name: "Alexandra Morgan",
                   role: "CEO & Founder",
-                  image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1974&auto=format&fit=crop"
+                  image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?q=80&w=400&auto=format&fit=crop",
+                  bio: "Visionary leader with 15+ years in e-commerce"
                 },
                 {
                   name: "Sarah Chen",
-                  role: "CTO",
-                  image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1976&auto=format&fit=crop"
+                  role: "Chief Technology Officer",
+                  image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
+                  bio: "Tech innovator specializing in scalable platforms"
                 },
                 {
                   name: "Marcus Johnson",
                   role: "Head of Operations",
-                  image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1974&auto=format&fit=crop"
+                  image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
+                  bio: "Operations expert ensuring seamless experiences"
                 },
                 {
                   name: "Jessica Williams",
-                  role: "Customer Experience",
-                  image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=1974&auto=format&fit=crop"
+                  role: "Customer Experience Director",
+                  image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
+                  bio: "Customer advocate with a passion for excellence"
                 }
               ].map((member, index) => (
-                <div key={index} className="text-center group">
-                  <div className="mb-4 rounded-lg overflow-hidden">
+                <div key={index} className="group text-center">
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-purple-500 rounded-2xl transform rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
                     <img 
                       src={member.image} 
                       alt={member.name}
-                      className="w-full h-auto aspect-square object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="relative w-full aspect-square object-cover rounded-2xl shadow-xl group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <h3 className="text-lg font-semibold">{member.name}</h3>
-                  <p className="text-gray-600">{member.role}</p>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">{member.name}</h3>
+                  <p className="text-blue-600 font-medium mb-3">{member.role}</p>
+                  <p className="text-gray-600 text-sm">{member.bio}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-4xl font-bold mb-6">Ready to Experience the Difference?</h2>
+            <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+              Join over 500,000 satisfied customers who trust us for their shopping needs.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="/products"
+                className="bg-white text-blue-600 px-8 py-4 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-300 inline-flex items-center justify-center"
+              >
+                Start Shopping
+              </a>
+              <a 
+                href="/contact"
+                className="border-2 border-white text-white px-8 py-4 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-300 inline-flex items-center justify-center"
+              >
+                Get in Touch
+              </a>
             </div>
           </div>
         </section>
