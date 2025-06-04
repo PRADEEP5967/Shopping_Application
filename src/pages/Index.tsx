@@ -12,6 +12,7 @@ import Testimonials from '@/components/Testimonials';
 import CategoryNav from '@/components/CategoryNav';
 import TrendingProducts from '@/components/TrendingProducts';
 import DealsSection from '@/components/DealsSection';
+import ModernCategoryNav from '@/components/ModernCategoryNav';
 
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,8 @@ const Index = () => {
       
       <main className="flex-grow">
         <Hero />
+        
+        <ModernCategoryNav />
         
         <DealsSection />
         
