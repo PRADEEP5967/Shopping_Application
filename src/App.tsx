@@ -21,6 +21,13 @@ import NotFound from '@/pages/NotFound';
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
 import AdminProductAdd from '@/pages/AdminProductAdd';
+import AdminProducts from '@/pages/admin/Products';
+import AdminOrders from '@/pages/admin/Orders';
+import AdminCustomers from '@/pages/admin/Customers';
+import AdminCategories from '@/pages/admin/Categories';
+import AdminDiscounts from '@/pages/admin/Discounts';
+import AdminAnalytics from '@/pages/admin/Analytics';
+import AdminActivity from '@/pages/admin/Activity';
 
 function App() {
   return (
@@ -53,6 +60,41 @@ function App() {
                     <Route path="/admin/add-product" element={
                       <AdminDashboardLayout title="Add Product">
                         <AdminProductAdd />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/products" element={
+                      <AdminDashboardLayout title="Product Management">
+                        <AdminProducts />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/orders" element={
+                      <AdminDashboardLayout title="Order Management">
+                        <AdminOrders />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/customers" element={
+                      <AdminDashboardLayout title="Customer Management">
+                        <AdminCustomers />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/categories" element={
+                      <AdminDashboardLayout title="Category Management">
+                        <AdminCategories />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/discounts" element={
+                      <AdminDashboardLayout title="Discount Management">
+                        <AdminDiscounts />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/analytics" element={
+                      <AdminDashboardLayout title="Analytics Dashboard">
+                        <AdminAnalytics />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/activity" element={
+                      <AdminDashboardLayout title="Activity Log">
+                        <AdminActivity />
                       </AdminDashboardLayout>
                     } />
                     
