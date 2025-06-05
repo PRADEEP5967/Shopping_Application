@@ -11,14 +11,20 @@ import {
   Star
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import ProductGrid from '@/components/ProductGrid';
+import ReviewForm from '@/components/reviews/ReviewForm';
+import ReviewsList from '@/components/reviews/ReviewsList';
+import ReviewStats from '@/components/reviews/ReviewStats';
+import AIRecommendations from '@/components/AIRecommendations';
 import { getProductById, getRelatedProducts } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useReviews } from '@/contexts/ReviewsContext';
 import { ProductVariant } from '@/types';
 import { cn, formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -30,7 +36,8 @@ const ProductDetail = () => {
   
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { getProductStats } = useReviews();
   const navigate = useNavigate();
   
   const [selectedImage, setSelectedImage] = useState(0);
@@ -60,6 +67,7 @@ const ProductDetail = () => {
   const inWishlist = isInWishlist(product.id);
   const isInStock = selectedVariant ? selectedVariant.inStock : product.inStock;
   const displayPrice = selectedVariant ? selectedVariant.price : product.price;
+  const reviewStats = getProductStats(product.id);
   
   const handleAddToCart = () => {
     if (!isAuthenticated) {
@@ -125,7 +133,7 @@ const ProductDetail = () => {
             
             {/* Product Info */}
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{product.name}</h1>
               
               <div className="flex items-center mt-2 mb-4">
                 {/* Star Rating */}
@@ -133,27 +141,27 @@ const ProductDetail = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star 
                       key={i}
-                      className={`w-5 h-5 ${i < Math.round(product.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                      className={`w-5 h-5 ${i < Math.round(reviewStats.averageRating || product.rating) ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
                     />
                   ))}
-                  <span className="ml-2 text-sm text-gray-600">
-                    {product.rating.toFixed(1)} ({product.reviewCount} reviews)
+                  <span className="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                    {(reviewStats.averageRating || product.rating).toFixed(1)} ({reviewStats.totalReviews || product.reviewCount} reviews)
                   </span>
                 </div>
               </div>
               
-              <div className="text-2xl font-bold text-gray-900 mb-4">
+              <div className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 {formatCurrency(displayPrice)}
               </div>
               
               <div className="prose max-w-none mb-6">
-                <p className="text-gray-700">{product.description}</p>
+                <p className="text-gray-700 dark:text-gray-300">{product.description}</p>
               </div>
               
               {/* Authentication Notice */}
               {!isAuthenticated && (
-                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                  <p className="text-blue-800 text-sm">
+                <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                  <p className="text-blue-800 dark:text-blue-200 text-sm">
                     Please <Link to="/login" className="font-medium underline">login</Link> to add items to your cart.
                   </p>
                 </div>
@@ -271,6 +279,83 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>
+          
+          {/* Product Details Tabs */}
+          <div className="mt-16">
+            <Tabs defaultValue="reviews" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="reviews">Reviews ({reviewStats.totalReviews})</TabsTrigger>
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="specifications">Specifications</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="reviews" className="mt-6">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-1">
+                    <ReviewStats productId={product.id} />
+                  </div>
+                  <div className="lg:col-span-2 space-y-6">
+                    <ReviewForm productId={product.id} />
+                    <ReviewsList productId={product.id} />
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="description" className="mt-6">
+                <div className="prose max-w-none">
+                  <p className="text-gray-700 dark:text-gray-300">{product.description}</p>
+                  {product.features && (
+                    <div className="mt-6">
+                      <h3 className="font-semibold mb-3">Key Features</h3>
+                      <ul className="space-y-2">
+                        {product.features.map((feature, index) => (
+                          <li key={index} className="flex items-start">
+                            <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="specifications" className="mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-semibold mb-3">Product Details</h3>
+                    <dl className="space-y-2">
+                      <div className="flex justify-between">
+                        <dt className="text-gray-600 dark:text-gray-400">Category:</dt>
+                        <dd className="font-medium">{product.category}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="text-gray-600 dark:text-gray-400">Brand:</dt>
+                        <dd className="font-medium">{product.brand || 'NextCommerce'}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="text-gray-600 dark:text-gray-400">SKU:</dt>
+                        <dd className="font-medium">{product.id}</dd>
+                      </div>
+                      <div className="flex justify-between">
+                        <dt className="text-gray-600 dark:text-gray-400">Availability:</dt>
+                        <dd className={cn("font-medium", product.inStock ? "text-green-600" : "text-red-600")}>
+                          {product.inStock ? 'In Stock' : 'Out of Stock'}
+                        </dd>
+                      </div>
+                    </dl>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+          
+          {/* AI Recommendations */}
+          <AIRecommendations 
+            currentProduct={product} 
+            userId={user?.id}
+            limit={4}
+          />
           
           {/* Related Products */}
           {relatedProducts.length > 0 && (
