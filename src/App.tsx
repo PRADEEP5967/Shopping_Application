@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -8,19 +9,18 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import ProductsPage from '@/pages/ProductsPage';
-import CategoriesPage from '@/pages/CategoriesPage';
+import Products from '@/pages/Products';
+import CategoryPage from '@/pages/CategoryPage';
 import ProductDetail from '@/pages/ProductDetail';
 import MyAccount from '@/pages/MyAccount';
 import WishlistPage from '@/pages/WishlistPage';
-import CheckoutPage from '@/pages/CheckoutPage';
-import OrderConfirmationPage from '@/pages/OrderConfirmationPage';
-import AboutUs from '@/pages/AboutUs';
-import ContactUs from '@/pages/ContactUs';
+import Orders from '@/pages/Orders';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
-import Admin from '@/pages/admin/Admin';
-import AddProduct from '@/pages/admin/AddProduct';
+import AdminDashboard from '@/pages/AdminDashboard';
+import AdminProductAdd from '@/pages/AdminProductAdd';
 
 function App() {
   return (
@@ -35,19 +35,26 @@ function App() {
                     <Route path="/" element={<Index />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
-                    <Route path="/products" element={<ProductsPage />} />
-                    <Route path="/categories" element={<CategoriesPage />} />
+                    <Route path="/products" element={<Products />} />
+                    <Route path="/categories" element={<CategoryPage />} />
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/my-account" element={<MyAccount />} />
                     <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
-                    <Route path="/about-us" element={<AboutUs />} />
-                    <Route path="/contact-us" element={<ContactUs />} />
+                    <Route path="/orders" element={<Orders />} />
+                    <Route path="/about-us" element={<About />} />
+                    <Route path="/contact-us" element={<Contact />} />
                     
                     {/* Admin Routes */}
-                    <Route path="/admin" element={<AdminDashboardLayout title="Dashboard" />} />
-                    <Route path="/admin/add-product" element={<AdminDashboardLayout title="Add Product"><AddProduct /></AdminDashboardLayout>} />
+                    <Route path="/admin" element={
+                      <AdminDashboardLayout title="Dashboard">
+                        <AdminDashboard />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/add-product" element={
+                      <AdminDashboardLayout title="Add Product">
+                        <AdminProductAdd />
+                      </AdminDashboardLayout>
+                    } />
                     
                     <Route path="*" element={<NotFound />} />
                   </Routes>
