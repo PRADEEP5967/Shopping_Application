@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut } from 'lucide-react';
+import { LogOut, Shield } from 'lucide-react';
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
@@ -13,7 +13,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, handleLogout }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, isAdmin } = useAuth();
 
   if (!isMenuOpen) return null;
 
@@ -39,6 +39,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
         {isAuthenticated ? (
           <>
             <div className="py-2 text-sm text-gray-600">Hello, {user?.firstName}</div>
+            {isAdmin && (
+              <Link to="/admin" className="block py-2" onClick={() => setIsMenuOpen(false)}>
+                <Button variant="outline" className="w-full justify-start">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Admin Panel
+                </Button>
+              </Link>
+            )}
             <Button 
               variant="outline" 
               onClick={() => {

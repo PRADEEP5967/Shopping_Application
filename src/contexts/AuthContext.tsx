@@ -70,14 +70,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
     
-    // Admin login special case
-    if (email === 'admin@admin.com' || email.includes('admin')) {
+    // Admin login with specific credentials
+    if (email === 'admin@nextcommerce.com' && password === 'admin2024!') {
       const mockUser: User = {
-        id: Math.random().toString(36).substr(2, 9),
-        firstName: email.split('@')[0],
-        lastName: 'Admin',
+        id: 'admin-001',
+        firstName: 'Admin',
+        lastName: 'User',
         email,
-        address: '123 Main St',
+        address: 'NextCommerce HQ, 123 Business Street',
         gender: 'other',
         role: 'admin'
       };

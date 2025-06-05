@@ -8,8 +8,9 @@ import { Label } from '@/components/ui/label';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogIn, Package, UserPlus } from 'lucide-react';
+import { LogIn, Package, UserPlus, Info } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,16 +41,6 @@ const Login = () => {
     setIsLoading(false);
   };
   
-  // Quick admin login for demo purposes
-  const handleQuickAdminLogin = async () => {
-    setIsLoading(true);
-    const success = await login("admin@admin.com", "admin123");
-    if (success) {
-      navigate('/admin');
-    }
-    setIsLoading(false);
-  };
-
   // Quick user login for demo purposes
   const handleQuickUserLogin = async () => {
     setIsLoading(true);
@@ -114,31 +105,35 @@ const Login = () => {
             </form>
             
             <div className="mt-6">
+              <Alert>
+                <Info className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Admin Access:</strong><br />
+                  Email: admin@nextcommerce.com<br />
+                  Password: admin2024!
+                </AlertDescription>
+              </Alert>
+            </div>
+            
+            <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <Separator />
                 </div>
                 <div className="relative flex justify-center text-xs">
                   <span className="bg-card px-2 text-muted-foreground">
-                    Quick demo logins
+                    Quick demo login
                   </span>
                 </div>
               </div>
               
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <Button 
-                  variant="outline" 
-                  onClick={handleQuickAdminLogin}
-                  className="text-blue-600 border-blue-200 hover:bg-blue-50"
-                >
-                  Admin Demo
-                </Button>
+              <div className="mt-4">
                 <Button 
                   variant="outline"
                   onClick={handleQuickUserLogin}
-                  className="text-green-600 border-green-200 hover:bg-green-50"
+                  className="w-full text-green-600 border-green-200 hover:bg-green-50"
                 >
-                  User Demo
+                  Demo User Account
                 </Button>
               </div>
             </div>

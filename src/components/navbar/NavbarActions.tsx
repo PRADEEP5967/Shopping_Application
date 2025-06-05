@@ -61,7 +61,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
             <Link to="/admin">
               <Button size="sm" variant="secondary" className="flex items-center gap-1">
                 <Shield className="h-4 w-4" />
-                Admin
+                Admin Panel
               </Button>
             </Link>
           )}
