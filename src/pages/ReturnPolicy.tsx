@@ -2,202 +2,273 @@
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import CartFlyout from '@/components/CartFlyout';
-import { RefreshCw, Package, AlertTriangle, HelpCircle, ArrowLeft } from 'lucide-react';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { 
+  RotateCcw, 
+  Clock, 
+  CheckCircle, 
+  XCircle, 
+  Package, 
+  CreditCard,
+  ArrowRight,
+  AlertCircle
+} from 'lucide-react';
 
 const ReturnPolicy = () => {
+  const returnableItems = [
+    "Clothing and accessories in original condition",
+    "Electronics in original packaging",
+    "Home goods and furniture (within size limits)",
+    "Books and media in new condition",
+    "Beauty products (unopened and unused)"
+  ];
+
+  const nonReturnableItems = [
+    "Personalized or customized items",
+    "Perishable goods (food, flowers)",
+    "Digital downloads",
+    "Gift cards",
+    "Final sale items",
+    "Items damaged by misuse"
+  ];
+
+  const returnSteps = [
+    {
+      step: 1,
+      title: "Initiate Return",
+      description: "Log into your account and start a return request from your order history."
+    },
+    {
+      step: 2,
+      title: "Print Label",
+      description: "Download and print the prepaid return shipping label we provide."
+    },
+    {
+      step: 3,
+      title: "Package Items",
+      description: "Pack items securely in original packaging with all tags and accessories."
+    },
+    {
+      step: 4,
+      title: "Ship Back",
+      description: "Drop off package at designated carrier location or schedule pickup."
+    },
+    {
+      step: 5,
+      title: "Get Refunded",
+      description: "Receive your refund within 3-5 business days after we process your return."
+    }
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Link to="/" className="text-primary hover:underline inline-flex items-center">
-            <ArrowLeft className="h-4 w-4 mr-1" />
-            Back to Home
-          </Link>
-        </div>
-        
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-10">
-            <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <RefreshCw className="h-8 w-8 text-primary" />
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                <RotateCcw className="h-8 w-8 text-green-600" />
+              </div>
             </div>
             <h1 className="text-3xl font-bold mb-2">Return & Exchange Policy</h1>
-            <p className="text-gray-600">
-              We want you to be completely satisfied with your purchase. If you're not, we're here to help.
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We want you to be completely satisfied with your purchase. 
+              Here's everything you need to know about returns and exchanges.
             </p>
           </div>
-          
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">Return Policy Overview</h2>
-            <p className="mb-4">
-              Most items can be returned within 30 days of receipt for a full refund. To be eligible for a return, your item must be in the same condition that you received it, unworn or unused, with tags, and in its original packaging.
-            </p>
-            <p>
-              Some items cannot be returned, including:
-            </p>
-            <ul className="list-disc pl-6 mb-4 space-y-1">
-              <li>Gift cards</li>
-              <li>Downloadable software products</li>
-              <li>Personal care items that have been opened or used</li>
-              <li>Custom-made or personalized items</li>
-              <li>Items marked as "Final Sale" or "Non-Returnable"</li>
-            </ul>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <Package className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">Easy Returns</h3>
-              <p className="text-sm text-gray-600">
-                Start your return online and we'll guide you through the process with simple steps.
-              </p>
-            </div>
+
+          {/* Policy Overview */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <Clock className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">30-Day Window</h3>
+                <p className="text-sm text-gray-600">
+                  Returns accepted within 30 days of delivery
+                </p>
+              </CardContent>
+            </Card>
             
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <RefreshCw className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">Free Exchanges</h3>
-              <p className="text-sm text-gray-600">
-                Need a different size or color? We cover return shipping for exchanges.
-              </p>
-            </div>
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <Package className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Free Returns</h3>
+                <p className="text-sm text-gray-600">
+                  We provide prepaid return labels
+                </p>
+              </CardContent>
+            </Card>
             
-            <div className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow">
-              <div className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                <HelpCircle className="h-5 w-5 text-primary" />
-              </div>
-              <h3 className="font-semibold mb-2">24/7 Support</h3>
-              <p className="text-sm text-gray-600">
-                Our customer service team is available to help with any return questions.
-              </p>
-            </div>
+            <Card className="text-center">
+              <CardContent className="p-6">
+                <CreditCard className="h-8 w-8 text-green-600 mx-auto mb-3" />
+                <h3 className="font-semibold mb-2">Fast Refunds</h3>
+                <p className="text-sm text-gray-600">
+                  Refunds processed within 3-5 business days
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-            <h2 className="text-xl font-bold mb-4">How to Return an Item</h2>
-            <ol className="list-decimal pl-6 space-y-4">
-              <li>
-                <strong>Initiate a Return</strong>
-                <p className="text-gray-600 mt-1">
-                  Log in to your account, go to your order history, and select the item(s) you wish to return. 
-                  Follow the prompts to complete the return request.
-                </p>
-              </li>
-              <li>
-                <strong>Package Your Return</strong>
-                <p className="text-gray-600 mt-1">
-                  Pack the item(s) in the original packaging if possible. Include all parts, accessories, 
-                  and documentation that came with the product.
-                </p>
-              </li>
-              <li>
-                <strong>Print Your Return Label</strong>
-                <p className="text-gray-600 mt-1">
-                  Once your return is approved, you'll receive a return shipping label via email. 
-                  Print the label and attach it to your package.
-                </p>
-              </li>
-              <li>
-                <strong>Ship Your Return</strong>
-                <p className="text-gray-600 mt-1">
-                  Drop off your package at the carrier specified on your return label. Keep the tracking number for reference.
-                </p>
-              </li>
-              <li>
-                <strong>Receive Your Refund</strong>
-                <p className="text-gray-600 mt-1">
-                  Once your return is received and inspected, we'll process your refund to the original payment method. 
-                  This typically takes 3-5 business days, depending on your bank.
-                </p>
-              </li>
-            </ol>
-          </div>
-          
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-5 rounded mb-8">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <AlertTriangle className="h-5 w-5 text-yellow-400" />
+
+          {/* Return Process */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ArrowRight className="h-5 w-5" />
+                How to Return Items
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {returnSteps.map((step, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0 font-semibold text-sm">
+                      {step.step}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold mb-1">{step.title}</h4>
+                      <p className="text-gray-600 text-sm">{step.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-yellow-800">Important Note</h3>
-                <div className="mt-2 text-sm text-yellow-700">
-                  <p>
-                    All returns must be initiated within 30 days of delivery. Returns initiated after 
-                    this period may not be eligible for a full refund.
-                  </p>
+              
+              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900 mb-1">Pro Tip</h4>
+                    <p className="text-blue-800 text-sm">
+                      Keep your tracking number! It helps us locate your return quickly and process your refund faster.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            </CardContent>
+          </Card>
+
+          {/* Eligible Items */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="h-5 w-5" />
+                  Returnable Items
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {returnableItems.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-600">
+                  <XCircle className="h-5 w-5" />
+                  Non-Returnable Items
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2">
+                  {nonReturnableItems.map((item, index) => (
+                    <li key={index} className="flex items-start gap-2 text-sm">
+                      <XCircle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
-          
-          <div className="mb-8">
-            <h2 className="text-xl font-bold mb-4">Frequently Asked Questions</h2>
-            <Accordion type="single" collapsible className="bg-white rounded-lg shadow-sm">
-              <AccordionItem value="item-1">
-                <AccordionTrigger className="px-6 py-4">
-                  Can I return a gift?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Yes, you can return a gift. If you received a gift, you will need the order number or gift receipt.
-                  The refund will be issued as store credit to the gift recipient.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2">
-                <AccordionTrigger className="px-6 py-4">
-                  How long does it take to process my refund?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Once your return is received, it typically takes 1-2 business days to inspect and process.
-                  After processing, refunds to your original payment method can take an additional 3-5 business
-                  days to appear on your statement, depending on your financial institution.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3">
-                <AccordionTrigger className="px-6 py-4">
-                  What if I received a damaged or defective item?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  If you received a damaged or defective item, please contact our customer service team
-                  immediately. We'll provide a prepaid return label and expedite your replacement or refund.
-                  Please take photos of the damaged items as these may be required during the return process.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-4">
-                <AccordionTrigger className="px-6 py-4">
-                  Can I exchange an item instead of returning it?
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4">
-                  Yes, we offer exchanges for size, color, or other variations of the same product.
-                  To request an exchange, follow the same process as a return but select "Exchange"
-                  instead of "Return" when initiating the process through your account.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </div>
-          
-          <div className="text-center">
-            <h2 className="text-xl font-bold mb-4">Need More Help?</h2>
-            <p className="text-gray-600 mb-6">
-              Our customer service team is here to assist you with any questions or concerns.
-            </p>
-            <Link to="/contact">
-              <Button>Contact Support</Button>
-            </Link>
-          </div>
+
+          {/* Conditions */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Return Conditions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold mb-2 flex items-center gap-2">
+                    <Badge variant="secondary">Required</Badge>
+                    Item Condition
+                  </h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Items must be in original condition</li>
+                    <li>• All tags and labels must be attached</li>
+                    <li>• Items must be clean and unworn</li>
+                    <li>• Original packaging when applicable</li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2 flex items-center gap-2">
+                    <Badge variant="secondary">Timeline</Badge>
+                    Return Window
+                  </h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• 30 days from delivery date</li>
+                    <li>• Must be initiated within 30 days</li>
+                    <li>• Items received after 45 days not accepted</li>
+                    <li>• Holidays may extend processing time</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Exchanges */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Exchanges</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-600 mb-4">
+                We offer exchanges for different sizes or colors of the same item. The exchange process 
+                is similar to returns, and we'll send the new item once we receive the original.
+              </p>
+              
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <h4 className="font-semibold text-yellow-800 mb-2">Exchange Policy</h4>
+                <ul className="text-sm text-yellow-700 space-y-1">
+                  <li>• Exchanges must be for the same item in different size/color</li>
+                  <li>• Price differences may apply for different models</li>
+                  <li>• Original item must meet return conditions</li>
+                  <li>• New item ships after we receive the return</li>
+                </ul>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Section */}
+          <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+            <CardContent className="p-6 text-center">
+              <h3 className="text-lg font-semibold mb-2">Need Help with a Return?</h3>
+              <p className="text-gray-600 mb-4">
+                Our customer service team is here to help make your return process as smooth as possible.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button asChild>
+                  <a href="/orders">Start a Return</a>
+                </Button>
+                <Button variant="outline" asChild>
+                  <a href="/contact-us">Contact Support</a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
       

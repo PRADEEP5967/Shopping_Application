@@ -1,205 +1,395 @@
 
 import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import CartFlyout from '@/components/CartFlyout';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { 
-  ArrowLeft, 
   Package, 
+  Truck, 
   MapPin, 
-  Calendar, 
-  FileText 
+  CreditCard, 
+  Download,
+  ArrowLeft,
+  CheckCircle,
+  Clock,
+  Calendar,
+  Mail,
+  Phone
 } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
-import { downloadInvoice } from '@/utils/invoiceGenerator';
-import { Order } from '@/types';
-
-// Mock order data - in a real app this would come from an API
-const MOCK_ORDER: Order = {
-  id: 'ORD-5612',
-  createdAt: '2023-05-15T08:30:00Z',
-  status: 'delivered',
-  totalAmount: 1299.98,
-  items: [
-    { 
-      product: { 
-        id: '1', 
-        name: 'Laptop Pro 13"', 
-        description: 'High-performance laptop with advanced features',
-        price: 1299.98,
-        category: 'Electronics',
-        images: ['https://images.unsplash.com/photo-1496181133206-80ce9b88a853'],
-        rating: 4.5,
-        reviewCount: 128,
-        inStock: true
-      }, 
-      quantity: 1 
-    }
-  ],
-  shippingAddress: {
-    fullName: 'John Doe',
-    addressLine1: '123 Main St',
-    addressLine2: 'Apt 4B',
-    city: 'San Francisco',
-    state: 'CA',
-    postalCode: '94107',
-    country: 'United States'
-  }
-};
+import InvoiceButton from '@/components/InvoiceButton';
 
 const OrderDetail = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  
-  // In a real app, you'd fetch the order by ID
-  const order = MOCK_ORDER;
+  const { orderId } = useParams();
 
-  if (!order) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <CartFlyout />
-        
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="text-center py-12">
-            <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">Order not found</h2>
-            <p className="text-gray-600 mb-6">The order you're looking for doesn't exist.</p>
-            <Link to="/order-history">
-              <Button>Back to Order History</Button>
-            </Link>
-          </div>
-        </main>
-        
-        <Footer />
-      </div>
-    );
-  }
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Badge variant="outline" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Pending</Badge>;
-      case 'shipped':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">Shipped</Badge>;
-      case 'delivered':
-        return <Badge variant="outline" className="bg-green-100 text-green-800 hover:bg-green-100">Delivered</Badge>;
-      case 'cancelled':
-        return <Badge variant="outline" className="bg-red-100 text-red-800 hover:bg-red-100">Cancelled</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
+  // Mock order data - in real app, fetch based on orderId
+  const order = {
+    id: orderId || 'ORD-2024-001',
+    date: new Date('2024-01-15'),
+    status: 'delivered',
+    total: 129.99,
+    subtotal: 104.99,
+    shipping: 9.99,
+    tax: 15.01,
+    trackingNumber: 'TRK-789456123',
+    estimatedDelivery: new Date('2024-01-20'),
+    actualDelivery: new Date('2024-01-19'),
+    items: [
+      {
+        id: 1,
+        name: 'Wireless Bluetooth Headphones',
+        price: 79.99,
+        quantity: 1,
+        image: '/placeholder.svg',
+        sku: 'WBH-001'
+      },
+      {
+        id: 2,
+        name: 'Premium Phone Case',
+        price: 25.00,
+        quantity: 2,
+        image: '/placeholder.svg',
+        sku: 'PPC-002'
+      }
+    ],
+    shippingAddress: {
+      name: 'John Doe',
+      street: '123 Main Street',
+      city: 'New York',
+      state: 'NY',
+      zipCode: '10001',
+      country: 'United States'
+    },
+    billingAddress: {
+      name: 'John Doe',
+      street: '123 Main Street',
+      city: 'New York',
+      state: 'NY',
+      zipCode: '10001',
+      country: 'United States'
+    },
+    paymentMethod: {
+      type: 'Credit Card',
+      last4: '4242',
+      brand: 'Visa'
+    },
+    orderTimeline: [
+      {
+        status: 'Order Placed',
+        date: new Date('2024-01-15T10:30:00'),
+        completed: true
+      },
+      {
+        status: 'Payment Confirmed',
+        date: new Date('2024-01-15T10:32:00'),
+        completed: true
+      },
+      {
+        status: 'Processing',
+        date: new Date('2024-01-15T14:00:00'),
+        completed: true
+      },
+      {
+        status: 'Shipped',
+        date: new Date('2024-01-16T09:15:00'),
+        completed: true
+      },
+      {
+        status: 'Out for Delivery',
+        date: new Date('2024-01-19T08:00:00'),
+        completed: true
+      },
+      {
+        status: 'Delivered',
+        date: new Date('2024-01-19T14:30:00'),
+        completed: true
+      }
+    ]
   };
 
-  const handleDownloadInvoice = () => {
-    downloadInvoice(order);
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      case 'shipped':
+      case 'out for delivery':
+        return 'bg-blue-100 text-blue-800';
+      case 'processing':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold">Order {order.id}</h1>
-            <p className="text-gray-600">
-              Placed on {new Date(order.createdAt).toLocaleDateString()}
-            </p>
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center gap-4 mb-8">
+            <Link to="/orders">
+              <Button variant="outline" size="sm" className="flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back to Orders
+              </Button>
+            </Link>
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold">Order Details</h1>
+              <p className="text-gray-600">Order #{order.id}</p>
+            </div>
+            <Badge className={`${getStatusColor(order.status)} text-lg px-3 py-1`}>
+              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            </Badge>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Order Items */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
-                  Order Items
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {order.items.map((item, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 border rounded-lg">
-                      <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Main Content */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Order Timeline */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Order Timeline
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {order.orderTimeline.map((event, index) => (
+                      <div key={index} className="flex items-start gap-3">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                          event.completed ? 'bg-green-100' : 'bg-gray-100'
+                        }`}>
+                          {event.completed ? (
+                            <CheckCircle className="h-4 w-4 text-green-600" />
+                          ) : (
+                            <Clock className="h-4 w-4 text-gray-400" />
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h4 className={`font-medium ${event.completed ? 'text-gray-900' : 'text-gray-500'}`}>
+                            {event.status}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {event.date.toLocaleDateString()} at {event.date.toLocaleTimeString()}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Order Items */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Package className="h-5 w-5" />
+                    Order Items
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {order.items.map((item, index) => (
+                      <div key={index} className="flex items-start gap-4">
                         <img 
-                          src={item.product.images[0]} 
-                          alt={item.product.name}
-                          className="w-full h-full object-cover"
+                          src={item.image} 
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-md border"
                         />
+                        <div className="flex-1">
+                          <h4 className="font-medium">{item.name}</h4>
+                          <p className="text-sm text-gray-600">SKU: {item.sku}</p>
+                          <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                          <p className="text-sm text-gray-600">${item.price.toFixed(2)} each</p>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold">{item.product.name}</h3>
-                        <p className="text-gray-600">Quantity: {item.quantity}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">{formatCurrency(item.product.price)}</p>
-                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Shipping & Billing */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <MapPin className="h-5 w-5" />
+                      Shipping Address
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-sm">
+                      <p className="font-medium">{order.shippingAddress.name}</p>
+                      <p>{order.shippingAddress.street}</p>
+                      <p>
+                        {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
+                      </p>
+                      <p>{order.shippingAddress.country}</p>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                  </CardContent>
+                </Card>
 
-          {/* Order Summary & Details */}
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-between">
-                  <span>Status:</span>
-                  {getStatusBadge(order.status)}
-                </div>
-                <div className="flex justify-between">
-                  <span>Total:</span>
-                  <span className="font-semibold">{formatCurrency(order.totalAmount)}</span>
-                </div>
-                <Button 
-                  onClick={handleDownloadInvoice}
-                  variant="outline" 
-                  className="w-full flex items-center gap-2"
-                >
-                  <FileText className="h-4 w-4" />
-                  Download Invoice
-                </Button>
-              </CardContent>
-            </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CreditCard className="h-5 w-5" />
+                      Payment Method
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-sm">
+                      <p className="font-medium">{order.paymentMethod.type}</p>
+                      <p>{order.paymentMethod.brand} ending in {order.paymentMethod.last4}</p>
+                      <p className="text-gray-600 mt-2">
+                        Charged on {order.date.toLocaleDateString()}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
 
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  Shipping Address
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-sm space-y-1">
-                  <p className="font-semibold">{order.shippingAddress.fullName}</p>
-                  <p>{order.shippingAddress.addressLine1}</p>
-                  {order.shippingAddress.addressLine2 && (
-                    <p>{order.shippingAddress.addressLine2}</p>
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Order Summary */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Summary</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>${order.subtotal.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    <span>${order.shipping.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Tax</span>
+                    <span>${order.tax.toFixed(2)}</span>
+                  </div>
+                  <Separator />
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span>${order.total.toFixed(2)}</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Tracking Info */}
+              {order.trackingNumber && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Truck className="h-5 w-5" />
+                      Tracking
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div>
+                      <p className="text-sm text-gray-600">Tracking Number</p>
+                      <p className="font-mono text-sm">{order.trackingNumber}</p>
+                    </div>
+                    
+                    {order.status === 'delivered' ? (
+                      <div>
+                        <p className="text-sm text-gray-600">Delivered</p>
+                        <p className="font-medium text-green-600">
+                          {order.actualDelivery?.toLocaleDateString()}
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-sm text-gray-600">Estimated Delivery</p>
+                        <p className="font-medium">
+                          {order.estimatedDelivery.toLocaleDateString()}
+                        </p>
+                      </div>
+                    )}
+                    
+                    <Button className="w-full" size="sm">
+                      <Truck className="h-4 w-4 mr-2" />
+                      Track Package
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <InvoiceButton 
+                    order={{
+                      id: order.id,
+                      date: order.date,
+                      items: order.items.map(item => ({
+                        name: item.name,
+                        quantity: item.quantity,
+                        price: item.price
+                      })),
+                      subtotal: order.subtotal,
+                      shipping: order.shipping,
+                      tax: order.tax,
+                      total: order.total,
+                      shippingAddress: order.shippingAddress
+                    }}
+                    className="w-full"
+                  />
+                  
+                  <Button variant="outline" className="w-full" size="sm">
+                    <Mail className="h-4 w-4 mr-2" />
+                    Email Order Details
+                  </Button>
+                  
+                  {order.status === 'delivered' && (
+                    <Button variant="outline" className="w-full" size="sm">
+                      Return Items
+                    </Button>
                   )}
-                  <p>
-                    {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}
-                  </p>
-                  <p>{order.shippingAddress.country}</p>
-                </div>
-              </CardContent>
-            </Card>
+                  
+                  <Button variant="outline" className="w-full" size="sm">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Contact Support
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Order Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Order Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Order Date</span>
+                    <span>{order.date.toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Order ID</span>
+                    <span className="font-mono">{order.id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Items</span>
+                    <span>{order.items.length}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </main>

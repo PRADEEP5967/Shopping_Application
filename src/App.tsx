@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -16,6 +17,14 @@ import WishlistPage from '@/pages/WishlistPage';
 import Orders from '@/pages/Orders';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import Checkout from '@/pages/Checkout';
+import OrderConfirmation from '@/pages/OrderConfirmation';
+import FAQ from '@/pages/FAQ';
+import ReturnPolicy from '@/pages/ReturnPolicy';
+import ShoppingPolicy from '@/pages/ShoppingPolicy';
+import NewArrivals from '@/pages/NewArrivals';
+import OrderHistory from '@/pages/OrderHistory';
+import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
@@ -48,6 +57,14 @@ function App() {
                     <Route path="/my-account" element={<MyAccount />} />
                     <Route path="/wishlist" element={<WishlistPage />} />
                     <Route path="/orders" element={<Orders />} />
+                    <Route path="/checkout" element={<Checkout />} />
+                    <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                    <Route path="/order-history" element={<OrderHistory />} />
+                    <Route path="/order-detail/:orderId" element={<OrderDetail />} />
+                    <Route path="/new-arrivals" element={<NewArrivals />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/return-policy" element={<ReturnPolicy />} />
+                    <Route path="/shipping-policy" element={<ShoppingPolicy />} />
                     <Route path="/about-us" element={<About />} />
                     <Route path="/contact-us" element={<Contact />} />
                     
