@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -28,6 +27,7 @@ import AdminCategories from '@/pages/admin/Categories';
 import AdminDiscounts from '@/pages/admin/Discounts';
 import AdminAnalytics from '@/pages/admin/Analytics';
 import AdminActivity from '@/pages/admin/Activity';
+import AdminABTesting from '@/pages/admin/ABTesting';
 
 function App() {
   return (
@@ -95,6 +95,11 @@ function App() {
                     <Route path="/admin/activity" element={
                       <AdminDashboardLayout title="Activity Log">
                         <AdminActivity />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/ab-testing" element={
+                      <AdminDashboardLayout title="A/B Testing">
+                        <AdminABTesting />
                       </AdminDashboardLayout>
                     } />
                     

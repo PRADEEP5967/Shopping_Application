@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -162,6 +161,14 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 >
                   <History className="mr-2 h-4 w-4" />
                   Order History
+                </Button>
+                <Button 
+                  variant={isActive('/admin/ab-testing') ? "default" : "ghost"} 
+                  className="w-full justify-start"
+                  onClick={() => navigate('/admin/ab-testing')}
+                >
+                  <BarChart3 className="mr-2 h-4 w-4" />
+                  A/B Testing
                 </Button>
               </div>
             </div>
