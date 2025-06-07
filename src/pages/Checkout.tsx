@@ -12,12 +12,11 @@ import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { CreditCard, Truck, MapPin, User, Lock } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 const Checkout = () => {
-  const { items, total, clearCart } = useCart();
+  const { items, subtotal, clearCart } = useCart();
   const { user } = useAuth();
-  const { toast } = useToast();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -60,18 +59,15 @@ const Checkout = () => {
     // Clear cart and redirect
     clearCart();
     
-    toast({
-      title: "Order Placed Successfully!",
-      description: `Your order ${orderId} has been confirmed.`,
-    });
+    toast.success(`Order ${orderId} has been confirmed!`);
     
     navigate(`/order-confirmation?orderId=${orderId}`);
     setIsProcessing(false);
   };
 
-  const shippingCost = total > 50 ? 0 : 9.99;
-  const tax = total * 0.08;
-  const finalTotal = total + shippingCost + tax;
+  const shippingCost = subtotal > 50 ? 0 : 9.99;
+  const tax = subtotal * 0.08;
+  const finalTotal = subtotal + shippingCost + tax;
 
   if (items.length === 0) {
     return (
@@ -257,24 +253,30 @@ const Checkout = () => {
                 <CardTitle>Order Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {items.map((item) => (
-                  <div key={item.id} className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="font-medium">{item.name}</h4>
-                      <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                {items.map((item) => {
+                  const price = item.variant ? item.variant.price : item.product.price;
+                  return (
+                    <div key={`${item.product.id}-${item.variant?.id || 'default'}`} className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <h4 className="font-medium">{item.product.name}</h4>
+                        <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                        {item.variant && (
+                          <p className="text-sm text-gray-500">{item.variant.name}</p>
+                        )}
+                      </div>
+                      <span className="font-medium">
+                        ${(price * item.quantity).toFixed(2)}
+                      </span>
                     </div>
-                    <span className="font-medium">
-                      ${(item.price * item.quantity).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
+                  );
+                })}
                 
                 <Separator />
                 
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>${total.toFixed(2)}</span>
+                    <span>${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shipping</span>
@@ -291,7 +293,7 @@ const Checkout = () => {
                   </div>
                 </div>
 
-                {total > 50 && (
+                {subtotal > 50 && (
                   <Badge variant="secondary" className="w-full justify-center">
                     🎉 Free shipping applied!
                   </Badge>

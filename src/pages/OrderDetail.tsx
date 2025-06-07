@@ -21,11 +21,40 @@ import {
   Phone
 } from 'lucide-react';
 import InvoiceButton from '@/components/InvoiceButton';
+import { CartItem, Product } from '@/types';
 
 const OrderDetail = () => {
   const { orderId } = useParams();
 
-  // Mock order data - in real app, fetch based on orderId
+  // Create proper mock products that match the Product type
+  const mockProducts: Product[] = [
+    {
+      id: '1',
+      name: 'Wireless Bluetooth Headphones',
+      description: 'High-quality wireless headphones',
+      price: 79.99,
+      category: 'Electronics',
+      images: ['/placeholder.svg'],
+      rating: 4.5,
+      reviewCount: 120,
+      inStock: true,
+      brand: 'AudioTech'
+    },
+    {
+      id: '2',
+      name: 'Premium Phone Case',
+      description: 'Protective phone case',
+      price: 25.00,
+      category: 'Accessories',
+      images: ['/placeholder.svg'],
+      rating: 4.0,
+      reviewCount: 85,
+      inStock: true,
+      brand: 'ProtectPro'
+    }
+  ];
+
+  // Mock order data with proper types
   const order = {
     id: orderId || 'ORD-2024-001',
     date: new Date('2024-01-15'),
@@ -39,36 +68,30 @@ const OrderDetail = () => {
     actualDelivery: new Date('2024-01-19'),
     items: [
       {
-        id: 1,
-        name: 'Wireless Bluetooth Headphones',
-        price: 79.99,
-        quantity: 1,
-        image: '/placeholder.svg',
-        sku: 'WBH-001'
+        product: mockProducts[0],
+        quantity: 1
       },
       {
-        id: 2,
-        name: 'Premium Phone Case',
-        price: 25.00,
-        quantity: 2,
-        image: '/placeholder.svg',
-        sku: 'PPC-002'
+        product: mockProducts[1],
+        quantity: 2
       }
-    ],
+    ] as CartItem[],
     shippingAddress: {
-      name: 'John Doe',
-      street: '123 Main Street',
+      fullName: 'John Doe',
+      addressLine1: '123 Main Street',
+      addressLine2: '',
       city: 'New York',
       state: 'NY',
-      zipCode: '10001',
+      postalCode: '10001',
       country: 'United States'
     },
     billingAddress: {
-      name: 'John Doe',
-      street: '123 Main Street',
+      fullName: 'John Doe',
+      addressLine1: '123 Main Street',
+      addressLine2: '',
       city: 'New York',
       state: 'NY',
-      zipCode: '10001',
+      postalCode: '10001',
       country: 'United States'
     },
     paymentMethod: {
@@ -200,18 +223,18 @@ const OrderDetail = () => {
                     {order.items.map((item, index) => (
                       <div key={index} className="flex items-start gap-4">
                         <img 
-                          src={item.image} 
-                          alt={item.name}
+                          src={item.product.images[0]} 
+                          alt={item.product.name}
                           className="w-16 h-16 object-cover rounded-md border"
                         />
                         <div className="flex-1">
-                          <h4 className="font-medium">{item.name}</h4>
-                          <p className="text-sm text-gray-600">SKU: {item.sku}</p>
+                          <h4 className="font-medium">{item.product.name}</h4>
+                          <p className="text-sm text-gray-600">SKU: {item.product.id}</p>
                           <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">${(item.price * item.quantity).toFixed(2)}</p>
-                          <p className="text-sm text-gray-600">${item.price.toFixed(2)} each</p>
+                          <p className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</p>
+                          <p className="text-sm text-gray-600">${item.product.price.toFixed(2)} each</p>
                         </div>
                       </div>
                     ))}
@@ -230,10 +253,13 @@ const OrderDetail = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="text-sm">
-                      <p className="font-medium">{order.shippingAddress.name}</p>
-                      <p>{order.shippingAddress.street}</p>
+                      <p className="font-medium">{order.shippingAddress.fullName}</p>
+                      <p>{order.shippingAddress.addressLine1}</p>
+                      {order.shippingAddress.addressLine2 && (
+                        <p>{order.shippingAddress.addressLine2}</p>
+                      )}
                       <p>
-                        {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.zipCode}
+                        {order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}
                       </p>
                       <p>{order.shippingAddress.country}</p>
                     </div>
@@ -338,9 +364,9 @@ const OrderDetail = () => {
                       id: order.id,
                       date: order.date,
                       items: order.items.map(item => ({
-                        name: item.name,
+                        name: item.product.name,
                         quantity: item.quantity,
-                        price: item.price
+                        price: item.product.price
                       })),
                       subtotal: order.subtotal,
                       shipping: order.shipping,
