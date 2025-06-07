@@ -39,6 +39,7 @@ import AdminOrders from '@/pages/admin/Orders';
 import AdminCustomers from '@/pages/admin/Customers';
 import AdminCategories from '@/pages/admin/Categories';
 import AdminDiscounts from '@/pages/admin/Discounts';
+import AdminInventory from '@/pages/admin/Inventory';
 import AdminAnalytics from '@/pages/admin/Analytics';
 import AdminActivity from '@/pages/admin/Activity';
 import AdminABTesting from '@/pages/admin/ABTesting';
@@ -116,6 +117,11 @@ function App() {
                     <Route path="/admin/discounts" element={
                       <AdminDashboardLayout title="Discount Management">
                         <AdminDiscounts />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/inventory" element={
+                      <AdminDashboardLayout title="Inventory Management">
+                        <AdminInventory />
                       </AdminDashboardLayout>
                     } />
                     <Route path="/admin/analytics" element={

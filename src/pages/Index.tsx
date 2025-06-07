@@ -4,15 +4,21 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import Hero from '@/components/Hero';
-import ProductGrid from '@/components/ProductGrid';
-import FeaturedCategories from '@/components/FeaturedCategories';
+import CategoryNav from '@/components/CategoryNav';
+import ModernCategoryNav from '@/components/ModernCategoryNav';
+import DealsSection from '@/components/DealsSection';
+import TrendingProducts from '@/components/TrendingProducts';
 import PromoFeatures from '@/components/PromoFeatures';
 import Testimonials from '@/components/Testimonials';
-import CategoryNav from '@/components/CategoryNav';
-import TrendingProducts from '@/components/TrendingProducts';
-import DealsSection from '@/components/DealsSection';
-import ModernCategoryNav from '@/components/ModernCategoryNav';
+import ProductGrid from '@/components/ProductGrid';
+import FeaturedCategories from '@/components/FeaturedCategories';
+
+// Modern Components
+import { ModernHero } from '@/components/modern/ModernHero';
+import { ModernFeatures } from '@/components/modern/ModernFeatures';
+import { ModernCTA } from '@/components/modern/ModernCTA';
+import { ModernTestimonials } from '@/components/modern/ModernTestimonials';
+import { StatsSection } from '@/components/modern/StatsSection';
 
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import { Button } from '@/components/ui/button';
@@ -30,11 +36,15 @@ const Index = () => {
       <CategoryNav categories={categories} />
       
       <main className="flex-grow">
-        <Hero />
+        {/* Modern Hero Section */}
+        <ModernHero />
         
         <ModernCategoryNav />
         
         <DealsSection />
+        
+        {/* Modern Features Section */}
+        <ModernFeatures />
         
         <div className="container mx-auto px-4 py-12">
           <ProductGrid 
@@ -55,8 +65,17 @@ const Index = () => {
         
         <TrendingProducts products={featuredProducts.slice(4, 8)} />
         
+        <StatsSection />
+        
         <PromoFeatures />
+        
+        {/* Modern Testimonials */}
+        <ModernTestimonials />
+        
         <Testimonials />
+        
+        {/* Modern CTA Section */}
+        <ModernCTA />
         
         {/* Newsletter Section */}
         <section className="py-12 bg-gradient-to-r from-primary to-primary/80 text-white">

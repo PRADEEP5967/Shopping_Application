@@ -21,6 +21,7 @@ import {
   Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import AdminInventory from '@/pages/admin/Inventory';
 
 interface AdminDashboardLayoutProps {
   children: React.ReactNode;
@@ -80,6 +81,15 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
               >
                 <Package className="mr-2 h-4 w-4" />
                 Products
+              </Button>
+              
+              <Button 
+                variant={isActive('/admin/inventory') ? "default" : "ghost"} 
+                className="w-full justify-start" 
+                onClick={() => navigate('/admin/inventory')}
+              >
+                <Inbox className="mr-2 h-4 w-4" />
+                Inventory
               </Button>
               
               <Button 
