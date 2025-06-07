@@ -22,6 +22,7 @@ import OrderConfirmation from '@/pages/OrderConfirmation';
 import FAQ from '@/pages/FAQ';
 import ReturnPolicy from '@/pages/ReturnPolicy';
 import ShoppingPolicy from '@/pages/ShoppingPolicy';
+import TermsOfService from '@/pages/TermsOfService';
 import NewArrivals from '@/pages/NewArrivals';
 import OrderHistory from '@/pages/OrderHistory';
 import OrderDetail from '@/pages/OrderDetail';
@@ -37,6 +38,10 @@ import AdminDiscounts from '@/pages/admin/Discounts';
 import AdminAnalytics from '@/pages/admin/Analytics';
 import AdminActivity from '@/pages/admin/Activity';
 import AdminABTesting from '@/pages/admin/ABTesting';
+import AdminSettings from '@/pages/admin/Settings';
+import AdminNotifications from '@/pages/admin/Notifications';
+import AdminHelp from '@/pages/admin/Help';
+import AdminPages from '@/pages/admin/Pages';
 
 function App() {
   return (
@@ -117,6 +122,26 @@ function App() {
                     <Route path="/admin/ab-testing" element={
                       <AdminDashboardLayout title="A/B Testing">
                         <AdminABTesting />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/settings" element={
+                      <AdminDashboardLayout title="Settings">
+                        <AdminSettings />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/notifications" element={
+                      <AdminDashboardLayout title="Notifications">
+                        <AdminNotifications />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/help" element={
+                      <AdminDashboardLayout title="Help & Documentation">
+                        <AdminHelp />
+                      </AdminDashboardLayout>
+                    } />
+                    <Route path="/admin/pages" element={
+                      <AdminDashboardLayout title="Page Management">
+                        <AdminPages />
                       </AdminDashboardLayout>
                     } />
                     
