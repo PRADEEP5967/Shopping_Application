@@ -17,6 +17,10 @@ import WishlistPage from '@/pages/WishlistPage';
 import Orders from '@/pages/Orders';
 import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import Services from '@/pages/Services';
+import Portfolio from '@/pages/Portfolio';
+import Team from '@/pages/Team';
+import Blog from '@/pages/Blog';
 import Checkout from '@/pages/Checkout';
 import OrderConfirmation from '@/pages/OrderConfirmation';
 import FAQ from '@/pages/FAQ';
@@ -70,8 +74,13 @@ function App() {
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/return-policy" element={<ReturnPolicy />} />
                     <Route path="/shipping-policy" element={<ShoppingPolicy />} />
+                    <Route path="/terms-of-service" element={<TermsOfService />} />
                     <Route path="/about-us" element={<About />} />
                     <Route path="/contact-us" element={<Contact />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/portfolio" element={<Portfolio />} />
+                    <Route path="/team" element={<Team />} />
+                    <Route path="/blog" element={<Blog />} />
                     
                     {/* Admin Routes */}
                     <Route path="/admin" element={
