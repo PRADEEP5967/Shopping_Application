@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -361,12 +362,10 @@ const OrderDetail = () => {
                   <InvoiceButton 
                     order={{
                       id: order.id,
-                      date: order.date,
+                      createdAt: order.date.toISOString(),
                       items: order.items,
-                      subtotal: order.subtotal,
-                      shipping: order.shipping,
-                      tax: order.tax,
-                      total: order.total,
+                      totalAmount: order.total,
+                      status: order.status as 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled',
                       shippingAddress: order.shippingAddress
                     }}
                     className="w-full"
