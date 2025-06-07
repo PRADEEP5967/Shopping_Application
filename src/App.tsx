@@ -31,6 +31,14 @@ import NewArrivals from '@/pages/NewArrivals';
 import OrderHistory from '@/pages/OrderHistory';
 import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
+
+// Category Pages
+import AccessoriesPage from '@/pages/AccessoriesPage';
+import ShoesPage from '@/pages/ShoesPage';
+import ClothingPage from '@/pages/ClothingPage';
+import ElectronicsPage from '@/pages/ElectronicsPage';
+
+// Admin Pages
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
 import AdminProductAdd from '@/pages/AdminProductAdd';
@@ -63,6 +71,13 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/categories" element={<CategoryPage />} />
+                    
+                    {/* Category Pages */}
+                    <Route path="/accessories" element={<AccessoriesPage />} />
+                    <Route path="/shoes" element={<ShoesPage />} />
+                    <Route path="/clothing" element={<ClothingPage />} />
+                    <Route path="/electronics" element={<ElectronicsPage />} />
+                    
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/my-account" element={<MyAccount />} />
                     <Route path="/wishlist" element={<WishlistPage />} />

@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, Shield } from 'lucide-react';
+import { LogOut, Shield, ChevronRight } from 'lucide-react';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
@@ -18,21 +23,63 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
   if (!isMenuOpen) return null;
 
   return (
-    <div className="md:hidden bg-white shadow-md">
+    <div className="md:hidden bg-white shadow-md border-t">
       <div className="container mx-auto px-4 py-3 space-y-3">
-        <Link to="/" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+        <Link to="/" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
           Home
         </Link>
-        <Link to="/products" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-          Shop
+        
+        <Collapsible>
+          <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-gray-600 hover:text-primary font-medium transition-colors">
+            Shop
+            <ChevronRight className="h-4 w-4 transition-transform duration-200" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 pl-4">
+            <Link to="/accessories" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Accessories
+            </Link>
+            <Link to="/shoes" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Shoes
+            </Link>
+            <Link to="/clothing" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Clothing
+            </Link>
+            <Link to="/electronics" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Electronics
+            </Link>
+            <Link to="/products" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              All Products
+            </Link>
+          </CollapsibleContent>
+        </Collapsible>
+
+        <Collapsible>
+          <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-gray-600 hover:text-primary font-medium transition-colors">
+            Categories
+            <ChevronRight className="h-4 w-4 transition-transform duration-200" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-2 pl-4">
+            <Link to="/categories" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              All Categories
+            </Link>
+            <Link to="/new-arrivals" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              New Arrivals
+            </Link>
+          </CollapsibleContent>
+        </Collapsible>
+        
+        <Link to="/about-us" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          About
         </Link>
-        <Link to="/categories" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
-          Categories
+        
+        <Link to="/contact-us" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          Contact
         </Link>
-        <Link to="/wishlist" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+        
+        <Link to="/wishlist" className="block py-2 text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
           Wishlist
         </Link>
-        <Link to="/my-account" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+        <Link to="/my-account" className="block py-2 text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
           Account
         </Link>
         
@@ -60,7 +107,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
             </Button>
           </>
         ) : (
-          <Link to="/login" className="block py-2 text-gray-600 hover:text-primary" onClick={() => setIsMenuOpen(false)}>
+          <Link to="/login" className="block py-2 text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
             Login
           </Link>
         )}
