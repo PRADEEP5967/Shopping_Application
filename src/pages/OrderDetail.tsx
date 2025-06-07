@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -363,11 +362,7 @@ const OrderDetail = () => {
                     order={{
                       id: order.id,
                       date: order.date,
-                      items: order.items.map(item => ({
-                        name: item.product.name,
-                        quantity: item.quantity,
-                        price: item.product.price
-                      })),
+                      items: order.items,
                       subtotal: order.subtotal,
                       shipping: order.shipping,
                       tax: order.tax,
