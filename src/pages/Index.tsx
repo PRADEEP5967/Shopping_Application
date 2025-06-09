@@ -12,6 +12,7 @@ import PromoFeatures from '@/components/PromoFeatures';
 import Testimonials from '@/components/Testimonials';
 import ProductGrid from '@/components/ProductGrid';
 import FeaturedCategories from '@/components/FeaturedCategories';
+import SmartRecommendations from '@/components/SmartRecommendations';
 
 // Modern Components
 import { ModernHero } from '@/components/modern/ModernHero';
@@ -22,14 +23,14 @@ import { StatsSection } from '@/components/modern/StatsSection';
 
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Gift, Zap } from 'lucide-react';
 
 const Index = () => {
   const featuredProducts = getFeaturedProducts();
   const categories = getProductCategories();
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <Navbar />
       <CartFlyout />
       
@@ -41,31 +42,94 @@ const Index = () => {
         
         <ModernCategoryNav />
         
+        {/* Smart Recommendations Section */}
+        <section className="py-16 bg-white dark:bg-gray-900">
+          <div className="container mx-auto px-4">
+            <SmartRecommendations />
+          </div>
+        </section>
+        
         <DealsSection />
         
         {/* Modern Features Section */}
         <ModernFeatures />
         
-        <div className="container mx-auto px-4 py-12">
-          <ProductGrid 
-            products={featuredProducts.slice(0, 4)} 
-            title="Featured Products"
-            subtitle="Our most popular products handpicked by our team"
-          />
-          <div className="text-center mt-8">
-            <Link to="/products">
-              <Button variant="outline" size="lg" className="flex items-center gap-2 hover:bg-primary hover:text-white transition-all">
-                View All Products <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+        {/* Featured Products with Modern Design */}
+        <section className="py-16 bg-gray-50 dark:bg-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full mb-4">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-primary font-medium">Handpicked for You</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Featured Products
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Discover our most popular products, carefully selected by our team to bring you the best shopping experience.
+              </p>
+            </div>
+            
+            <ProductGrid 
+              products={featuredProducts.slice(0, 8)} 
+              title=""
+              subtitle=""
+            />
+            
+            <div className="text-center mt-12">
+              <Link to="/products">
+                <Button size="lg" className="group hover:scale-105 transition-all duration-200">
+                  View All Products 
+                  <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
           </div>
-        </div>
+        </section>
         
         <FeaturedCategories />
         
         <TrendingProducts products={featuredProducts.slice(4, 8)} />
         
         <StatsSection />
+        
+        {/* Enhanced Promo Features */}
+        <section className="py-16 bg-gradient-to-r from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-900/20 dark:to-purple-900/20">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Why Choose NextCommerce?</h2>
+              <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Experience the future of online shopping with our cutting-edge features and exceptional service.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Gift className="h-8 w-8 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Free Shipping</h3>
+                <p className="text-gray-600 dark:text-gray-400">Free shipping on orders over $50. No minimum purchase required for premium members.</p>
+              </div>
+              
+              <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+                <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Zap className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Fast Delivery</h3>
+                <p className="text-gray-600 dark:text-gray-400">Lightning-fast delivery with same-day shipping available in major cities.</p>
+              </div>
+              
+              <div className="text-center p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+                <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Sparkles className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Premium Quality</h3>
+                <p className="text-gray-600 dark:text-gray-400">Carefully curated products from trusted brands with quality guarantee.</p>
+              </div>
+            </div>
+          </div>
+        </section>
         
         <PromoFeatures />
         
@@ -77,26 +141,38 @@ const Index = () => {
         {/* Modern CTA Section */}
         <ModernCTA />
         
-        {/* Newsletter Section */}
-        <section className="py-12 bg-gradient-to-r from-primary to-primary/80 text-white">
-          <div className="container mx-auto px-4">
+        {/* Enhanced Newsletter Section */}
+        <section className="py-16 bg-gradient-to-r from-primary via-blue-600 to-purple-600 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent"></div>
+          
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl font-bold mb-4 animate-fade-in">Stay Updated</h2>
-              <p className="mb-6 animate-fade-in">Subscribe to our newsletter for exclusive deals and updates on new products.</p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 rounded-full mb-6">
+                <Sparkles className="h-4 w-4" />
+                <span className="font-medium">Exclusive Offers</span>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 animate-fade-in">
+                Stay in the Loop
+              </h2>
+              <p className="text-xl mb-8 text-white/90 animate-fade-in">
+                Subscribe to our newsletter for exclusive deals, early access to new products, and personalized recommendations.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                 <input 
                   type="email" 
-                  placeholder="Your email address"
-                  className="px-4 py-3 rounded-md text-gray-900 w-full sm:w-auto sm:min-w-[300px] focus:ring-2 focus:ring-white"
+                  placeholder="Enter your email address"
+                  className="flex-1 px-6 py-4 rounded-xl text-gray-900 placeholder-gray-500 border-0 focus:ring-4 focus:ring-white/30 transition-all"
                 />
-                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 hover:scale-105 transition-transform">
+                <Button size="lg" className="bg-white text-primary hover:bg-gray-100 px-8 py-4 rounded-xl font-semibold hover:scale-105 transition-all duration-200">
                   Subscribe
                 </Button>
               </div>
               
-              <p className="text-sm mt-4 text-white/80">
-                By subscribing, you agree to our Privacy Policy and consent to receive updates from our company.
+              <p className="text-sm mt-6 text-white/80">
+                Join 50,000+ shoppers who save with our exclusive deals. Unsubscribe anytime.
               </p>
             </div>
           </div>
