@@ -32,6 +32,8 @@ import NewArrivals from '@/pages/NewArrivals';
 import OrderHistory from '@/pages/OrderHistory';
 import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
+import DealsDiscounts from '@/pages/DealsDiscounts';
+import ReturnsExchanges from '@/pages/ReturnsExchanges';
 
 // New Pages
 import Performance from '@/pages/Performance';
@@ -77,6 +79,8 @@ function App() {
                     <Route path="/performance" element={<Performance />} />
                     <Route path="/efficiency" element={<Efficiency />} />
                     <Route path="/quality" element={<Quality />} />
+                    <Route path="/deals-discounts" element={<DealsDiscounts />} />
+                    <Route path="/returns-exchanges" element={<ReturnsExchanges />} />
                     
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/my-account" element={<MyAccount />} />
