@@ -93,11 +93,6 @@ const ModernProductCard: React.FC<ModernProductCardProps> = ({
                 -{discountPercentage}%
               </Badge>
             )}
-            {product.featured && (
-              <Badge className="bg-blue-500 text-white">
-                Featured
-              </Badge>
-            )}
           </div>
 
           {/* Action Buttons */}
