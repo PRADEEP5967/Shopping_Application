@@ -1,0 +1,161 @@
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
+import CartFlyout from '@/components/CartFlyout';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ArrowRight, Grid3X3, Sparkles, Zap, Package } from 'lucide-react';
+
+const CategoriesPage = () => {
+  const categories = [
+    {
+      name: 'Accessories',
+      description: 'Bags, wallets, belts & lifestyle accessories',
+      icon: Package,
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'from-purple-50 to-pink-50',
+      link: '/accessories',
+      count: '25+ items'
+    },
+    {
+      name: 'Shoes',
+      description: 'Athletic, casual & formal footwear',
+      icon: Zap,
+      color: 'from-blue-500 to-cyan-500',
+      bgColor: 'from-blue-50 to-cyan-50',
+      link: '/shoes',
+      count: '40+ items'
+    },
+    {
+      name: 'Clothing',
+      description: 'T-shirts, jackets & premium apparel',
+      icon: Sparkles,
+      color: 'from-green-500 to-emerald-500',
+      bgColor: 'from-green-50 to-emerald-50',
+      link: '/clothing',
+      count: '60+ items'
+    },
+    {
+      name: 'Electronics',
+      description: 'Gadgets, audio & smart devices',
+      icon: Grid3X3,
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'from-orange-50 to-red-50',
+      link: '/electronics',
+      count: '30+ items'
+    }
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <CartFlyout />
+      
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="relative py-20 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-4xl mx-auto text-center">
+              <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 animate-fade-in">
+                <Grid3X3 className="w-3 h-3 mr-1" />
+                All Categories
+              </Badge>
+              
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
+                Shop by Category
+              </h1>
+              
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
+                Discover our complete range of products across different categories. Find exactly what you're looking for with ease.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Categories Grid */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {categories.map((category, index) => {
+                const IconComponent = category.icon;
+                return (
+                  <Link 
+                    key={category.name} 
+                    to={category.link}
+                    className="group block animate-fade-in hover:scale-105 transition-all duration-300"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className={`relative p-8 rounded-2xl bg-gradient-to-br ${category.bgColor} border border-gray-100 shadow-sm group-hover:shadow-xl transition-all duration-300 overflow-hidden`}>
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
+                        <div className={`w-full h-full bg-gradient-to-br ${category.color}`} />
+                      </div>
+                      
+                      <div className="relative z-10">
+                        <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${category.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="w-8 h-8 text-white" />
+                        </div>
+                        
+                        <h3 className="text-xl font-bold mb-2 text-gray-900">{category.name}</h3>
+                        <p className="text-gray-600 mb-4 text-sm leading-relaxed">{category.description}</p>
+                        
+                        <div className="flex items-center justify-between">
+                          <Badge variant="secondary" className="text-xs">
+                            {category.count}
+                          </Badge>
+                          <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4 animate-fade-in">Why Shop by Category?</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto animate-fade-in">
+                Browse our organized categories to find products that match your specific needs and preferences.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center animate-fade-in">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Grid3X3 className="w-8 h-8 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Organized Shopping</h3>
+                <p className="text-gray-600">Find products easily with our well-organized category structure.</p>
+              </div>
+              <div className="text-center animate-fade-in">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Quick Discovery</h3>
+                <p className="text-gray-600">Discover new products and brands within your favorite categories.</p>
+              </div>
+              <div className="text-center animate-fade-in">
+                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="w-8 h-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Curated Selection</h3>
+                <p className="text-gray-600">Every category features hand-picked, high-quality products.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <Footer />
+    </div>
+  );
+};
+
+export default CategoriesPage;

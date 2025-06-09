@@ -9,7 +9,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { cn } from '@/lib/utils';
 
 const DesktopNavigation = () => {
   return (
@@ -75,27 +74,9 @@ const DesktopNavigation = () => {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-gray-600 hover:text-primary transition-colors font-medium bg-transparent">
+            <Link to="/categories" className="text-gray-600 hover:text-primary transition-colors font-medium">
               Categories
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <div className="w-[400px] p-4">
-                <div className="grid grid-cols-1 gap-2">
-                  <NavigationMenuLink asChild>
-                    <Link to="/categories" className="block p-3 rounded-md hover:bg-gray-50 transition-colors">
-                      <div className="font-medium text-gray-900">All Categories</div>
-                      <div className="text-sm text-gray-500">Browse all product categories</div>
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link to="/new-arrivals" className="block p-3 rounded-md hover:bg-gray-50 transition-colors">
-                      <div className="font-medium text-gray-900">New Arrivals</div>
-                      <div className="text-sm text-gray-500">Latest products and collections</div>
-                    </Link>
-                  </NavigationMenuLink>
-                </div>
-              </div>
-            </NavigationMenuContent>
+            </Link>
           </NavigationMenuItem>
 
           <NavigationMenuItem>

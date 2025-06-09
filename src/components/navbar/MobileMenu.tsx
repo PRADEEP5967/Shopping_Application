@@ -53,20 +53,9 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
           </CollapsibleContent>
         </Collapsible>
 
-        <Collapsible>
-          <CollapsibleTrigger className="flex items-center justify-between w-full py-2 text-gray-600 hover:text-primary font-medium transition-colors">
-            Categories
-            <ChevronRight className="h-4 w-4 transition-transform duration-200" />
-          </CollapsibleTrigger>
-          <CollapsibleContent className="space-y-2 pl-4">
-            <Link to="/categories" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              All Categories
-            </Link>
-            <Link to="/new-arrivals" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              New Arrivals
-            </Link>
-          </CollapsibleContent>
-        </Collapsible>
+        <Link to="/categories" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          Categories
+        </Link>
         
         <Link to="/about-us" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
           About

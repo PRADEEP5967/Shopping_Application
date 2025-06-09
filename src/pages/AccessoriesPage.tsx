@@ -8,11 +8,17 @@ import ProductGrid from '@/components/ProductGrid';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Star, TrendingUp } from 'lucide-react';
+import { ArrowRight, Star, TrendingUp, Package, Heart, Shield } from 'lucide-react';
 
 const AccessoriesPage = () => {
   const allProducts = getAllProducts();
   const accessoriesProducts = allProducts.filter(product => product.category === 'Accessories');
+
+  const subcategories = [
+    { name: 'Bags & Backpacks', icon: Package, count: '15+' },
+    { name: 'Wallets & Cases', icon: Shield, count: '8+' },
+    { name: 'Lifestyle', icon: Heart, count: '12+' }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -52,8 +58,35 @@ const AccessoriesPage = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
+        {/* Subcategories */}
         <section className="py-12 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-2">Browse Subcategories</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {subcategories.map((sub, index) => {
+                const IconComponent = sub.icon;
+                return (
+                  <div key={sub.name} className="group p-6 bg-gray-50 rounded-xl hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer animate-fade-in">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center transition-all">
+                        <IconComponent className="w-6 h-6 text-primary group-hover:text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{sub.name}</h3>
+                        <p className="text-sm text-gray-600 group-hover:text-white/80">{sub.count} products</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Section */}
+        <section className="py-12 bg-gradient-to-r from-primary/5 to-accent/5">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div className="animate-fade-in">

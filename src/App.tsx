@@ -11,6 +11,7 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Products from '@/pages/Products';
 import CategoryPage from '@/pages/CategoryPage';
+import CategoriesPage from '@/pages/CategoriesPage';
 import ProductDetail from '@/pages/ProductDetail';
 import MyAccount from '@/pages/MyAccount';
 import WishlistPage from '@/pages/WishlistPage';
@@ -70,7 +71,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/products" element={<Products />} />
-                    <Route path="/categories" element={<CategoryPage />} />
+                    <Route path="/categories" element={<CategoriesPage />} />
+                    <Route path="/category/:categoryName" element={<CategoryPage />} />
                     
                     {/* Category Pages */}
                     <Route path="/accessories" element={<AccessoriesPage />} />
