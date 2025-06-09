@@ -52,8 +52,8 @@ const Contact = () => {
                     <h3 className="font-medium text-lg">Our Location</h3>
                     <p className="text-gray-600">
                       123 Tech Avenue<br />
-                      San Francisco, CA 94107<br />
-                      United States
+                      Noida<br />
+                      India
                     </p>
                   </div>
                 </div>
@@ -65,8 +65,8 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium text-lg">Call Us</h3>
                     <p className="text-gray-600">
-                      Customer Service: (800) 123-4567<br />
-                      Support: (800) 765-4321
+                      Customer Service: 8130885013<br />
+                      Support: 8130885013
                     </p>
                   </div>
                 </div>
@@ -164,16 +164,16 @@ const Contact = () => {
           </div>
         </div>
         
-        {/* Map */}
+        {/* Map - Updated for Noida, India */}
         <div className="w-full h-96 bg-gray-200 mt-12">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.0952767311126!2d-122.39568518426471!3d37.78198957975714!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807ded297e89%3A0x9cdf14f4c51c0bc6!2s123%20Main%20St%2C%20San%20Francisco%2C%20CA%2094105!5e0!3m2!1sen!2sus!4v1620942834995!5m2!1sen!2sus"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224346.48127602546!2d77.04417840000001!3d28.5272803!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5a43173357b%3A0x37ffce30c87cc03f!2sNoida%2C%20Uttar%20Pradesh%2C%20India!5e0!3m2!1sen!2sus!4v1620942834995!5m2!1sen!2sus"
             width="100%"
             height="100%"
             style={{ border: 0 }}
             allowFullScreen
             loading="lazy"
-            title="Our location"
+            title="Our location in Noida, India"
           ></iframe>
         </div>
       </main>

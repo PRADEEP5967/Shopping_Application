@@ -33,12 +33,6 @@ import OrderHistory from '@/pages/OrderHistory';
 import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
 
-// Category Pages
-import AccessoriesPage from '@/pages/AccessoriesPage';
-import ShoesPage from '@/pages/ShoesPage';
-import ClothingPage from '@/pages/ClothingPage';
-import ElectronicsPage from '@/pages/ElectronicsPage';
-
 // New Pages
 import Performance from '@/pages/Performance';
 import Efficiency from '@/pages/Efficiency';
@@ -78,12 +72,6 @@ function App() {
                     <Route path="/products" element={<Products />} />
                     <Route path="/categories" element={<CategoriesPage />} />
                     <Route path="/category/:categoryName" element={<CategoryPage />} />
-                    
-                    {/* Category Pages */}
-                    <Route path="/accessories" element={<AccessoriesPage />} />
-                    <Route path="/shoes" element={<ShoesPage />} />
-                    <Route path="/clothing" element={<ClothingPage />} />
-                    <Route path="/electronics" element={<ElectronicsPage />} />
                     
                     {/* New Required Pages */}
                     <Route path="/performance" element={<Performance />} />
