@@ -35,26 +35,25 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
             <ChevronRight className="h-4 w-4 transition-transform duration-200" />
           </CollapsibleTrigger>
           <CollapsibleContent className="space-y-2 pl-4">
-            <Link to="/accessories" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Accessories
-            </Link>
-            <Link to="/shoes" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Shoes
-            </Link>
-            <Link to="/clothing" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Clothing
-            </Link>
-            <Link to="/electronics" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Electronics
-            </Link>
             <Link to="/products" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
               All Products
+            </Link>
+            <Link to="/categories" className="block py-2 text-sm text-gray-600 hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Categories
             </Link>
           </CollapsibleContent>
         </Collapsible>
 
-        <Link to="/categories" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
-          Categories
+        <Link to="/performance" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          Performance
+        </Link>
+        
+        <Link to="/efficiency" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          Efficiency
+        </Link>
+        
+        <Link to="/quality" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>
+          Quality
         </Link>
         
         <Link to="/about-us" className="block py-2 text-gray-600 hover:text-primary font-medium transition-colors" onClick={() => setIsMenuOpen(false)}>

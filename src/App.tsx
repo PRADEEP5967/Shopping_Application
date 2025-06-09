@@ -39,6 +39,11 @@ import ShoesPage from '@/pages/ShoesPage';
 import ClothingPage from '@/pages/ClothingPage';
 import ElectronicsPage from '@/pages/ElectronicsPage';
 
+// New Pages
+import Performance from '@/pages/Performance';
+import Efficiency from '@/pages/Efficiency';
+import Quality from '@/pages/Quality';
+
 // Admin Pages
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
 import AdminDashboard from '@/pages/AdminDashboard';
@@ -79,6 +84,11 @@ function App() {
                     <Route path="/shoes" element={<ShoesPage />} />
                     <Route path="/clothing" element={<ClothingPage />} />
                     <Route path="/electronics" element={<ElectronicsPage />} />
+                    
+                    {/* New Required Pages */}
+                    <Route path="/performance" element={<Performance />} />
+                    <Route path="/efficiency" element={<Efficiency />} />
+                    <Route path="/quality" element={<Quality />} />
                     
                     <Route path="/product/:id" element={<ProductDetail />} />
                     <Route path="/my-account" element={<MyAccount />} />

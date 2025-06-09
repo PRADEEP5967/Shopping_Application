@@ -73,15 +73,15 @@ const Footer = () => {
             <div className="space-y-2 pt-2">
               <div className="flex items-center space-x-3 text-sm">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>support@nextcommerce.com</span>
+                <span>pradeepsahani8130s@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3 text-sm">
                 <Phone className="h-4 w-4 text-primary" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 8130885013</span>
               </div>
               <div className="flex items-center space-x-3 text-sm">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span>123 Commerce St, Tech City</span>
+                <span>123 Commerce St, Tech City, Noida</span>
               </div>
             </div>
           </div>
@@ -96,23 +96,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/categories/electronics" className="text-gray-400 hover:text-primary transition-colors">
-                  Electronics
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories/wearables" className="text-gray-400 hover:text-primary transition-colors">
-                  Wearables
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories/smart-home" className="text-gray-400 hover:text-primary transition-colors">
-                  Smart Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/categories/computers" className="text-gray-400 hover:text-primary transition-colors">
-                  Computers
+                <Link to="/categories" className="text-gray-400 hover:text-primary transition-colors">
+                  Categories
                 </Link>
               </li>
               <li>
@@ -123,6 +108,21 @@ const Footer = () => {
               <li>
                 <Link to="/deals" className="text-gray-400 hover:text-primary transition-colors">
                   Deals & Discounts
+                </Link>
+              </li>
+              <li>
+                <Link to="/performance" className="text-gray-400 hover:text-primary transition-colors">
+                  Performance
+                </Link>
+              </li>
+              <li>
+                <Link to="/efficiency" className="text-gray-400 hover:text-primary transition-colors">
+                  Efficiency
+                </Link>
+              </li>
+              <li>
+                <Link to="/quality" className="text-gray-400 hover:text-primary transition-colors">
+                  Quality
                 </Link>
               </li>
             </ul>

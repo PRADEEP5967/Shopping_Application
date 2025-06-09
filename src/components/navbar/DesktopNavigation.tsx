@@ -26,46 +26,25 @@ const DesktopNavigation = () => {
               Shop
             </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <div className="grid w-[600px] grid-cols-2 gap-3 p-6">
+              <div className="grid w-[400px] grid-cols-1 gap-3 p-6">
                 <div className="space-y-3">
-                  <h3 className="font-medium text-sm text-gray-900 mb-3">Categories</h3>
+                  <h3 className="font-medium text-sm text-gray-900 mb-3">Products</h3>
                   <NavigationMenuLink asChild>
                     <Link 
-                      to="/accessories" 
+                      to="/products" 
                       className="block p-3 rounded-md hover:bg-gray-50 transition-colors group"
                     >
-                      <div className="font-medium text-gray-900 group-hover:text-primary">Accessories</div>
-                      <div className="text-sm text-gray-500">Bags, wallets, belts & more</div>
+                      <div className="font-medium text-gray-900 group-hover:text-primary">All Products</div>
+                      <div className="text-sm text-gray-500">Browse our complete catalog</div>
                     </Link>
                   </NavigationMenuLink>
                   <NavigationMenuLink asChild>
                     <Link 
-                      to="/shoes" 
+                      to="/categories" 
                       className="block p-3 rounded-md hover:bg-gray-50 transition-colors group"
                     >
-                      <div className="font-medium text-gray-900 group-hover:text-primary">Shoes</div>
-                      <div className="text-sm text-gray-500">Athletic, casual & formal footwear</div>
-                    </Link>
-                  </NavigationMenuLink>
-                </div>
-                <div className="space-y-3">
-                  <h3 className="font-medium text-sm text-gray-900 mb-3">More Categories</h3>
-                  <NavigationMenuLink asChild>
-                    <Link 
-                      to="/clothing" 
-                      className="block p-3 rounded-md hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className="font-medium text-gray-900 group-hover:text-primary">Clothing</div>
-                      <div className="text-sm text-gray-500">T-shirts, jackets & apparel</div>
-                    </Link>
-                  </NavigationMenuLink>
-                  <NavigationMenuLink asChild>
-                    <Link 
-                      to="/electronics" 
-                      className="block p-3 rounded-md hover:bg-gray-50 transition-colors group"
-                    >
-                      <div className="font-medium text-gray-900 group-hover:text-primary">Electronics</div>
-                      <div className="text-sm text-gray-500">Gadgets, audio & smart devices</div>
+                      <div className="font-medium text-gray-900 group-hover:text-primary">Categories</div>
+                      <div className="text-sm text-gray-500">Shop by product categories</div>
                     </Link>
                   </NavigationMenuLink>
                 </div>
@@ -74,11 +53,23 @@ const DesktopNavigation = () => {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link to="/categories" className="text-gray-600 hover:text-primary transition-colors font-medium">
-              Categories
+            <Link to="/performance" className="text-gray-600 hover:text-primary transition-colors font-medium">
+              Performance
             </Link>
           </NavigationMenuItem>
 
+          <NavigationMenuItem>
+            <Link to="/efficiency" className="text-gray-600 hover:text-primary transition-colors font-medium">
+              Efficiency
+            </Link>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <Link to="/quality" className="text-gray-600 hover:text-primary transition-colors font-medium">
+              Quality
+            </Link>
+          </NavigationMenuItem>
+          
           <NavigationMenuItem>
             <Link to="/about-us" className="text-gray-600 hover:text-primary transition-colors font-medium">
               About
