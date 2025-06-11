@@ -30,11 +30,19 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-40 w-full bg-white shadow-sm">
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <NavbarLogo />
-        <DesktopNavigation />
-        <NavbarActions toggleSearch={toggleSearch} handleLogout={handleLogout} />
-        <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+      <div className="container mx-auto px-3 sm:px-4 h-16 flex items-center justify-between">
+        <div className="flex items-center flex-1 min-w-0">
+          <NavbarLogo />
+        </div>
+        
+        <div className="hidden lg:flex items-center flex-1 justify-center">
+          <DesktopNavigation />
+        </div>
+        
+        <div className="flex items-center space-x-1 sm:space-x-2">
+          <NavbarActions toggleSearch={toggleSearch} handleLogout={handleLogout} />
+          <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+        </div>
       </div>
 
       <MobileMenu 

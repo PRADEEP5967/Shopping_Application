@@ -77,8 +77,31 @@
   }
 }
 
-/* Enhanced animations and transitions */
+/* Enhanced responsive design */
 @layer utilities {
+  /* Mobile-first responsive containers */
+  .container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Responsive text sizes */
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+  
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+  
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl lg:text-2xl;
+  }
+  
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl lg:text-3xl;
+  }
+  
+  /* Enhanced animations and transitions */
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
@@ -103,6 +126,7 @@
     animation: rotateIn 0.4s ease-out;
   }
 
+  /* Line clamping utilities */
   .line-clamp-1 {
     overflow: hidden;
     display: -webkit-box;
@@ -122,6 +146,20 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+  
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Safe area handling for mobile devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -241,5 +279,39 @@
   }
   50% {
     opacity: .5;
+  }
+}
+
+/* Responsive breakpoint utilities */
+@media (max-width: 640px) {
+  .mobile-full {
+    @apply w-full;
+  }
+  
+  .mobile-hidden {
+    @apply hidden;
+  }
+  
+  .mobile-flex {
+    @apply flex;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .tablet-grid {
+    @apply grid-cols-2;
+  }
+}
+
+@media (min-width: 1025px) {
+  .desktop-grid {
+    @apply grid-cols-3 lg:grid-cols-4;
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
   }
 }

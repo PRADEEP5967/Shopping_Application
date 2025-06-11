@@ -1,8 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useCart } from '@/contexts/CartContext';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface MobileMenuButtonProps {
   isMenuOpen: boolean;
@@ -10,22 +9,21 @@ interface MobileMenuButtonProps {
 }
 
 const MobileMenuButton: React.FC<MobileMenuButtonProps> = ({ isMenuOpen, toggleMenu }) => {
-  const { totalItems, toggleCart } = useCart();
-
   return (
-    <div className="flex items-center space-x-3 md:hidden">
-      <Button variant="ghost" size="icon" onClick={toggleCart} className="relative">
-        <ShoppingCart className="h-5 w-5" />
-        {totalItems > 0 && (
-          <span className="absolute -top-2 -right-2 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-            {totalItems}
-          </span>
-        )}
-      </Button>
-      <Button variant="ghost" size="icon" onClick={toggleMenu}>
-        {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
-    </div>
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleMenu}
+      className="lg:hidden p-2 touch-target"
+      aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+      aria-expanded={isMenuOpen}
+    >
+      {isMenuOpen ? (
+        <X className="h-5 w-5" />
+      ) : (
+        <Menu className="h-5 w-5" />
+      )}
+    </Button>
   );
 };
 
