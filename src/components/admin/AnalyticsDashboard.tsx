@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+import SalesReporting from '@/components/admin/SalesReporting';
 
 const salesData = [
   { month: 'Jan', sales: 4000, orders: 240 },
@@ -116,6 +116,11 @@ export const AnalyticsDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Sales Reporting */}
+      <SalesReporting />
     </div>
   );
 };
+
+export default AnalyticsDashboard;

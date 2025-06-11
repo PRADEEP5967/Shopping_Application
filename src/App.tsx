@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -34,6 +33,8 @@ import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
 import DealsDiscounts from '@/pages/DealsDiscounts';
 import ReturnsExchanges from '@/pages/ReturnsExchanges';
+import SearchPage from '@/pages/SearchPage';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 // New Pages
 import Performance from '@/pages/Performance';
@@ -60,135 +61,140 @@ import AdminPages from '@/pages/admin/Pages';
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <ReviewsProvider>
-              <Router>
-                <div className="App">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/products" element={<Products />} />
-                    <Route path="/categories" element={<CategoriesPage />} />
-                    <Route path="/category/:categoryName" element={<CategoryPage />} />
-                    
-                    {/* New Required Pages */}
-                    <Route path="/performance" element={<Performance />} />
-                    <Route path="/efficiency" element={<Efficiency />} />
-                    <Route path="/quality" element={<Quality />} />
-                    <Route path="/deals-discounts" element={<DealsDiscounts />} />
-                    <Route path="/returns-exchanges" element={<ReturnsExchanges />} />
-                    
-                    <Route path="/product/:id" element={<ProductDetail />} />
-                    <Route path="/my-account" element={<MyAccount />} />
-                    <Route path="/wishlist" element={<WishlistPage />} />
-                    <Route path="/orders" element={<Orders />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/order-confirmation" element={<OrderConfirmation />} />
-                    <Route path="/order-history" element={<OrderHistory />} />
-                    <Route path="/order-detail/:orderId" element={<OrderDetail />} />
-                    <Route path="/new-arrivals" element={<NewArrivals />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/return-policy" element={<ReturnPolicy />} />
-                    <Route path="/shipping-policy" element={<ShoppingPolicy />} />
-                    <Route path="/terms-of-service" element={<TermsOfService />} />
-                    <Route path="/about-us" element={<About />} />
-                    <Route path="/contact-us" element={<Contact />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/portfolio" element={<Portfolio />} />
-                    <Route path="/team" element={<Team />} />
-                    <Route path="/blog" element={<Blog />} />
-                    
-                    {/* Admin Routes */}
-                    <Route path="/admin" element={
-                      <AdminDashboardLayout title="Dashboard">
-                        <AdminDashboard />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/add-product" element={
-                      <AdminDashboardLayout title="Add Product">
-                        <AdminProductAdd />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/products" element={
-                      <AdminDashboardLayout title="Product Management">
-                        <AdminProducts />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/orders" element={
-                      <AdminDashboardLayout title="Order Management">
-                        <AdminOrders />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/customers" element={
-                      <AdminDashboardLayout title="Customer Management">
-                        <AdminCustomers />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/categories" element={
-                      <AdminDashboardLayout title="Category Management">
-                        <AdminCategories />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/discounts" element={
-                      <AdminDashboardLayout title="Discount Management">
-                        <AdminDiscounts />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/inventory" element={
-                      <AdminDashboardLayout title="Inventory Management">
-                        <AdminInventory />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/analytics" element={
-                      <AdminDashboardLayout title="Analytics Dashboard">
-                        <AdminAnalytics />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/activity" element={
-                      <AdminDashboardLayout title="Activity Log">
-                        <AdminActivity />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/ab-testing" element={
-                      <AdminDashboardLayout title="A/B Testing">
-                        <AdminABTesting />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/settings" element={
-                      <AdminDashboardLayout title="Settings">
-                        <AdminSettings />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/notifications" element={
-                      <AdminDashboardLayout title="Notifications">
-                        <AdminNotifications />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/help" element={
-                      <AdminDashboardLayout title="Help & Documentation">
-                        <AdminHelp />
-                      </AdminDashboardLayout>
-                    } />
-                    <Route path="/admin/pages" element={
-                      <AdminDashboardLayout title="Page Management">
-                        <AdminPages />
-                      </AdminDashboardLayout>
-                    } />
-                    
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                  <Toaster />
-                </div>
-              </Router>
-            </ReviewsProvider>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <ThemeProvider>
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <ReviewsProvider>
+                <Router>
+                  <div className="App">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/products" element={<Products />} />
+                      <Route path="/categories" element={<CategoriesPage />} />
+                      <Route path="/category/:categoryName" element={<CategoryPage />} />
+                      
+                      {/* New Required Pages */}
+                      <Route path="/performance" element={<Performance />} />
+                      <Route path="/efficiency" element={<Efficiency />} />
+                      <Route path="/quality" element={<Quality />} />
+                      <Route path="/deals-discounts" element={<DealsDiscounts />} />
+                      <Route path="/returns-exchanges" element={<ReturnsExchanges />} />
+                      
+                      <Route path="/product/:id" element={<ProductDetail />} />
+                      <Route path="/my-account" element={<MyAccount />} />
+                      <Route path="/wishlist" element={<WishlistPage />} />
+                      <Route path="/orders" element={<Orders />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                      <Route path="/order-history" element={<OrderHistory />} />
+                      <Route path="/order-detail/:orderId" element={<OrderDetail />} />
+                      <Route path="/new-arrivals" element={<NewArrivals />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/return-policy" element={<ReturnPolicy />} />
+                      <Route path="/shipping-policy" element={<ShoppingPolicy />} />
+                      <Route path="/terms-of-service" element={<TermsOfService />} />
+                      <Route path="/about-us" element={<About />} />
+                      <Route path="/contact-us" element={<Contact />} />
+                      <Route path="/services" element={<Services />} />
+                      <Route path="/portfolio" element={<Portfolio />} />
+                      <Route path="/team" element={<Team />} />
+                      <Route path="/blog" element={<Blog />} />
+                      
+                      {/* New Search Page */}
+                      <Route path="/search" element={<SearchPage />} />
+                      
+                      {/* Admin Routes */}
+                      <Route path="/admin" element={
+                        <AdminDashboardLayout title="Dashboard">
+                          <AdminDashboard />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/add-product" element={
+                        <AdminDashboardLayout title="Add Product">
+                          <AdminProductAdd />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/products" element={
+                        <AdminDashboardLayout title="Product Management">
+                          <AdminProducts />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/orders" element={
+                        <AdminDashboardLayout title="Order Management">
+                          <AdminOrders />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/customers" element={
+                        <AdminDashboardLayout title="Customer Management">
+                          <AdminCustomers />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/categories" element={
+                        <AdminDashboardLayout title="Category Management">
+                          <AdminCategories />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/discounts" element={
+                        <AdminDashboardLayout title="Discount Management">
+                          <AdminDiscounts />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/inventory" element={
+                        <AdminDashboardLayout title="Inventory Management">
+                          <AdminInventory />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/analytics" element={
+                        <AdminDashboardLayout title="Analytics Dashboard">
+                          <AdminAnalytics />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/activity" element={
+                        <AdminDashboardLayout title="Activity Log">
+                          <AdminActivity />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/ab-testing" element={
+                        <AdminDashboardLayout title="A/B Testing">
+                          <AdminABTesting />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/settings" element={
+                        <AdminDashboardLayout title="Settings">
+                          <AdminSettings />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/notifications" element={
+                        <AdminDashboardLayout title="Notifications">
+                          <AdminNotifications />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/help" element={
+                        <AdminDashboardLayout title="Help & Documentation">
+                          <AdminHelp />
+                        </AdminDashboardLayout>
+                      } />
+                      <Route path="/admin/pages" element={
+                        <AdminDashboardLayout title="Page Management">
+                          <AdminPages />
+                        </AdminDashboardLayout>
+                      } />
+                      
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    <Toaster />
+                  </div>
+                </Router>
+              </ReviewsProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

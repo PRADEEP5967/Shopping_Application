@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search, Package, AlertTriangle, Plus, Minus } from 'lucide-react';
 import { getAllProducts } from '@/data/products';
+import BulkOperations from '@/components/admin/BulkOperations';
 
 export const InventoryManagement = () => {
   const [products] = useState(getAllProducts());
@@ -64,6 +64,9 @@ export const InventoryManagement = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Bulk Operations */}
+      <BulkOperations />
 
       <Card>
         <CardHeader>

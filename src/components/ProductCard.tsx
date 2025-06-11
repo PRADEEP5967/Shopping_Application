@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Product } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useReviews } from '@/contexts/ReviewsContext';
+import StockIndicator from '@/components/inventory/StockIndicator';
 import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
@@ -16,23 +18,40 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
   const { addItem } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { getProductStats } = useReviews();
   
   const inWishlist = isInWishlist(product.id);
+  const reviewStats = getProductStats(product.id);
+  
+  // Track recently viewed products
+  useEffect(() => {
+    const addToRecentlyViewed = () => {
+      const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+      const filtered = recent.filter((p: Product) => p.id !== product.id);
+      const updated = [product, ...filtered].slice(0, 10);
+      localStorage.setItem('recentlyViewed', JSON.stringify(updated));
+    };
+
+    const timer = setTimeout(addToRecentlyViewed, 2000); // Add after 2 seconds of viewing
+    return () => clearTimeout(timer);
+  }, [product]);
   
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to product page
+    e.preventDefault();
     addItem(product, 1);
   };
   
   const handleToggleWishlist = (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigating to product page
+    e.preventDefault();
     toggleWishlist(product);
   };
 
-  // Ensure product has all required fields
   const productImage = product.images && product.images.length > 0 
     ? product.images[0] 
     : 'https://placehold.co/300x300?text=No+Image';
+
+  // Generate random stock level for display
+  const stockLevel = product.inStock ? Math.floor(Math.random() * 50) + 1 : 0;
 
   return (
     <Link 
@@ -47,6 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
           src={productImage} 
           alt={product.name}
           className="product-image w-full h-full object-cover"
+          loading="lazy"
         />
         
         {/* Wishlist button */}
@@ -63,27 +83,36 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
           />
         </button>
         
-        {/* Out of stock overlay */}
-        {!product.inStock && (
-          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-            <p className="text-white font-medium text-lg">Out of Stock</p>
-          </div>
-        )}
+        {/* Stock indicator overlay */}
+        <div className="absolute bottom-2 left-2">
+          <StockIndicator 
+            inStock={product.inStock} 
+            stockLevel={stockLevel}
+            lowStockThreshold={10}
+          />
+        </div>
       </div>
       
       <div className="p-4">
         <h3 className="font-medium text-gray-900 mb-1 line-clamp-1">{product.name}</h3>
         
         <div className="flex items-center justify-between mb-2">
-          <p className="font-semibold text-lg">${product.price.toFixed(2)}</p>
+          <div className="flex flex-col">
+            <p className="font-semibold text-lg">${product.price.toFixed(2)}</p>
+            {product.originalPrice && product.originalPrice > product.price && (
+              <span className="text-sm text-gray-500 line-through">
+                ${product.originalPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
           
-          {/* Ratings */}
+          {/* Enhanced ratings with review count */}
           <div className="flex items-center">
             <div className="flex">
               {[...Array(5)].map((_, i) => (
                 <svg 
                   key={i}
-                  className={`w-4 h-4 ${i < Math.round(product.rating || 0) ? "text-yellow-400" : "text-gray-300"}`}
+                  className={`w-4 h-4 ${i < Math.round(reviewStats.averageRating || product.rating || 0) ? "text-yellow-400" : "text-gray-300"}`}
                   fill="currentColor" 
                   viewBox="0 0 20 20"
                 >
@@ -91,7 +120,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
                 </svg>
               ))}
             </div>
-            <span className="text-xs text-gray-500 ml-1">({product.reviewCount || 0})</span>
+            <span className="text-xs text-gray-500 ml-1">
+              ({reviewStats.totalReviews || product.reviewCount || 0})
+            </span>
           </div>
         </div>
         

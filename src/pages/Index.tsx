@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -13,6 +12,8 @@ import Testimonials from '@/components/Testimonials';
 import ProductGrid from '@/components/ProductGrid';
 import FeaturedCategories from '@/components/FeaturedCategories';
 import SmartRecommendations from '@/components/SmartRecommendations';
+import RecentlyViewed from '@/components/features/RecentlyViewed';
+import NewsletterSignup from '@/components/marketing/NewsletterSignup';
 
 // Modern Components
 import { ModernHero } from '@/components/modern/ModernHero';
@@ -97,6 +98,13 @@ const Index = () => {
         <section className="py-16 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
             <SmartRecommendations />
+          </div>
+        </section>
+
+        {/* Recently Viewed Section */}
+        <section className="py-16 bg-white dark:bg-gray-900">
+          <div className="container mx-auto px-4">
+            <RecentlyViewed />
           </div>
         </section>
         
@@ -218,6 +226,15 @@ const Index = () => {
         
         {/* Modern CTA Section */}
         <ModernCTA />
+        
+        {/* Newsletter Signup Section */}
+        <section className="py-16 bg-gray-50 dark:bg-gray-800">
+          <div className="container mx-auto px-4">
+            <div className="max-w-2xl mx-auto">
+              <NewsletterSignup />
+            </div>
+          </div>
+        </section>
         
         {/* Enhanced Newsletter Section */}
         <section className="py-16 bg-gradient-to-r from-primary via-blue-600 to-purple-600 text-white relative overflow-hidden">
