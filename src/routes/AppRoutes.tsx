@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Products from '@/pages/Products';
-import CategoryPage from '@/pages/CategoryPage';
+import CategoryProductsPage from '@/pages/CategoryProductsPage';
 import CategoriesPage from '@/pages/CategoriesPage';
 import ProductDetail from '@/pages/ProductDetail';
 import MyAccount from '@/pages/MyAccount';
@@ -63,7 +62,7 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/products" element={<Products />} />
       <Route path="/categories" element={<CategoriesPage />} />
-      <Route path="/category/:categoryName" element={<CategoryPage />} />
+      <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
       
       {/* New Required Pages */}
       <Route path="/performance" element={<Performance />} />
