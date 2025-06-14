@@ -30,6 +30,8 @@ import { NewsletterSection } from '@/components/sections/NewsletterSection';
 
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 
+import ModernImageSlider from '@/components/ModernImageSlider';
+
 const Index = () => {
   const featuredProducts = getFeaturedProducts();
   const categories = getProductCategories();
@@ -45,6 +47,9 @@ const Index = () => {
         {/* Hero Section */}
         <HeroSection />
 
+        {/* Add Modern Image Slider here */}
+        <ModernImageSlider />
+        
         {/* Quick Links Section */}
         <QuickLinksSection />
         
