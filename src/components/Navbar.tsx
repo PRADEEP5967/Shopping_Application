@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingBag, Menu, Search, ChevronDown } from 'lucide-react';
+import { ShoppingBag, Menu, Search, ChevronDown, LayoutGrid } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from "@/components/ui/button"
 import ThemeToggle from '@/components/ThemeToggle';
@@ -44,6 +43,22 @@ const ALL_PAGES = [
   { label: "Portfolio", to: "/portfolio" },
   { label: "New Arrivals", to: "/new-arrivals" },
   { label: "Special Offers", to: "/special-offers" },
+];
+
+const CATEGORIES = [
+  { label: "Smartphones", to: "/category/smartphone" },
+  { label: "Monitors", to: "/category/monitor" },
+  { label: "Shirts", to: "/category/shirt" },
+  { label: "Dresses", to: "/category/dress" },
+  { label: "Babies", to: "/category/baby" },
+  { label: "Sofas", to: "/category/sofa" },
+  { label: "Dumbbells", to: "/category/dumbbell" },
+  { label: "Personal Care", to: "/category/heart" },
+  { label: "Headphones", to: "/category/headphones" },
+  { label: "TVs", to: "/category/tv" },
+  { label: "Computers", to: "/category/computers" },
+  { label: "Wearables", to: "/category/wearables" },
+  // Add more categories as needed
 ];
 
 const Navbar = () => {
@@ -107,6 +122,33 @@ const Navbar = () => {
             >
               Contact
             </Link>
+          </li>
+          <li>
+            {/* Category Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={
+                    "flex items-center gap-1 px-2" +
+                    (pathname.startsWith('/category') ? " bg-blue-50 text-blue-700 dark:bg-blue-900 dark:text-blue-300" : "")
+                  }
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                  Category
+                  <ChevronDown className="ml-0.5 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-44">
+                {CATEGORIES.map((cat) => (
+                  <DropdownMenuItem key={cat.to} asChild>
+                    <Link to={cat.to} className="w-full">
+                      {cat.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </li>
           <li>
             <Link
@@ -223,4 +265,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
