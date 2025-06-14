@@ -20,6 +20,7 @@ const CategoryPage = () => {
   const [sortOption, setSortOption] = useState('featured');
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [minRating, setMinRating] = useState<number>(0); // <-- Added minRating state
   
   // Get proper category name from URL param
   const formattedCategoryName = categoryName
@@ -58,6 +59,11 @@ const CategoryPage = () => {
     result = result.filter(
       product => product.price >= priceRange[0] && product.price <= priceRange[1]
     );
+
+    // Apply rating filter
+    if (minRating > 0) {
+      result = result.filter(product => product.rating >= minRating);
+    }
     
     // Apply sorting
     switch (sortOption) {
@@ -76,7 +82,7 @@ const CategoryPage = () => {
     }
     
     setFilteredProducts(result);
-  }, [products, selectedBrands, priceRange, sortOption]);
+  }, [products, selectedBrands, priceRange, sortOption, minRating]);
   
   const handleBrandToggle = (brand: string) => {
     setSelectedBrands(prev => {
@@ -93,6 +99,7 @@ const CategoryPage = () => {
   const handleClearFilters = () => {
     setSelectedBrands([]);
     setPriceRange([0, 1000]);
+    setMinRating(0);
   };
   
   return (
@@ -117,6 +124,8 @@ const CategoryPage = () => {
             brands={brands}
             selectedBrands={selectedBrands}
             handleBrandToggle={handleBrandToggle}
+            selectedRating={minRating} // <-- Added
+            handleRatingChange={setMinRating} // <-- Added
           />
         </div>
         
@@ -128,6 +137,8 @@ const CategoryPage = () => {
             brands={brands}
             selectedBrands={selectedBrands}
             handleBrandToggle={handleBrandToggle}
+            selectedRating={minRating} // <-- Added
+            handleRatingChange={setMinRating} // <-- Added
           />
           
           {/* Product Grid */}
@@ -152,3 +163,4 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
