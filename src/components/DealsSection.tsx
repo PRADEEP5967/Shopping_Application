@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight, Percent, Clock, Star } from 'lucide-react';
+import { ArrowRight, Percent, Clock, Star, Sparkles } from 'lucide-react'; // FIXED: Added Sparkles here
 
 const DealsSection = () => {
   // Simulating different deal types
@@ -87,3 +87,4 @@ const DealsSection = () => {
 };
 
 export default DealsSection;
+
