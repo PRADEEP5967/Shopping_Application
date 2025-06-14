@@ -1,9 +1,8 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
-const githubImgUrl = "https://github.com/pradeepsahani.png";
+const githubImgUrl = "/lovable-uploads/0fe50496-21b2-45c7-a290-b3539fc12445.png";
 
 export const ModernTeamHomeSection = () => {
   const roles = [
