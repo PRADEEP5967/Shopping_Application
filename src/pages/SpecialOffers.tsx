@@ -1,6 +1,5 @@
-
 import React from "react";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CartFlyout from "@/components/CartFlyout";
 import ModernImageSlider from "@/components/ModernImageSlider";
@@ -14,7 +13,7 @@ const featuredProducts = getFeaturedProducts(8);
 const SpecialOffers = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
-      <Navbar />
+      <Header />
       <CartFlyout />
       <main className="flex-grow">
         {/* Hero Section */}

@@ -1,6 +1,5 @@
-
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { FeatureCard } from '@/components/modern/FeatureCard';
 import { StatsSection } from '@/components/modern/StatsSection';
@@ -57,7 +56,7 @@ const Services = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10">
