@@ -1,9 +1,10 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import { Info, Users, History, Award, Globe, Zap, Shield, Heart } from 'lucide-react';
+
+const githubImgUrl = "https://github.com/pradeepsahani.png";
 
 const About = () => {
   return (
@@ -157,27 +158,27 @@ const About = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
-                  name: "Alexandra Morgan",
+                  name: "ER PRADEEP SAHANI",
                   role: "CEO & Founder",
-                  image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?q=80&w=400&auto=format&fit=crop",
+                  image: githubImgUrl,
                   bio: "Visionary leader with 15+ years in e-commerce"
                 },
                 {
-                  name: "Sarah Chen",
+                  name: "ER PRADEEP SAHANI",
                   role: "Chief Technology Officer",
-                  image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
+                  image: githubImgUrl,
                   bio: "Tech innovator specializing in scalable platforms"
                 },
                 {
-                  name: "Marcus Johnson",
+                  name: "ER PRADEEP SAHANI",
                   role: "Head of Operations",
-                  image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop",
+                  image: githubImgUrl,
                   bio: "Operations expert ensuring seamless experiences"
                 },
                 {
-                  name: "Jessica Williams",
+                  name: "ER PRADEEP SAHANI",
                   role: "Customer Experience Director",
-                  image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=400&auto=format&fit=crop",
+                  image: githubImgUrl,
                   bio: "Customer advocate with a passion for excellence"
                 }
               ].map((member, index) => (

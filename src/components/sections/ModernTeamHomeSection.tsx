@@ -29,11 +29,11 @@ export const ModernTeamHomeSection = () => {
               <CardContent className="flex flex-col items-center p-6">
                 <img
                   src={githubImgUrl}
-                  alt="Pradeep Sahani"
+                  alt="ER PRADEEP SAHANI"
                   className="w-24 h-24 rounded-full object-cover shadow-lg mb-5 ring-2 ring-primary animate-scale-in"
                 />
                 <div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">Pradeep Sahani</h3>
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-1">ER PRADEEP SAHANI</h3>
                   <p className="text-primary font-medium mb-2">{title}</p>
                   <Badge variant="outline" className="text-xs">{role}</Badge>
                 </div>
