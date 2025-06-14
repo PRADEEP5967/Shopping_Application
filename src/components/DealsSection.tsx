@@ -16,6 +16,14 @@ const DealsSection = () => {
       icon: <Clock className="h-5 w-5" />
     },
     {
+      title: "Special Offers",
+      description: "Modern curated deals",
+      image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop",
+      link: "/special-offers",
+      color: "from-pink-500 to-primary",
+      icon: <Sparkles className="h-5 w-5" />
+    },
+    {
       title: "New Arrivals",
       description: "Latest Products",
       image: "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?q=80&w=2187&auto=format&fit=crop",
@@ -39,7 +47,7 @@ const DealsSection = () => {
         Special Offers
         <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold ml-2 px-2.5 py-0.5 rounded-full">HOT</span>
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {deals.map((deal, index) => (
           <Link to={deal.link} key={index} className="group">
             <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow h-full">
