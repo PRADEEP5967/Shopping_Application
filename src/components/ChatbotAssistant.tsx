@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -129,49 +128,62 @@ const ChatbotAssistant: React.FC = () => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  // NEW: Batch message send, support multiple queries separated by newline or ";"
   const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim()) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue,
-      sender: 'user',
-      timestamp: new Date()
-    };
+    // Allow both newlines and semicolons as separators
+    const queries = inputValue
+      .split(/\n|;/)
+      .map(q => q.trim())
+      .filter(q => !!q);
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    if (queries.length === 0) return;
+
     setIsTyping(true);
+    setInputValue('');
 
-    // Simulate typing delay
-    setTimeout(() => {
-      const botResponse = generateBotResponse(inputValue);
-      setMessages(prev => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1000);
+    // Prepare user messages
+    const timeBase = Date.now();
+    const userMessages = queries.map((q, idx) => ({
+      id: (timeBase + idx * 2).toString(),
+      text: q,
+      sender: 'user' as const,
+      timestamp: new Date()
+    }));
+
+    // Prepare bot responses in advance (simulate async)
+    const botMessages = queries.map((q, idx) => {
+      // Add +1 offset to avoid duplicate IDs
+      const botMsg = generateBotResponse(q);
+      return {
+        ...botMsg,
+        id: (timeBase + idx * 2 + 1).toString(),
+        timestamp: new Date()
+      };
+    });
+
+    // Batch update messages for performance
+    setMessages(prev => [...prev, ...userMessages, ...botMessages]);
+    setIsTyping(false);
   }, [inputValue]);
 
+  // Update suggestion click for batch support and performance
   const handleSuggestionClick = useCallback((suggestion: string) => {
     setInputValue(suggestion);
     setTimeout(() => {
-      // Wait for setInputValue to flush before sending
-      // so inputValue is picked up as intended
-      // But since handleSendMessage is using inputValue state, we want to call it after state is set.
-      // So pass suggestion directly to bot
       const userMessage: Message = {
         id: Date.now().toString(),
         text: suggestion,
         sender: 'user',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, userMessage]);
-      setIsTyping(true);
+      const botResponse = generateBotResponse(suggestion);
+      botResponse.id = (Date.now() + 1).toString();
+      botResponse.timestamp = new Date();
+      setMessages(prev => [...prev, userMessage, botResponse]);
+      setIsTyping(false);
       setInputValue('');
-      setTimeout(() => {
-        const botResponse = generateBotResponse(suggestion);
-        setMessages(prev => [...prev, botResponse]);
-        setIsTyping(false);
-      }, 1000);
     }, 0);
   }, []);
 
@@ -278,9 +290,11 @@ const ChatbotAssistant: React.FC = () => {
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') handleSendMessage();
+                    if (e.key === 'Enter') {
+                      handleSendMessage();
+                    }
                   }}
-                  placeholder="Type your message..."
+                  placeholder="Type your message... (multiple queries? Separate by newline or ; )"
                   className="flex-1"
                 />
                 <Button onClick={handleSendMessage} size="icon" aria-label="Send message">
