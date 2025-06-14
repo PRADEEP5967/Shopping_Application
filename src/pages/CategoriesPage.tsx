@@ -4,49 +4,94 @@ import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Grid3X3, Sparkles, Zap, Package } from 'lucide-react';
+import { 
+  ArrowRight, 
+  Grid3X3, 
+  Sparkles, 
+  Zap, 
+  Package,
+  Laptop,
+  Watch,
+  Monitor,
+  Sofa,
+  Camera,
+  Gamepad,
+  Home as HomeIcon
+} from 'lucide-react';
+import { getProductCategories, getAllProducts } from '@/data/products';
+
+const categoryDetails: Record<string, any> = {
+  'Electronics': {
+    description: 'Gadgets, audio & smart devices',
+    icon: Laptop,
+    color: 'from-blue-500 to-cyan-500',
+    bgColor: 'from-blue-50 to-cyan-50',
+  },
+  'Wearables': {
+    description: 'Smartwatches and fitness trackers.',
+    icon: Watch,
+    color: 'from-red-500 to-yellow-500',
+    bgColor: 'from-red-50 to-yellow-50',
+  },
+  'Computers': {
+    description: 'Laptops, desktops, and accessories.',
+    icon: Monitor,
+    color: 'from-indigo-500 to-violet-500',
+    bgColor: 'from-indigo-50 to-violet-50',
+  },
+  'Smart Home': {
+    description: 'Automate your home with our devices.',
+    icon: HomeIcon,
+    color: 'from-sky-500 to-blue-500',
+    bgColor: 'from-sky-50 to-blue-50',
+  },
+  'Photography': {
+    description: 'Cameras, lenses, and photo gear.',
+    icon: Camera,
+    color: 'from-gray-700 to-gray-900',
+    bgColor: 'from-gray-50 to-gray-100',
+  },
+  'Furniture': {
+    description: 'Stylish furniture for every room.',
+    icon: Sofa,
+    color: 'from-lime-500 to-green-500',
+    bgColor: 'from-lime-50 to-green-50',
+  },
+  'Gaming': {
+    description: 'Consoles, games, and accessories.',
+    icon: Gamepad,
+    color: 'from-rose-500 to-fuchsia-500',
+    bgColor: 'from-rose-50 to-fuchsia-50',
+  },
+  'default': {
+    description: 'Browse our collection of products.',
+    icon: Package,
+    color: 'from-gray-500 to-gray-700',
+    bgColor: 'from-gray-50 to-gray-100',
+  }
+};
+
+const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 
 const CategoriesPage = () => {
-  const categories = [
-    {
-      name: 'Accessories',
-      description: 'Bags, wallets, belts & lifestyle accessories',
-      icon: Package,
-      color: 'from-purple-500 to-pink-500',
-      bgColor: 'from-purple-50 to-pink-50',
-      link: '/accessories',
-      count: '25+ items'
-    },
-    {
-      name: 'Shoes',
-      description: 'Athletic, casual & formal footwear',
-      icon: Zap,
-      color: 'from-blue-500 to-cyan-500',
-      bgColor: 'from-blue-50 to-cyan-50',
-      link: '/shoes',
-      count: '40+ items'
-    },
-    {
-      name: 'Clothing',
-      description: 'T-shirts, jackets & premium apparel',
-      icon: Sparkles,
-      color: 'from-green-500 to-emerald-500',
-      bgColor: 'from-green-50 to-emerald-50',
-      link: '/clothing',
-      count: '60+ items'
-    },
-    {
-      name: 'Electronics',
-      description: 'Gadgets, audio & smart devices',
-      icon: Grid3X3,
-      color: 'from-orange-500 to-red-500',
-      bgColor: 'from-orange-50 to-red-50',
-      link: '/electronics',
-      count: '30+ items'
-    }
-  ];
+  const allProducts = getAllProducts();
+  const categoryNames = getProductCategories();
+
+  const categories = categoryNames.map(name => {
+    const details = categoryDetails[name] || categoryDetails.default;
+    const productCount = allProducts.filter(p => p.category === name).length;
+
+    return {
+      name,
+      description: details.description,
+      icon: details.icon,
+      color: details.color,
+      bgColor: details.bgColor,
+      link: `/category/${slugify(name)}`,
+      count: `${productCount} ${productCount === 1 ? 'item' : 'items'}`
+    };
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -159,3 +204,4 @@ const CategoriesPage = () => {
 };
 
 export default CategoriesPage;
+
