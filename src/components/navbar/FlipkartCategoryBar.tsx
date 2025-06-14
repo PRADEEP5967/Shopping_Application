@@ -5,14 +5,14 @@ import {
   Smartphone, 
   Monitor, 
   Shirt, 
-  Dress, 
   Baby, 
   Sofa, 
   Dumbbell, 
   Heart, 
   Headphones, 
   Tv, 
-  Home as HomeIcon 
+  Home as HomeIcon,
+  User 
 } from "lucide-react";
 
 const CATEGORIES = [
@@ -33,7 +33,7 @@ const CATEGORIES = [
   },
   {
     label: "Women",
-    icon: Dress,
+    icon: User, // Replaced Dress with User icon
     to: "/category/women",
   },
   {

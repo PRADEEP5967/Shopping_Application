@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -25,6 +26,7 @@ import ModernImageSlider from '@/components/ModernImageSlider';
 import AnimatedFeatureCard from "@/components/modern/AnimatedFeatureCard";
 import { Zap, ShieldCheck, Headphones, Truck, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
+import FlipkartCategoryBar from "@/components/navbar/FlipkartCategoryBar"; // <-- Added import
 
 const HOMEPAGE_FEATURES = [
   {
