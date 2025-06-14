@@ -6,7 +6,6 @@ import NotFound from '@/pages/NotFound';
 // Import route modules
 import { MainRoutes } from './MainRoutes';
 import { AdminRoutes } from './AdminRoutes';
-import { CategoryRoutes } from './CategoryRoutes';
 import { PendingRoutes } from './PendingRoutes';
 
 const AppRoutes = () => {
@@ -17,9 +16,6 @@ const AppRoutes = () => {
       
       {/* Admin Routes */}
       {AdminRoutes}
-      
-      {/* Category Routes */}
-      {CategoryRoutes}
       
       {/* Pending Routes */}
       {PendingRoutes}
