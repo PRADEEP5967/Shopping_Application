@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -69,6 +68,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
     { path: '/admin/pages', icon: Files, label: 'Pages' },
   ];
 
+  // Add our new modern analytics links to the sidebar!
+  const modernAnalyticsMenuItems = [
+    { path: '/admin/real-time-analysis', icon: 'gauge', label: 'Real-Time Analysis' },
+    { path: '/admin/customer-reports', icon: 'users', label: 'Customer Reports' },
+    { path: '/admin/insights', icon: 'chart-pie', label: 'Insights' },
+  ];
+
   const analyticsMenuItems = [
     { path: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
     { path: '/admin/activity', icon: Activity, label: 'Activity Log' },
@@ -81,6 +87,14 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
     { path: '/admin/settings', icon: Settings, label: 'Settings' },
     { path: '/admin/help', icon: HelpCircle, label: 'Help' },
   ];
+
+  // Map string 'icon' to actual Lucide icon
+  const iconMap: Record<string, React.ElementType> = {
+    'gauge': require('lucide-react').Gauge,
+    'users': require('lucide-react').Users,
+    'chart-pie': require('lucide-react').ChartPie,
+    // ... add other icons if needed ...
+  };
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col">
@@ -154,6 +168,32 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
+            </div>
+          </div>
+          
+          {/* Modern Analytics Section */}
+          <div>
+            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
+              Modern Reports
+            </h3>
+            <div className="space-y-1">
+              {modernAnalyticsMenuItems.map((item) => {
+                const Icon = iconMap[item.icon];
+                return (
+                  <Button 
+                    key={item.path}
+                    variant={isActive(item.path) ? "default" : "ghost"} 
+                    className="w-full justify-start text-sm"
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsMobileSidebarOpen(false);
+                    }}
+                  >
+                    {Icon ? <Icon className="mr-2 h-4 w-4 shrink-0" /> : null}
+                    <span className="truncate">{item.label}</span>
+                  </Button>
+                );
+              })}
             </div>
           </div>
           

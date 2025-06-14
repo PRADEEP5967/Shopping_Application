@@ -58,6 +58,11 @@ import AdminNotifications from '@/pages/admin/Notifications';
 import AdminHelp from '@/pages/admin/Help';
 import AdminPages from '@/pages/admin/Pages';
 
+// New Modern Report/Admin Pages
+import RealTimeAnalysis from '@/pages/admin/RealTimeAnalysis';
+import CustomerReports from '@/pages/admin/CustomerReports';
+import Insights from '@/pages/admin/Insights';
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -179,6 +184,23 @@ const AppRoutes = () => {
       <Route path="/admin/pages" element={
         <AdminDashboardLayout title="Page Management">
           <AdminPages />
+        </AdminDashboardLayout>
+      } />
+      
+      {/* Modern Admin Analytics/Reports Pages */}
+      <Route path="/admin/real-time-analysis" element={
+        <AdminDashboardLayout title="Real-Time Data Analysis">
+          <RealTimeAnalysis />
+        </AdminDashboardLayout>
+      } />
+      <Route path="/admin/customer-reports" element={
+        <AdminDashboardLayout title="Customer Reports">
+          <CustomerReports />
+        </AdminDashboardLayout>
+      } />
+      <Route path="/admin/insights" element={
+        <AdminDashboardLayout title="Insights">
+          <Insights />
         </AdminDashboardLayout>
       } />
       
