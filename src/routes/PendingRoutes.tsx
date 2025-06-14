@@ -6,7 +6,7 @@ import OrderProcessingPending from '@/pages/OrderProcessingPending';
 import PaymentPending from '@/pages/PaymentPending';
 import AccountVerificationPending from '@/pages/AccountVerificationPending';
 
-export const PendingRoutes = () => (
+export const PendingRoutes = (
   <>
     <Route path="/pending" element={<Pending />} />
     <Route path="/pending/order-processing" element={<OrderProcessingPending />} />

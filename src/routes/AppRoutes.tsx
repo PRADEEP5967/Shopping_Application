@@ -13,16 +13,16 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Main Application Routes */}
-      <MainRoutes />
+      {MainRoutes}
       
       {/* Admin Routes */}
-      <AdminRoutes />
+      {AdminRoutes}
       
       {/* Category Routes */}
-      <CategoryRoutes />
+      {CategoryRoutes}
       
       {/* Pending Routes */}
-      <PendingRoutes />
+      {PendingRoutes}
       
       {/* Fallback Route */}
       <Route path="*" element={<NotFound />} />

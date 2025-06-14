@@ -40,7 +40,7 @@ import Performance from '@/pages/Performance';
 import Efficiency from '@/pages/Efficiency';
 import Quality from '@/pages/Quality';
 
-export const MainRoutes = () => (
+export const MainRoutes = (
   <>
     <Route path="/" element={<Index />} />
     <Route path="/login" element={<Login />} />

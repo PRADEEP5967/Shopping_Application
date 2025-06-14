@@ -28,7 +28,7 @@ import SSLEncryption from '@/pages/admin/SSLEncryption';
 import PCICompliance from '@/pages/admin/PCICompliance';
 import TwoFASupport from '@/pages/admin/TwoFASupport';
 
-export const AdminRoutes = () => (
+export const AdminRoutes = (
   <>
     <Route path="/admin" element={
       <AdminDashboardLayout title="Dashboard">

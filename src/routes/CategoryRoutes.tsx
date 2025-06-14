@@ -8,7 +8,7 @@ import DressPage from '@/pages/DressPage';
 import BabyToyPage from '@/pages/BabyToyPage';
 import SofaPage from '@/pages/SofaPage';
 
-export const CategoryRoutes = () => (
+export const CategoryRoutes = (
   <>
     <Route path="/category/smartphone" element={<SmartphonePage />} />
     <Route path="/category/monitor" element={<MonitorPage />} />
