@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -62,6 +61,8 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       <Navbar />
+      {/* Flipkart-style Category Navigation Bar */}
+      <FlipkartCategoryBar />
       <CartFlyout />
 
       {/* Modern Hero Section */}
