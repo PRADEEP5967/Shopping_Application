@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,97 @@ interface Message {
   timestamp: Date;
   suggestions?: string[];
 }
+
+// Move quickActions outside the component to avoid recreation on every render
+const quickActions = [
+  { icon: ShoppingCart, label: 'Find Products', action: 'find-products' },
+  { icon: Package, label: 'Track Order', action: 'track-order' },
+  { icon: HelpCircle, label: 'Get Help', action: 'get-help' }
+];
+
+// Memoized bot response generator
+const generateBotResponse = (userMessage: string): Message => {
+  const lowerMessage = userMessage.toLowerCase();
+
+  let response = {
+    id: Date.now().toString(),
+    text: '',
+    sender: 'bot' as const,
+    timestamp: new Date(),
+    suggestions: [] as string[]
+  };
+
+  if (lowerMessage.includes('find') || lowerMessage.includes('product') || lowerMessage.includes('search')) {
+    response.text = 'I can help you find the perfect product! What are you looking for today? You can search by category, brand, or specific features.';
+    response.suggestions = ['Electronics', 'Clothing', 'Shoes', 'Accessories'];
+  } else if (lowerMessage.includes('order') || lowerMessage.includes('track')) {
+    response.text = 'To track your order, please provide your order number. You can find it in your confirmation email or account dashboard.';
+    response.suggestions = ['Check order status', 'View order history', 'Cancel order'];
+  } else if (lowerMessage.includes('return') || lowerMessage.includes('refund')) {
+    response.text = 'Our return policy allows returns within 30 days of purchase. Items must be in original condition. Would you like to start a return?';
+    response.suggestions = ['Start return', 'Return policy', 'Refund status'];
+  } else if (lowerMessage.includes('size') || lowerMessage.includes('fit')) {
+    response.text = 'I can help you find the right size! Check our size guide or tell me what product you\'re interested in for specific sizing information.';
+    response.suggestions = ['Size guide', 'Fit recommendations', 'Exchange policy'];
+  } else if (lowerMessage.includes('payment') || lowerMessage.includes('card')) {
+    response.text = 'We accept all major credit cards, PayPal, and digital wallets. All payments are secured with SSL encryption. Need help with payment?';
+    response.suggestions = ['Payment methods', 'Billing issues', 'Security info'];
+  } else if (lowerMessage.includes('shipping') || lowerMessage.includes('delivery')) {
+    response.text = 'We offer free shipping on orders over $50. Standard delivery takes 3-5 business days, express delivery 1-2 days. What would you like to know?';
+    response.suggestions = ['Shipping rates', 'Delivery time', 'Express shipping'];
+  } else {
+    response.text = 'I\'m here to help! You can ask me about products, orders, returns, sizing, or any other questions about shopping with us.';
+    response.suggestions = ['Browse products', 'Check order', 'Customer support', 'FAQ'];
+  }
+
+  return response;
+};
+
+// Memoized message item for fast list rendering
+const ChatMessage = memo(({ message, onSuggestionClick }: {
+  message: Message;
+  onSuggestionClick: (suggestion: string) => void;
+}) => {
+  return (
+    <div
+      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+    >
+      <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
+        <div
+          className={`p-3 rounded-lg ${message.sender === 'user'
+            ? 'bg-blue-500 text-white'
+            : 'bg-gray-100 text-gray-900'
+            }`}
+        >
+          <p className="text-sm">{message.text}</p>
+        </div>
+
+        {message.suggestions && message.suggestions.length > 0 && (
+          <div className="mt-2 space-y-1">
+            {message.suggestions.map((suggestion, index) => (
+              <button
+                key={`${message.id}-suggestion-${index}`}
+                onClick={() => onSuggestionClick(suggestion)}
+                className="block w-full text-left text-xs bg-white border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors"
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className={`flex items-end ${message.sender === 'user' ? 'order-2 ml-2' : 'order-1 mr-2'}`}>
+        {message.sender === 'user' ? (
+          <User className="h-6 w-6 text-gray-400" />
+        ) : (
+          <Bot className="h-6 w-6 text-blue-500" />
+        )}
+      </div>
+    </div>
+  );
+});
+ChatMessage.displayName = 'ChatMessage';
 
 const ChatbotAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,58 +120,16 @@ const ChatbotAssistant: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const quickActions = [
-    { icon: ShoppingCart, label: 'Find Products', action: 'find-products' },
-    { icon: Package, label: 'Track Order', action: 'track-order' },
-    { icon: HelpCircle, label: 'Get Help', action: 'get-help' }
-  ];
-
-  const scrollToBottom = () => {
+  // Memoize scrollToBottom for effect
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, scrollToBottom]);
 
-  const generateBotResponse = (userMessage: string): Message => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    let response = {
-      id: Date.now().toString(),
-      text: '',
-      sender: 'bot' as const,
-      timestamp: new Date(),
-      suggestions: [] as string[]
-    };
-
-    if (lowerMessage.includes('find') || lowerMessage.includes('product') || lowerMessage.includes('search')) {
-      response.text = 'I can help you find the perfect product! What are you looking for today? You can search by category, brand, or specific features.';
-      response.suggestions = ['Electronics', 'Clothing', 'Shoes', 'Accessories'];
-    } else if (lowerMessage.includes('order') || lowerMessage.includes('track')) {
-      response.text = 'To track your order, please provide your order number. You can find it in your confirmation email or account dashboard.';
-      response.suggestions = ['Check order status', 'View order history', 'Cancel order'];
-    } else if (lowerMessage.includes('return') || lowerMessage.includes('refund')) {
-      response.text = 'Our return policy allows returns within 30 days of purchase. Items must be in original condition. Would you like to start a return?';
-      response.suggestions = ['Start return', 'Return policy', 'Refund status'];
-    } else if (lowerMessage.includes('size') || lowerMessage.includes('fit')) {
-      response.text = 'I can help you find the right size! Check our size guide or tell me what product you\'re interested in for specific sizing information.';
-      response.suggestions = ['Size guide', 'Fit recommendations', 'Exchange policy'];
-    } else if (lowerMessage.includes('payment') || lowerMessage.includes('card')) {
-      response.text = 'We accept all major credit cards, PayPal, and digital wallets. All payments are secured with SSL encryption. Need help with payment?';
-      response.suggestions = ['Payment methods', 'Billing issues', 'Security info'];
-    } else if (lowerMessage.includes('shipping') || lowerMessage.includes('delivery')) {
-      response.text = 'We offer free shipping on orders over $50. Standard delivery takes 3-5 business days, express delivery 1-2 days. What would you like to know?';
-      response.suggestions = ['Shipping rates', 'Delivery time', 'Express shipping'];
-    } else {
-      response.text = 'I\'m here to help! You can ask me about products, orders, returns, sizing, or any other questions about shopping with us.';
-      response.suggestions = ['Browse products', 'Check order', 'Customer support', 'FAQ'];
-    }
-
-    return response;
-  };
-
-  const sendMessage = async () => {
+  const handleSendMessage = useCallback(async () => {
     if (!inputValue.trim()) return;
 
     const userMessage: Message = {
@@ -100,14 +149,33 @@ const ChatbotAssistant: React.FC = () => {
       setMessages(prev => [...prev, botResponse]);
       setIsTyping(false);
     }, 1000);
-  };
+  }, [inputValue]);
 
-  const handleSuggestionClick = (suggestion: string) => {
+  const handleSuggestionClick = useCallback((suggestion: string) => {
     setInputValue(suggestion);
-    sendMessage();
-  };
+    setTimeout(() => {
+      // Wait for setInputValue to flush before sending
+      // so inputValue is picked up as intended
+      // But since handleSendMessage is using inputValue state, we want to call it after state is set.
+      // So pass suggestion directly to bot
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        text: suggestion,
+        sender: 'user',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, userMessage]);
+      setIsTyping(true);
+      setInputValue('');
+      setTimeout(() => {
+        const botResponse = generateBotResponse(suggestion);
+        setMessages(prev => [...prev, botResponse]);
+        setIsTyping(false);
+      }, 1000);
+    }, 0);
+  }, []);
 
-  const handleQuickAction = (action: string) => {
+  const handleQuickAction = useCallback((action: string) => {
     let message = '';
     switch (action) {
       case 'find-products':
@@ -120,9 +188,19 @@ const ChatbotAssistant: React.FC = () => {
         message = 'I need help';
         break;
     }
-    setInputValue(message);
-    sendMessage();
-  };
+    handleSuggestionClick(message);
+  }, [handleSuggestionClick]);
+
+  // Memoize the rendered messages
+  const renderedMessages = useMemo(() => (
+    messages.map((message) => (
+      <ChatMessage
+        key={message.id}
+        message={message}
+        onSuggestionClick={handleSuggestionClick}
+      />
+    ))
+  ), [messages, handleSuggestionClick]);
 
   return (
     <>
@@ -131,6 +209,7 @@ const ChatbotAssistant: React.FC = () => {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg z-40"
         size="icon"
+        aria-label="Open Chat Assistant"
       >
         <MessageCircle className="h-6 w-6" />
       </Button>
@@ -149,6 +228,7 @@ const ChatbotAssistant: React.FC = () => {
                 size="icon"
                 onClick={() => setIsOpen(false)}
                 className="h-8 w-8"
+                aria-label="Close Chat Assistant"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -172,47 +252,8 @@ const ChatbotAssistant: React.FC = () => {
           <CardContent className="flex-1 flex flex-col p-0">
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
-                    <div
-                      className={`p-3 rounded-lg ${
-                        message.sender === 'user'
-                          ? 'bg-blue-500 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
-                    >
-                      <p className="text-sm">{message.text}</p>
-                    </div>
-                    
-                    {message.suggestions && message.suggestions.length > 0 && (
-                      <div className="mt-2 space-y-1">
-                        {message.suggestions.map((suggestion, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="block w-full text-left text-xs bg-white border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors"
-                          >
-                            {suggestion}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className={`flex items-end ${message.sender === 'user' ? 'order-2 ml-2' : 'order-1 mr-2'}`}>
-                    {message.sender === 'user' ? (
-                      <User className="h-6 w-6 text-gray-400" />
-                    ) : (
-                      <Bot className="h-6 w-6 text-blue-500" />
-                    )}
-                  </div>
-                </div>
-              ))}
-              
+              {renderedMessages}
+
               {isTyping && (
                 <div className="flex justify-start">
                   <div className="flex items-center space-x-2">
@@ -236,11 +277,13 @@ const ChatbotAssistant: React.FC = () => {
                 <Input
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSendMessage();
+                  }}
                   placeholder="Type your message..."
                   className="flex-1"
                 />
-                <Button onClick={sendMessage} size="icon">
+                <Button onClick={handleSendMessage} size="icon" aria-label="Send message">
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
