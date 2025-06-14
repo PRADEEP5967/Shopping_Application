@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Product } from '@/types';
-import ProductCard from './ProductCard';
+import ModernProductCard from './ModernProductCard';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 interface TrendingProductsProps {
@@ -99,10 +99,9 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {visibleProducts.map((product, index) => (
-            <ProductCard 
+            <ModernProductCard 
               key={`${product.id}-${index}`} 
               product={product} 
-              className="transform transition-all duration-300 hover:-translate-y-2"
             />
           ))}
         </div>

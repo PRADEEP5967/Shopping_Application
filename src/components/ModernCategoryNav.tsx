@@ -3,82 +3,82 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Smartphone, 
-  Shirt, 
-  Home, 
-  Dumbbell, 
-  Book, 
-  Gift,
+  Smartphone,
+  Watch,
+  Monitor,
+  Home as HomeIcon,
+  Camera,
+  Sofa,
+  Gamepad,
   Sparkles,
-  Tag
+  Tag,
+  Package
 } from 'lucide-react';
+import { getProductCategories } from '@/data/products';
 
-interface CategoryItem {
-  id: string;
-  name: string;
-  icon: React.ComponentType<any>;
-  image: string;
-  link: string;
-  badge?: string;
-  color: string;
-}
-
-const categories: CategoryItem[] = [
-  {
-    id: '1',
-    name: 'Electronics',
+const categoryDetails: Record<string, any> = {
+  'Electronics': {
     icon: Smartphone,
-    image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?q=80&w=200&auto=format&fit=crop',
-    link: '/category/electronics',
+    image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2301&auto=format&fit=crop',
     badge: 'Hot',
     color: 'from-blue-500 to-cyan-500'
   },
-  {
-    id: '2',
-    name: 'Fashion',
-    icon: Shirt,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=200&auto=format&fit=crop',
-    link: '/category/clothing',
-    badge: 'Trending',
+  'Wearables': {
+    icon: Watch,
+    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd6b0?q=80&w=2076&auto=format&fit=crop',
+    badge: 'New',
     color: 'from-pink-500 to-purple-500'
   },
-  {
-    id: '3',
-    name: 'Home & Living',
-    icon: Home,
-    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=200&auto=format&fit=crop',
-    link: '/category/home',
+  'Computers': {
+    icon: Monitor,
+    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop',
     color: 'from-orange-500 to-red-500'
   },
-  {
-    id: '4',
-    name: 'Sports',
-    icon: Dumbbell,
-    image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=200&auto=format&fit=crop',
-    link: '/category/sports',
-    badge: 'New',
+  'Smart Home': {
+    icon: HomeIcon,
+    image: 'https://images.unsplash.com/photo-1558002038-1055e2dae1e7?q=80&w=2070&auto=format&fit=crop',
     color: 'from-green-500 to-teal-500'
   },
-  {
-    id: '5',
-    name: 'Books',
-    icon: Book,
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?q=80&w=200&auto=format&fit=crop',
-    link: '/category/books',
+  'Photography': {
+    icon: Camera,
+    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=2070&auto=format&fit=crop',
     color: 'from-amber-500 to-orange-500'
   },
-  {
-    id: '6',
-    name: 'Gifts',
-    icon: Gift,
-    image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?q=80&w=200&auto=format&fit=crop',
-    link: '/category/gifts',
-    badge: 'Special',
+  'Furniture': {
+    icon: Sofa,
+    image: 'https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=2062&auto=format&fit=crop',
+    badge: 'Sale',
     color: 'from-violet-500 to-purple-500'
+  },
+  'Gaming': {
+    icon: Gamepad,
+    image: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=2070&auto=format&fit=crop',
+    color: 'from-rose-500 to-pink-500'
+  },
+  'default': {
+    icon: Package,
+    image: 'https://images.unsplash.com/photo-1581591524425-c7e0978865fc?q=80&w=2070&auto=format&fit=crop',
+    color: 'from-gray-500 to-gray-600'
   }
-];
+};
+
+const slugify = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 
 const ModernCategoryNav = () => {
+  const categoryNames = getProductCategories();
+  const categories = categoryNames.map(name => {
+    const details = categoryDetails[name] || categoryDetails.default;
+    return {
+      id: name,
+      name,
+      icon: details.icon,
+      image: details.image,
+      link: `/category/${slugify(name)}`,
+      badge: details.badge,
+      color: details.color
+    };
+  });
+
   return (
     <div className="bg-white py-8 border-t border-gray-100">
       <div className="container mx-auto px-4">
@@ -95,7 +95,7 @@ const ModernCategoryNav = () => {
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-4 md:gap-6">
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (

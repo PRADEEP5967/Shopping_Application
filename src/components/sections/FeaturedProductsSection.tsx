@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import ProductGrid from '@/components/ProductGrid';
+import ModernProductCard from '@/components/ModernProductCard';
 import { Product } from '@/types';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
@@ -27,11 +27,11 @@ export const FeaturedProductsSection: React.FC<FeaturedProductsSectionProps> = (
           </p>
         </div>
         
-        <ProductGrid 
-          products={featuredProducts.slice(0, 8)} 
-          title=""
-          subtitle=""
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {featuredProducts.slice(0, 8).map((product) => (
+            <ModernProductCard key={product.id} product={product} />
+          ))}
+        </div>
         
         <div className="text-center mt-12">
           <Link to="/products">

@@ -8,9 +8,7 @@ import DealsSection from '@/components/DealsSection';
 import TrendingProducts from '@/components/TrendingProducts';
 import PromoFeatures from '@/components/PromoFeatures';
 import Testimonials from '@/components/Testimonials';
-import FeaturedCategories from '@/components/FeaturedCategories';
 import SmartRecommendations from '@/components/SmartRecommendations';
-import RecentlyViewed from '@/components/features/RecentlyViewed';
 import NewsletterSignup from '@/components/marketing/NewsletterSignup';
 
 // Modern Components
@@ -18,6 +16,7 @@ import { ModernFeatures } from '@/components/modern/ModernFeatures';
 import { ModernCTA } from '@/components/modern/ModernCTA';
 import { ModernTestimonials } from '@/components/modern/ModernTestimonials';
 import { StatsSection } from '@/components/modern/StatsSection';
+import ModernCategoryNav from '@/components/ModernCategoryNav';
 
 // New Section Components
 import { HeroSection } from '@/components/sections/HeroSection';
@@ -53,13 +52,6 @@ const Index = () => {
             <SmartRecommendations />
           </div>
         </section>
-
-        {/* Recently Viewed Section */}
-        <section className="py-16 bg-white dark:bg-gray-900">
-          <div className="container mx-auto px-4">
-            <RecentlyViewed />
-          </div>
-        </section>
         
         <DealsSection />
         
@@ -69,7 +61,7 @@ const Index = () => {
         {/* Featured Products Section */}
         <FeaturedProductsSection featuredProducts={featuredProducts} />
         
-        <FeaturedCategories />
+        <ModernCategoryNav />
         
         <TrendingProducts products={featuredProducts.slice(4, 8)} />
         
