@@ -30,6 +30,9 @@ import DealsDiscounts from '@/pages/DealsDiscounts';
 import ReturnsExchanges from '@/pages/ReturnsExchanges';
 import SearchPage from '@/pages/SearchPage';
 import Careers from '@/pages/Careers';
+import WearablesPage from '@/pages/WearablesPage';
+import SmartHomePage from '@/pages/SmartHomePage';
+import ComputersPage from '@/pages/ComputersPage';
 
 // New Pages
 import Performance from '@/pages/Performance';
@@ -91,6 +94,9 @@ const AppRoutes = () => {
       <Route path="/team" element={<Team />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/careers" element={<Careers />} />
+      <Route path="/wearables" element={<WearablesPage />} />
+      <Route path="/smart-home" element={<SmartHomePage />} />
+      <Route path="/computers" element={<ComputersPage />} />
       
       {/* New Search Page */}
       <Route path="/search" element={<SearchPage />} />
