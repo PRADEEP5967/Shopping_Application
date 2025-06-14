@@ -1,4 +1,3 @@
-
 import React from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -36,14 +35,18 @@ const ModernImageSlider: React.FC = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   React.useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi) {
+      return;
+    }
     const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
     emblaApi.on("select", onSelect);
 
     // On mount, trigger select
-    setSelectedIndex(emblaApi?.selectedScrollSnap() || 0);
+    setSelectedIndex(emblaApi.selectedScrollSnap() || 0);
 
-    return () => emblaApi.off("select", onSelect);
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   const scrollPrev = React.useCallback(() => {
