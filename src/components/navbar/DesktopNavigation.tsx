@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -13,7 +12,7 @@ import {
 const DesktopNavigation = () => {
   return (
     <nav
-      className="hidden md:flex items-center"
+      className="hidden lg:flex items-center"
       aria-label="Main site navigation"
       role="navigation"
     >
