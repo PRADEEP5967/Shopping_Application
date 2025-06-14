@@ -1,0 +1,53 @@
+
+import { Product } from '@/types';
+
+export const shoesProducts: Product[] = [
+  {
+    id: '3',
+    name: 'Athletic Running Shoes',
+    description: 'Performance running shoes with advanced cushioning technology and breathable mesh upper.',
+    price: 129.99,
+    category: 'Shoes',
+    images: ['https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.6,
+    reviewCount: 342,
+    inStock: true,
+    features: ['Air cushioning system', 'Breathable mesh', 'Lightweight design', 'Non-slip sole'],
+  },
+  {
+    id: '8',
+    name: 'Leather Chelsea Boots',
+    description: 'Handcrafted leather Chelsea boots with elastic side panels and comfortable cushioned sole.',
+    price: 159.99,
+    category: 'Shoes',
+    images: ['https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.6,
+    reviewCount: 189,
+    inStock: true,
+    features: ['Genuine leather upper', 'Elastic side panels', 'Cushioned insole', 'Durable rubber sole'],
+  },
+  {
+    id: '11',
+    name: 'Waterproof Hiking Boots',
+    description: 'Professional hiking boots with waterproof membrane and superior ankle support.',
+    price: 179.99,
+    category: 'Shoes',
+    images: ['https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.8,
+    reviewCount: 298,
+    inStock: true,
+    features: ['Waterproof membrane', 'Ankle support', 'Vibram sole', 'Breathable lining'],
+  },
+  {
+    id: '16',
+    name: 'Suede Desert Boots',
+    description: 'Classic suede desert boots with crepe sole and timeless design for versatile styling.',
+    price: 119.99,
+    category: 'Shoes',
+    images: ['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.5,
+    reviewCount: 143,
+    inStock: false,
+    features: ['Premium suede upper', 'Crepe sole', 'Lace-up closure', 'Timeless design'],
+  },
+];

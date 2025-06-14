@@ -1,0 +1,53 @@
+
+import { Product } from '@/types';
+
+export const clothingProducts: Product[] = [
+  {
+    id: '4',
+    name: 'Designer Denim Jacket',
+    description: 'Contemporary denim jacket with modern fit and premium quality fabric. Perfect for layering.',
+    price: 89.50,
+    category: 'Clothing',
+    images: ['https://images.unsplash.com/photo-1544966503-7cc5ac882d5e?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.7,
+    reviewCount: 128,
+    inStock: true,
+    features: ['Premium denim fabric', 'Modern fit', 'Reinforced stitching', 'Multiple pockets'],
+  },
+  {
+    id: '6',
+    name: 'Organic Cotton T-Shirt',
+    description: 'Sustainably made organic cotton t-shirt with perfect fit and ultra-soft texture.',
+    price: 35.00,
+    category: 'Clothing',
+    images: ['https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.5,
+    reviewCount: 294,
+    inStock: true,
+    features: ['100% organic cotton', 'Pre-shrunk fabric', 'Eco-friendly dyes', 'Comfortable fit'],
+  },
+  {
+    id: '12',
+    name: 'Insulated Winter Jacket',
+    description: 'High-performance winter jacket with down insulation and weather-resistant outer shell.',
+    price: 149.50,
+    category: 'Clothing',
+    images: ['https://images.unsplash.com/photo-1551698618-1dfe5d97d256?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.7,
+    reviewCount: 156,
+    inStock: true,
+    features: ['Down insulation', 'Weather-resistant', 'Adjustable hood', 'Multiple pockets'],
+  },
+  {
+    id: '14',
+    name: 'Vintage Graphic Tee',
+    description: 'Retro-inspired graphic t-shirt with vintage wash and comfortable relaxed fit.',
+    price: 42.00,
+    category: 'Clothing',
+    images: ['https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop'],
+    rating: 4.4,
+    reviewCount: 188,
+    inStock: true,
+    features: ['Vintage wash', 'Soft cotton blend', 'Relaxed fit', 'Unique graphics'],
+  },
+];
