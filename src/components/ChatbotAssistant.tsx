@@ -219,7 +219,7 @@ const ChatbotAssistant: React.FC = () => {
       {/* Chat Toggle Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg z-40"
+        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg z-40 sm:bottom-6 sm:right-6"
         size="icon"
         aria-label="Open Chat Assistant"
       >
@@ -228,7 +228,14 @@ const ChatbotAssistant: React.FC = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <Card className="fixed bottom-6 right-6 w-96 h-[500px] shadow-xl z-50 flex flex-col">
+        <Card
+          className="
+            fixed bottom-0 left-0 right-0 mx-auto
+            w-full max-w-full h-[75dvh] rounded-t-lg z-50 flex flex-col shadow-xl
+            animate-fade-in
+            sm:bottom-6 sm:left-auto sm:right-6 sm:mx-0 sm:w-[400px] sm:max-w-[95vw] sm:h-[500px] sm:rounded-lg
+          "
+        >
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -245,7 +252,7 @@ const ChatbotAssistant: React.FC = () => {
                 <X className="h-4 w-4" />
               </Button>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {quickActions.map((action) => (
                 <Button
                   key={action.action}
@@ -263,9 +270,14 @@ const ChatbotAssistant: React.FC = () => {
 
           <CardContent className="flex-1 flex flex-col p-0">
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div
+              className="
+                flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300
+                bg-background
+              "
+              style={{ minHeight: 0 }}
+            >
               {renderedMessages}
-
               {isTyping && (
                 <div className="flex justify-start">
                   <div className="flex items-center space-x-2">
@@ -284,7 +296,7 @@ const ChatbotAssistant: React.FC = () => {
             </div>
 
             {/* Input */}
-            <div className="border-t p-4">
+            <div className="border-t p-2 sm:p-4 bg-card">
               <div className="flex gap-2">
                 <Input
                   value={inputValue}
@@ -295,7 +307,7 @@ const ChatbotAssistant: React.FC = () => {
                     }
                   }}
                   placeholder="Type your message... (multiple queries? Separate by newline or ; )"
-                  className="flex-1"
+                  className="flex-1 text-base sm:text-sm"
                 />
                 <Button onClick={handleSendMessage} size="icon" aria-label="Send message">
                   <Send className="h-4 w-4" />
