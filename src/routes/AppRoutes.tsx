@@ -67,6 +67,12 @@ import Insights from '@/pages/admin/Insights';
 import SSLEncryption from '@/pages/admin/SSLEncryption';
 import PCICompliance from '@/pages/admin/PCICompliance';
 import TwoFASupport from '@/pages/admin/TwoFASupport';
+import SmartphonePage from '@/pages/SmartphonePage';
+import MonitorPage from '@/pages/MonitorPage';
+import ShirtPage from '@/pages/ShirtPage';
+import DressPage from '@/pages/DressPage';
+import BabyToyPage from '@/pages/BabyToyPage';
+import SofaPage from '@/pages/SofaPage';
 
 const AppRoutes = () => {
   return (
@@ -227,6 +233,14 @@ const AppRoutes = () => {
       
       <Route path="/pending" element={<Pending />} />
       
+      {/* Category direct pages */}
+      <Route path="/category/smartphone" element={<SmartphonePage />} />
+      <Route path="/category/monitor" element={<MonitorPage />} />
+      <Route path="/category/shirt" element={<ShirtPage />} />
+      <Route path="/category/dress" element={<DressPage />} />
+      <Route path="/category/baby-toy" element={<BabyToyPage />} />
+      <Route path="/category/sofa" element={<SofaPage />} />
+      {/* Fallback */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
