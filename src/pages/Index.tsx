@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -10,6 +9,9 @@ import PromoFeatures from '@/components/PromoFeatures';
 import Testimonials from '@/components/Testimonials';
 import SmartRecommendations from '@/components/SmartRecommendations';
 import NewsletterSignup from '@/components/marketing/NewsletterSignup';
+import TestimonialsSlider from "@/components/TestimonialsSlider";
+import { AnimatedContentSection } from "@/components/sections/AnimatedContentSection";
+import { ModernTeamHomeSection } from "@/components/sections/ModernTeamHomeSection";
 
 // Modern Components
 import { ModernFeatures } from '@/components/modern/ModernFeatures';
@@ -46,6 +48,9 @@ const Index = () => {
         {/* Quick Links Section */}
         <QuickLinksSection />
         
+        {/* New: Animated Content Section */}
+        <AnimatedContentSection />
+        
         {/* Smart Recommendations Section */}
         <section className="py-16 bg-gray-50 dark:bg-gray-800">
           <div className="container mx-auto px-4">
@@ -66,6 +71,12 @@ const Index = () => {
         <TrendingProducts products={featuredProducts.slice(4, 8)} />
         
         <StatsSection />
+
+        {/* Modern Our Team Section */}
+        <ModernTeamHomeSection />
+
+        {/* Testimonial Slider Section */}
+        <TestimonialsSlider />
 
         {/* Customer Service Section */}
         <CustomerServiceSection />
