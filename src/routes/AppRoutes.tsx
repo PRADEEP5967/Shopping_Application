@@ -1,256 +1,30 @@
+
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Index from '@/pages/Index';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import Products from '@/pages/Products';
-import CategoryProductsPage from '@/pages/CategoryProductsPage';
-import CategoriesPage from '@/pages/CategoriesPage';
-import ProductDetail from '@/pages/ProductDetail';
-import MyAccount from '@/pages/MyAccount';
-import WishlistPage from '@/pages/WishlistPage';
-import Orders from '@/pages/Orders';
-import About from '@/pages/About';
-import Contact from '@/pages/Contact';
-import Services from '@/pages/Services';
-import Portfolio from '@/pages/Portfolio';
-import Team from '@/pages/Team';
-import Blog from '@/pages/Blog';
-import Checkout from '@/pages/Checkout';
-import OrderConfirmation from '@/pages/OrderConfirmation';
-import FAQ from '@/pages/FAQ';
-import ReturnPolicy from '@/pages/ReturnPolicy';
-import ShoppingPolicy from '@/pages/ShoppingPolicy';
-import TermsOfService from '@/pages/TermsOfService';
-import NewArrivals from '@/pages/NewArrivals';
-import OrderHistory from '@/pages/OrderHistory';
-import OrderDetail from '@/pages/OrderDetail';
 import NotFound from '@/pages/NotFound';
-import DealsDiscounts from '@/pages/DealsDiscounts';
-import ReturnsExchanges from '@/pages/ReturnsExchanges';
-import SearchPage from '@/pages/SearchPage';
-import Careers from '@/pages/Careers';
-import WearablesPage from '@/pages/WearablesPage';
-import SmartHomePage from '@/pages/SmartHomePage';
-import ComputersPage from '@/pages/ComputersPage';
-import SpecialOffers from '@/pages/SpecialOffers';
-import Pending from '@/pages/Pending';
 
-// New Pages
-import Performance from '@/pages/Performance';
-import Efficiency from '@/pages/Efficiency';
-import Quality from '@/pages/Quality';
-
-// Admin Pages
-import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
-import AdminDashboard from '@/pages/AdminDashboard';
-import AdminProductAdd from '@/pages/AdminProductAdd';
-import AdminProducts from '@/pages/admin/Products';
-import AdminOrders from '@/pages/admin/Orders';
-import AdminCustomers from '@/pages/admin/Customers';
-import AdminCategories from '@/pages/admin/Categories';
-import AdminDiscounts from '@/pages/admin/Discounts';
-import AdminInventory from '@/pages/admin/Inventory';
-import AdminAnalytics from '@/pages/admin/Analytics';
-import AdminActivity from '@/pages/admin/Activity';
-import AdminABTesting from '@/pages/admin/ABTesting';
-import AdminSettings from '@/pages/admin/Settings';
-import AdminNotifications from '@/pages/admin/Notifications';
-import AdminHelp from '@/pages/admin/Help';
-import AdminPages from '@/pages/admin/Pages';
-
-// New Modern Report/Admin Pages
-import RealTimeAnalysis from '@/pages/admin/RealTimeAnalysis';
-import CustomerReports from '@/pages/admin/CustomerReports';
-import Insights from '@/pages/admin/Insights';
-
-import SSLEncryption from '@/pages/admin/SSLEncryption';
-import PCICompliance from '@/pages/admin/PCICompliance';
-import TwoFASupport from '@/pages/admin/TwoFASupport';
-import SmartphonePage from '@/pages/SmartphonePage';
-import MonitorPage from '@/pages/MonitorPage';
-import ShirtPage from '@/pages/ShirtPage';
-import DressPage from '@/pages/DressPage';
-import BabyToyPage from '@/pages/BabyToyPage';
-import SofaPage from '@/pages/SofaPage';
-
-// New Pending Pages
-import OrderProcessingPending from '@/pages/OrderProcessingPending';
-import PaymentPending from '@/pages/PaymentPending';
-import AccountVerificationPending from '@/pages/AccountVerificationPending';
+// Import route modules
+import { MainRoutes } from './MainRoutes';
+import { AdminRoutes } from './AdminRoutes';
+import { CategoryRoutes } from './CategoryRoutes';
+import { PendingRoutes } from './PendingRoutes';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/products" element={<Products />} />
-      <Route path="/categories" element={<CategoriesPage />} />
-      <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
-      
-      {/* New Required Pages */}
-      <Route path="/performance" element={<Performance />} />
-      <Route path="/efficiency" element={<Efficiency />} />
-      <Route path="/quality" element={<Quality />} />
-      <Route path="/deals-discounts" element={<DealsDiscounts />} />
-      <Route path="/returns-exchanges" element={<ReturnsExchanges />} />
-      
-      <Route path="/product/:id" element={<ProductDetail />} />
-      <Route path="/my-account" element={<MyAccount />} />
-      <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-confirmation" element={<OrderConfirmation />} />
-      <Route path="/order-history" element={<OrderHistory />} />
-      <Route path="/order-detail/:orderId" element={<OrderDetail />} />
-      <Route path="/new-arrivals" element={<NewArrivals />} />
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/return-policy" element={<ReturnPolicy />} />
-      <Route path="/shipping-policy" element={<ShoppingPolicy />} />
-      <Route path="/terms-of-service" element={<TermsOfService />} />
-      <Route path="/about-us" element={<About />} />
-      <Route path="/contact-us" element={<Contact />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/portfolio" element={<Portfolio />} />
-      <Route path="/team" element={<Team />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/careers" element={<Careers />} />
-      <Route path="/wearables" element={<WearablesPage />} />
-      <Route path="/smart-home" element={<SmartHomePage />} />
-      <Route path="/computers" element={<ComputersPage />} />
-      
-      {/* New Search Page */}
-      <Route path="/search" element={<SearchPage />} />
-      
-      {/* New Special Offers Page */}
-      <Route path="/special-offers" element={<SpecialOffers />} />
+      {/* Main Application Routes */}
+      <MainRoutes />
       
       {/* Admin Routes */}
-      <Route path="/admin" element={
-        <AdminDashboardLayout title="Dashboard">
-          <AdminDashboard />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/add-product" element={
-        <AdminDashboardLayout title="Add Product">
-          <AdminProductAdd />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/products" element={
-        <AdminDashboardLayout title="Product Management">
-          <AdminProducts />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/orders" element={
-        <AdminDashboardLayout title="Order Management">
-          <AdminOrders />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/customers" element={
-        <AdminDashboardLayout title="Customer Management">
-          <AdminCustomers />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/categories" element={
-        <AdminDashboardLayout title="Category Management">
-          <AdminCategories />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/discounts" element={
-        <AdminDashboardLayout title="Discount Management">
-          <AdminDiscounts />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/inventory" element={
-        <AdminDashboardLayout title="Inventory Management">
-          <AdminInventory />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/analytics" element={
-        <AdminDashboardLayout title="Analytics Dashboard">
-          <AdminAnalytics />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/activity" element={
-        <AdminDashboardLayout title="Activity Log">
-          <AdminActivity />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/ab-testing" element={
-        <AdminDashboardLayout title="A/B Testing">
-          <AdminABTesting />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/settings" element={
-        <AdminDashboardLayout title="Settings">
-          <AdminSettings />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/notifications" element={
-        <AdminDashboardLayout title="Notifications">
-          <AdminNotifications />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/help" element={
-        <AdminDashboardLayout title="Help & Documentation">
-          <AdminHelp />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/pages" element={
-        <AdminDashboardLayout title="Page Management">
-          <AdminPages />
-        </AdminDashboardLayout>
-      } />
+      <AdminRoutes />
       
-      {/* Modern Admin Analytics/Reports Pages */}
-      <Route path="/admin/real-time-analysis" element={
-        <AdminDashboardLayout title="Real-Time Data Analysis">
-          <RealTimeAnalysis />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/customer-reports" element={
-        <AdminDashboardLayout title="Customer Reports">
-          <CustomerReports />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/insights" element={
-        <AdminDashboardLayout title="Insights">
-          <Insights />
-        </AdminDashboardLayout>
-      } />
+      {/* Category Routes */}
+      <CategoryRoutes />
       
-      <Route path="/admin/ssl-encryption" element={
-        <AdminDashboardLayout title="SSL Encryption">
-          <SSLEncryption />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/pci-compliance" element={
-        <AdminDashboardLayout title="PCI Compliance">
-          <PCICompliance />
-        </AdminDashboardLayout>
-      } />
-      <Route path="/admin/2fa-support" element={
-        <AdminDashboardLayout title="2FA Support">
-          <TwoFASupport />
-        </AdminDashboardLayout>
-      } />
+      {/* Pending Routes */}
+      <PendingRoutes />
       
-      <Route path="/pending" element={<Pending />} />
-      
-      {/* New Pending Pages */}
-      <Route path="/pending/order-processing" element={<OrderProcessingPending />} />
-      <Route path="/pending/payment" element={<PaymentPending />} />
-      <Route path="/pending/account-verification" element={<AccountVerificationPending />} />
-      
-      {/* Category direct pages */}
-      <Route path="/category/smartphone" element={<SmartphonePage />} />
-      <Route path="/category/monitor" element={<MonitorPage />} />
-      <Route path="/category/shirt" element={<ShirtPage />} />
-      <Route path="/category/dress" element={<DressPage />} />
-      <Route path="/category/baby-toy" element={<BabyToyPage />} />
-      <Route path="/category/sofa" element={<SofaPage />} />
-      {/* Fallback */}
+      {/* Fallback Route */}
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
