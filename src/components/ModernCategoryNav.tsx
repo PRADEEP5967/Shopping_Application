@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
@@ -12,7 +11,8 @@ import {
   Gamepad,
   Sparkles,
   Tag,
-  Package
+  Package,
+  ShoppingBag
 } from 'lucide-react';
 import { getProductCategories } from '@/data/products';
 
@@ -54,6 +54,12 @@ const categoryDetails: Record<string, any> = {
     icon: Gamepad,
     image: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=2070&auto=format&fit=crop',
     color: 'from-rose-500 to-pink-500'
+  },
+  'Accessories': {
+    icon: ShoppingBag,
+    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=400&auto=format&fit=crop',
+    badge: 'New',
+    color: 'from-yellow-500 to-orange-400',
   },
   'default': {
     icon: Package,

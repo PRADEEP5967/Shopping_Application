@@ -1,4 +1,3 @@
-
 import { Product } from '@/types';
 
 // Mock product data with modern, high-quality images
@@ -194,5 +193,29 @@ export const products: Product[] = [
     reviewCount: 143,
     inStock: false,
     features: ['Premium suede upper', 'Crepe sole', 'Lace-up closure', 'Timeless design'],
+  },
+  {
+    id: "acc-001",
+    name: "Leather Wallet",
+    brand: "LuxCraft",
+    category: "Accessories",
+    price: 38,
+    rating: 4.4,
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&auto=format&fit=crop",
+    description: "Premium leather wallet with multiple compartments.",
+    inStock: true,
+    isFeatured: true,
+  },
+  {
+    id: "acc-002",
+    name: "Sunglasses Classic",
+    brand: "RayLux",
+    category: "Accessories",
+    price: 75,
+    rating: 4.6,
+    image: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=400&auto=format&fit=crop",
+    description: "Classic sunglasses perfect for all seasons.",
+    inStock: true,
+    isFeatured: false,
   },
 ];
