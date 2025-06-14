@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -51,7 +50,7 @@ const Navbar: React.FC = () => {
         setIsMenuOpen={setIsMenuOpen}
         handleLogout={handleLogout} 
       />
-      {isSearchOpen && <SearchOverlay onClose={toggleSearch} />}
+      <SearchOverlay isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} />
     </header>
   );
 };

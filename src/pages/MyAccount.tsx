@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import { Button } from '@/components/ui/button';
@@ -71,7 +70,7 @@ const MyAccount = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8 bg-gray-50">

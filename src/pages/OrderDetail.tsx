@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { CartItem, Product } from '@/types';
 import OrderHeader from '@/components/order/OrderHeader';
@@ -151,7 +150,7 @@ const OrderDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">

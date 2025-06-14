@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import CategoryGrid from '@/components/category/CategoryGrid';
@@ -10,7 +10,7 @@ import CategoryFeatures from '@/components/category/CategoryFeatures';
 const CategoriesPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       <CartFlyout />
       
       <main className="flex-grow">

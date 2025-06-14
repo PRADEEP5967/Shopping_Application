@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
 
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import CategoryHeader from '@/components/category/CategoryHeader';
@@ -92,7 +92,7 @@ const CategoryProductsPage = () => {
   if (!categoryProducts.length) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        <Header />
         <CartFlyout />
         <main className="flex-grow container mx-auto px-4 py-8">
             <h1 className="text-2xl font-bold">Category not found: {categoryName}</h1>
@@ -105,7 +105,7 @@ const CategoryProductsPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50/50">
-      <Navbar />
+      <Header />
       <CartFlyout />
       <main className="flex-grow container mx-auto px-4 py-8">
         <CategoryHeader categoryName={categoryName} />
