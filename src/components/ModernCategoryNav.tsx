@@ -19,40 +19,40 @@ import { getProductCategories } from '@/data/products';
 const categoryDetails: Record<string, any> = {
   'Electronics': {
     icon: Smartphone,
-    image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?q=80&w=2301&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80',
     badge: 'Hot',
     color: 'from-blue-500 to-cyan-500'
   },
   'Wearables': {
     icon: Watch,
-    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd6b0?q=80&w=2076&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1536304993881-53d3c6d83f07?auto=format&fit=crop&w=400&q=80',
     badge: 'New',
     color: 'from-pink-500 to-purple-500'
   },
   'Computers': {
     icon: Monitor,
-    image: 'https://images.unsplash.com/photo-1531297484001-80022131f5a1?q=80&w=2020&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=400&q=80',
     color: 'from-orange-500 to-red-500'
   },
   'Smart Home': {
     icon: HomeIcon,
-    image: 'https://images.unsplash.com/photo-1558002038-1055e2dae1e7?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
     color: 'from-green-500 to-teal-500'
   },
   'Photography': {
     icon: Camera,
-    image: 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=400&q=80',
     color: 'from-amber-500 to-orange-500'
   },
   'Furniture': {
     icon: Sofa,
-    image: 'https://images.unsplash.com/photo-1505843513577-22bb7d21e455?q=80&w=2062&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1460518451285-97b6aa326961?auto=format&fit=crop&w=400&q=80',
     badge: 'Sale',
     color: 'from-violet-500 to-purple-500'
   },
   'Gaming': {
     icon: Gamepad,
-    image: 'https://images.unsplash.com/photo-1598550476439-6847785fcea6?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
     color: 'from-rose-500 to-pink-500'
   },
   'Accessories': {
@@ -63,7 +63,7 @@ const categoryDetails: Record<string, any> = {
   },
   'default': {
     icon: Package,
-    image: 'https://images.unsplash.com/photo-1581591524425-c7e0978865fc?q=80&w=2070&auto=format&fit=crop',
+    image: 'https://images.unsplash.com/photo-1611095564984-729c8d48a2bc?auto=format&fit=crop&w=400&q=80',
     color: 'from-gray-500 to-gray-600'
   }
 };
@@ -117,6 +117,8 @@ const ModernCategoryNav = () => {
                     src={category.image}
                     alt={category.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy"
+                    decoding="async"
                   />
                   
                   {/* Gradient Overlay */}

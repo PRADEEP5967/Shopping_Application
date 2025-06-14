@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -17,14 +16,14 @@ const CategoryNav: React.FC<CategoryNavProps> = ({ categories }) => {
   // Map categories to icons
   const getCategoryIcon = (category: string) => {
     switch(category) {
-      case 'Electronics': return <Laptop className="h-5 w-5" />;
-      case 'Wearables': return <Watch className="h-5 w-5" />;
-      case 'Computers': return <Monitor className="h-5 w-5" />;
-      case 'Smart Home': return <HomeIcon className="h-5 w-5" />;
-      case 'Photography': return <Camera className="h-5 w-5" />;
-      case 'Furniture': return <Sofa className="h-5 w-5" />;
-      case 'Gaming': return <Gamepad className="h-5 w-5" />;
-      default: return <Laptop className="h-5 w-5" />;
+      case 'Electronics': return <Laptop className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Wearables': return <Watch className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Computers': return <Monitor className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Smart Home': return <HomeIcon className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Photography': return <Camera className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Furniture': return <Sofa className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      case 'Gaming': return <Gamepad className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
+      default: return <Laptop className="h-5 w-5 transition-transform duration-200 group-hover:scale-125" />;
     }
   };
   
