@@ -28,15 +28,17 @@ import { Badge } from '@/components/ui/badge';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
+import RatingFilter from '@/components/shared/RatingFilter';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(searchParams.getAll('category') || []);
   const [sortOrder, setSortOrder] = useState(searchParams.get('sort') || 'featured');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000]);
+  const [minRating, setMinRating] = useState<number>(Number(searchParams.get('rating')) || 0);
   const [filterCount, setFilterCount] = useState(0);
   
   const isMobile = useMediaQuery("(max-width: 768px)");
@@ -67,6 +69,7 @@ const Products = () => {
     if (selectedCategories.length > 0) {
       selectedCategories.forEach(cat => params.append('category', cat));
     }
+    if (minRating > 0) params.set('rating', String(minRating));
     
     setSearchParams(params, { replace: true });
     
@@ -75,9 +78,10 @@ const Products = () => {
     if (searchQuery) count++;
     if (selectedCategories.length > 0) count += selectedCategories.length;
     if (priceRange[0] > 0 || priceRange[1] < 1000) count++;
+    if (minRating > 0) count++;
     setFilterCount(count);
     
-  }, [searchQuery, selectedCategories, sortOrder, priceRange, setSearchParams]);
+  }, [searchQuery, selectedCategories, sortOrder, priceRange, minRating, setSearchParams]);
   
   // Apply filters and sorting
   useEffect(() => {
@@ -103,6 +107,11 @@ const Products = () => {
     result = result.filter(
       product => product.price >= priceRange[0] && product.price <= priceRange[1]
     );
+
+    // Apply rating filter
+    if (minRating > 0) {
+      result = result.filter(p => p.rating >= minRating);
+    }
     
     // Apply sorting
     switch (sortOrder) {
@@ -131,7 +140,7 @@ const Products = () => {
     }
     
     setFilteredProducts(result);
-  }, [products, searchQuery, selectedCategories, sortOrder, priceRange]);
+  }, [products, searchQuery, selectedCategories, sortOrder, priceRange, minRating]);
   
   const handleCategoryToggle = (category: string) => {
     setSelectedCategories(prev => 
@@ -146,6 +155,7 @@ const Products = () => {
     setSelectedCategories([]);
     setSortOrder('featured');
     setPriceRange([0, 1000]);
+    setMinRating(0);
     setSearchParams({});
   };
   
@@ -191,6 +201,11 @@ const Products = () => {
             className="w-24"
           />
         </div>
+      </div>
+
+      <div>
+        <h3 className="font-medium mb-3">Rating</h3>
+        <RatingFilter selectedRating={minRating} onRatingChange={setMinRating} />
       </div>
       
       {filterCount > 0 && (

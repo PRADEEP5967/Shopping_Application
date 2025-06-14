@@ -13,6 +13,7 @@ import MobileFilterSheet from '@/components/category/MobileFilterSheet';
 import SortDropdown from '@/components/category/SortDropdown';
 import ProductGrid from '@/components/ProductGrid';
 import NoProductsFound from '@/components/category/NoProductsFound';
+import RatingFilter from '@/components/shared/RatingFilter';
 
 const unslugify = (slug: string) => {
   return slug
@@ -28,6 +29,7 @@ const CategoryProductsPage = () => {
   const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState('featured');
+  const [minRating, setMinRating] = useState<number>(0);
   
   const categoryProducts = useMemo(() => {
     return getAllProducts().filter(p => p.category === categoryName);
@@ -49,6 +51,11 @@ const CategoryProductsPage = () => {
       products = products.filter(p => p.brand && selectedBrands.includes(p.brand));
     }
 
+    // Filter by rating
+    if (minRating > 0) {
+      products = products.filter(p => p.rating >= minRating);
+    }
+
     // Sort products
     switch (sortOption) {
       case 'price-asc':
@@ -67,7 +74,7 @@ const CategoryProductsPage = () => {
     }
 
     return products;
-  }, [categoryProducts, priceRange, selectedBrands, sortOption]);
+  }, [categoryProducts, priceRange, selectedBrands, sortOption, minRating]);
 
   const handleBrandToggle = (brand: string) => {
     setSelectedBrands(prev => 
@@ -79,6 +86,7 @@ const CategoryProductsPage = () => {
     setPriceRange([0, 1000]);
     setSelectedBrands([]);
     setSortOption('featured');
+    setMinRating(0);
   };
 
   if (!categoryProducts.length) {
@@ -109,6 +117,8 @@ const CategoryProductsPage = () => {
             brands={brands}
             selectedBrands={selectedBrands}
             handleBrandToggle={handleBrandToggle}
+            selectedRating={minRating}
+            handleRatingChange={setMinRating}
           />
           
           <div className="flex-1">
@@ -119,6 +129,8 @@ const CategoryProductsPage = () => {
                 brands={brands}
                 selectedBrands={selectedBrands}
                 handleBrandToggle={handleBrandToggle}
+                selectedRating={minRating}
+                handleRatingChange={setMinRating}
               />
               <p className="text-sm text-gray-600 hidden md:block">
                 Showing {filteredProducts.length} of {categoryProducts.length} products

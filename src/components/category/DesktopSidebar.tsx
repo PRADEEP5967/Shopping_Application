@@ -2,6 +2,7 @@
 import React from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
+import RatingFilter from '../shared/RatingFilter';
 
 interface DesktopSidebarProps {
   priceRange: number[];
@@ -9,6 +10,8 @@ interface DesktopSidebarProps {
   brands: string[];
   selectedBrands: string[];
   handleBrandToggle: (brand: string) => void;
+  selectedRating: number;
+  handleRatingChange: (rating: number) => void;
 }
 
 const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
@@ -16,7 +19,9 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
   handlePriceChange,
   brands,
   selectedBrands,
-  handleBrandToggle
+  handleBrandToggle,
+  selectedRating,
+  handleRatingChange,
 }) => {
   return (
     <div className="hidden md:block w-64 flex-shrink-0">
@@ -37,6 +42,14 @@ const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
               <span>${priceRange[1]}</span>
             </div>
           </div>
+        </div>
+
+        <div>
+          <h3 className="font-medium text-lg mb-3">Rating</h3>
+          <RatingFilter
+            selectedRating={selectedRating}
+            onRatingChange={handleRatingChange}
+          />
         </div>
         
         <div>

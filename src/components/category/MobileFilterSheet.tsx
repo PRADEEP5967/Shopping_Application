@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Filter } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
+import RatingFilter from '../shared/RatingFilter';
 import {
   Sheet,
   SheetContent,
@@ -19,6 +20,8 @@ interface MobileFilterSheetProps {
   brands: string[];
   selectedBrands: string[];
   handleBrandToggle: (brand: string) => void;
+  selectedRating: number;
+  handleRatingChange: (rating: number) => void;
 }
 
 const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
@@ -26,7 +29,9 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
   handlePriceChange,
   brands,
   selectedBrands,
-  handleBrandToggle
+  handleBrandToggle,
+  selectedRating,
+  handleRatingChange,
 }) => {
   return (
     <Sheet>
@@ -61,6 +66,14 @@ const MobileFilterSheet: React.FC<MobileFilterSheetProps> = ({
                 <span>${priceRange[1]}</span>
               </div>
             </div>
+          </div>
+
+          <div>
+            <h3 className="font-medium mb-3">Rating</h3>
+            <RatingFilter
+              selectedRating={selectedRating}
+              onRatingChange={handleRatingChange}
+            />
           </div>
           
           <div>
