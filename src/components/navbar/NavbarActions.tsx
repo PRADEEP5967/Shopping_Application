@@ -23,7 +23,7 @@ interface NavbarActionsProps {
 
 const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogout }) => {
   const { user, isAuthenticated, isAdmin } = useAuth();
-  const { getTotalItems } = useCart();
+  const { totalItems } = useCart();
   const { items: wishlistItems } = useWishlist();
 
   return (
@@ -55,9 +55,9 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
       <Link to="/checkout">
         <Button variant="ghost" size="sm" className="relative" title="Shopping Cart">
           <ShoppingCart className="h-5 w-5" />
-          {getTotalItems() > 0 && (
+          {totalItems > 0 && (
             <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">
-              {getTotalItems()}
+              {totalItems}
             </Badge>
           )}
         </Button>
@@ -70,7 +70,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
             <Button variant="ghost" size="sm" className="flex items-center space-x-2">
               <Avatar className="h-7 w-7">
                 <AvatarImage 
-                  src="https://avatars.githubusercontent.com/u/your-github-username" 
+                  src="https://avatars.githubusercontent.com/u/pradeepsahani" 
                   alt="Pradeep Sahani" 
                 />
                 <AvatarFallback className="bg-primary text-white text-sm">PS</AvatarFallback>
