@@ -203,6 +203,7 @@ export const products: Product[] = [
     rating: 4.4,
     images: ["https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=400&auto=format&fit=crop"],
     description: "Premium leather wallet with multiple compartments.",
+    reviewCount: 67,
     inStock: true
   },
   {
@@ -214,6 +215,7 @@ export const products: Product[] = [
     rating: 4.6,
     images: ["https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?q=80&w=400&auto=format&fit=crop"],
     description: "Classic sunglasses perfect for all seasons.",
+    reviewCount: 41,
     inStock: true
   },
 ];
