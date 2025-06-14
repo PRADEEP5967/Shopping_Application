@@ -210,7 +210,7 @@ const Footer = () => {
       <div className="bg-black py-6 px-4">
         <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
           <p className="text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} NextCommerce Pro. All rights reserved.
+            © 2025 ER PRADEEP Pro. All rights reserved.
           </p>
           <div className="flex items-center space-x-4 mt-4 md:mt-0">
             <Link to="/privacy-policy" className="text-gray-400 text-sm hover:text-primary">
@@ -230,3 +230,4 @@ const Footer = () => {
 };
 
 export default Footer;
+
