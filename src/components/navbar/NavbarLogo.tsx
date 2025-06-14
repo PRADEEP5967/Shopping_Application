@@ -1,16 +1,20 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Store } from 'lucide-react';
+import PSLogo from '@/components/branding/PSLogo';
 
 const NavbarLogo = () => {
   return (
     <div className="flex items-center">
-      <Link to="/" className="text-xl font-bold text-primary flex items-center gap-2">
-        <Store className="h-7 w-7" />
+      <Link to="/" className="flex items-center gap-3 select-none group">
+        <PSLogo size={40} className="transition-transform duration-200 group-hover:scale-110" />
         <div className="flex flex-col leading-tight">
-          <span className="text-lg sm:text-xl">PRADEEP SAHANI</span>
-          <span className="text-sm font-medium text-primary/80 hidden sm:block">MART</span>
+          <span className="text-lg sm:text-xl font-bold text-primary">
+            Pradeep Sahani
+          </span>
+          <span className="text-sm font-medium text-primary/80 hidden sm:block">
+            Mart
+          </span>
         </div>
       </Link>
     </div>
