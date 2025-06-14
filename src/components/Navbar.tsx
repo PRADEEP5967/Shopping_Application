@@ -1,8 +1,10 @@
+
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ShoppingBag, Menu, Search, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from "@/components/ui/button"
+import ThemeToggle from '@/components/ThemeToggle';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -13,9 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input"
-import { Search } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -24,11 +24,27 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Menu } from 'lucide-react';
 
-// Removed: import { useUser } from '@/context/UserContext';
-
-import ThemeToggle from '@/components/ThemeToggle';
+const ALL_PAGES = [
+  { label: "Home", to: "/" },
+  { label: "Products", to: "/products" },
+  { label: "Categories", to: "/categories" },
+  { label: "Wishlist", to: "/wishlist" },
+  { label: "Cart", to: "/cart" },
+  { label: "My Account", to: "/my-account" },
+  { label: "Orders", to: "/orders" },
+  { label: "Blog", to: "/blog" },
+  { label: "Careers", to: "/careers" },
+  { label: "About", to: "/about-us" },
+  { label: "Contact", to: "/contact-us" },
+  { label: "Deals & Discounts", to: "/deals-discounts" },
+  { label: "Returns & Exchanges", to: "/returns-exchanges" },
+  { label: "FAQ", to: "/faq" },
+  { label: "Team", to: "/team" },
+  { label: "Portfolio", to: "/portfolio" },
+  { label: "New Arrivals", to: "/new-arrivals" },
+  { label: "Special Offers", to: "/special-offers" },
+];
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -44,8 +60,8 @@ const Navbar = () => {
   return (
     <header className="bg-white shadow sticky top-0 z-40 dark:bg-gray-800 border-b dark:border-gray-700">
       <nav className="container mx-auto flex items-center justify-between py-3 px-4">
+        {/* Logo */}
         <div className="flex items-center gap-2">
-          {/* Logo section */}
           <Link to="/" className="font-bold text-xl text-gray-800 dark:text-white">
             E-Shop
           </Link>
@@ -101,6 +117,24 @@ const Navbar = () => {
             >
               Smartphone
             </Link>
+          </li>
+          <li>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-1 px-2">
+                  All Pages <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                {ALL_PAGES.map((page) => (
+                  <DropdownMenuItem key={page.to} asChild>
+                    <Link to={page.to} className="w-full">
+                      {page.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </li>
         </ul>
         <div className="flex items-center gap-3">
@@ -166,11 +200,11 @@ const Navbar = () => {
                 </SheetDescription>
               </SheetHeader>
               <div className="grid gap-4 py-4">
-                <Link to="/" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">Home</Link>
-                <Link to="/products" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">Products</Link>
-                <Link to="/categories" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">Categories</Link>
-                <Link to="/about-us" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">About Us</Link>
-                <Link to="/contact-us" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">Contact Us</Link>
+                {ALL_PAGES.map((page) => (
+                  <Link key={page.to} to={page.to} className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">
+                    {page.label}
+                  </Link>
+                ))}
                 {user ? (
                   <>
                     <Link to="/my-account" className="hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md p-2 block">My Account</Link>
@@ -189,3 +223,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
