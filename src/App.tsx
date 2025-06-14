@@ -35,6 +35,7 @@ import DealsDiscounts from '@/pages/DealsDiscounts';
 import ReturnsExchanges from '@/pages/ReturnsExchanges';
 import SearchPage from '@/pages/SearchPage';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import Careers from '@/pages/Careers';
 
 // New Pages
 import Performance from '@/pages/Performance';
@@ -103,6 +104,7 @@ function App() {
                       <Route path="/portfolio" element={<Portfolio />} />
                       <Route path="/team" element={<Team />} />
                       <Route path="/blog" element={<Blog />} />
+                      <Route path="/careers" element={<Careers />} />
                       
                       {/* New Search Page */}
                       <Route path="/search" element={<SearchPage />} />

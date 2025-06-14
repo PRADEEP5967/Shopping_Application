@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -81,7 +80,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
             </CollapsibleContent>
           </Collapsible>
 
-          {['performance', 'efficiency', 'quality', 'about-us', 'contact-us'].map((path) => (
+          {['performance', 'efficiency', 'quality', 'about-us', 'contact-us', 'careers'].map((path) => (
             <Link 
               key={path}
               to={`/${path}`} 

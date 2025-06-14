@@ -81,6 +81,12 @@ const DesktopNavigation = () => {
               Contact
             </Link>
           </NavigationMenuItem>
+          
+          <NavigationMenuItem>
+            <Link to="/careers" className="text-gray-600 hover:text-primary transition-colors font-medium">
+              Careers
+            </Link>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>
