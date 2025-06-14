@@ -74,6 +74,11 @@ import DressPage from '@/pages/DressPage';
 import BabyToyPage from '@/pages/BabyToyPage';
 import SofaPage from '@/pages/SofaPage';
 
+// New Pending Pages
+import OrderProcessingPending from '@/pages/OrderProcessingPending';
+import PaymentPending from '@/pages/PaymentPending';
+import AccountVerificationPending from '@/pages/AccountVerificationPending';
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -232,6 +237,11 @@ const AppRoutes = () => {
       } />
       
       <Route path="/pending" element={<Pending />} />
+      
+      {/* New Pending Pages */}
+      <Route path="/pending/order-processing" element={<OrderProcessingPending />} />
+      <Route path="/pending/payment" element={<PaymentPending />} />
+      <Route path="/pending/account-verification" element={<AccountVerificationPending />} />
       
       {/* Category direct pages */}
       <Route path="/category/smartphone" element={<SmartphonePage />} />
