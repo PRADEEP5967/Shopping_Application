@@ -88,11 +88,20 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
     { path: '/admin/help', icon: HelpCircle, label: 'Help' },
   ];
 
+  const complianceMenuItems = [
+    { path: "/admin/ssl-encryption", icon: "shield-check", label: "SSL Encryption" },
+    { path: "/admin/pci-compliance", icon: "shield", label: "PCI Compliance" },
+    { path: "/admin/2fa-support", icon: "key-square", label: "2FA Support" },
+  ];
+
   // Map string 'icon' to actual Lucide icon
   const iconMap: Record<string, React.ElementType> = {
     'gauge': require('lucide-react').Gauge,
     'users': require('lucide-react').Users,
     'chart-pie': require('lucide-react').ChartPie,
+    "shield": require('lucide-react').Shield,
+    "shield-check": require('lucide-react').ShieldCheck,
+    "key-square": require('lucide-react').KeySquare,
     // ... add other icons if needed ...
   };
 
@@ -178,6 +187,32 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
             </h3>
             <div className="space-y-1">
               {modernAnalyticsMenuItems.map((item) => {
+                const Icon = iconMap[item.icon];
+                return (
+                  <Button 
+                    key={item.path}
+                    variant={isActive(item.path) ? "default" : "ghost"} 
+                    className="w-full justify-start text-sm"
+                    onClick={() => {
+                      navigate(item.path);
+                      setIsMobileSidebarOpen(false);
+                    }}
+                  >
+                    {Icon ? <Icon className="mr-2 h-4 w-4 shrink-0" /> : null}
+                    <span className="truncate">{item.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
+          
+          {/* Compliance & Security Section */}
+          <div>
+            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
+              Security & Compliance
+            </h3>
+            <div className="space-y-1">
+              {complianceMenuItems.map((item) => {
                 const Icon = iconMap[item.icon];
                 return (
                   <Button 

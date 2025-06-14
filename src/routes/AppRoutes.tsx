@@ -63,6 +63,10 @@ import RealTimeAnalysis from '@/pages/admin/RealTimeAnalysis';
 import CustomerReports from '@/pages/admin/CustomerReports';
 import Insights from '@/pages/admin/Insights';
 
+import SSLEncryption from '@/pages/admin/SSLEncryption';
+import PCICompliance from '@/pages/admin/PCICompliance';
+import TwoFASupport from '@/pages/admin/TwoFASupport';
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -201,6 +205,22 @@ const AppRoutes = () => {
       <Route path="/admin/insights" element={
         <AdminDashboardLayout title="Insights">
           <Insights />
+        </AdminDashboardLayout>
+      } />
+      
+      <Route path="/admin/ssl-encryption" element={
+        <AdminDashboardLayout title="SSL Encryption">
+          <SSLEncryption />
+        </AdminDashboardLayout>
+      } />
+      <Route path="/admin/pci-compliance" element={
+        <AdminDashboardLayout title="PCI Compliance">
+          <PCICompliance />
+        </AdminDashboardLayout>
+      } />
+      <Route path="/admin/2fa-support" element={
+        <AdminDashboardLayout title="2FA Support">
+          <TwoFASupport />
         </AdminDashboardLayout>
       } />
       
