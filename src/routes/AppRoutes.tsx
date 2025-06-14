@@ -34,6 +34,7 @@ import WearablesPage from '@/pages/WearablesPage';
 import SmartHomePage from '@/pages/SmartHomePage';
 import ComputersPage from '@/pages/ComputersPage';
 import SpecialOffers from '@/pages/SpecialOffers';
+import Pending from '@/pages/Pending';
 
 // New Pages
 import Performance from '@/pages/Performance';
@@ -223,6 +224,8 @@ const AppRoutes = () => {
           <TwoFASupport />
         </AdminDashboardLayout>
       } />
+      
+      <Route path="/pending" element={<Pending />} />
       
       <Route path="*" element={<NotFound />} />
     </Routes>
