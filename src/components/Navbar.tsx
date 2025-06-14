@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from "@/components/ui/button"
-import { ThemeToggle } from '@/components/ThemeToggle';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -29,6 +27,8 @@ import {
 import { Menu } from 'lucide-react';
 
 // Removed: import { useUser } from '@/context/UserContext';
+
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Navbar = () => {
   const { pathname } = useLocation();
@@ -189,4 +189,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
