@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
@@ -20,11 +19,21 @@ import {
   Clock,
   XCircle
 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const OrderHistory = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
+  const { isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated && !isAdmin) {
+      navigate('/login', { replace: true });
+    }
+  }, [isAuthenticated, isAdmin, navigate]);
 
   // Mock order data
   const orders = [
