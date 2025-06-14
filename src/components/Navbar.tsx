@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
-import { useShoppingCart } from '@/context/ShoppingCartContext';
+import { useCart } from '@/contexts/CartContext';
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from '@/components/ModeToggle';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -13,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input"
 import { Search } from 'lucide-react';
@@ -26,14 +27,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Menu } from 'lucide-react';
-import { useUser } from '@/context/UserContext';
+
+// Removed: import { useUser } from '@/context/UserContext';
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const { cartQuantity } = useShoppingCart();
+  const { totalItems } = useCart();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { userData } = useUser();
 
   const handleLogout = async () => {
     await logout();
@@ -110,14 +111,14 @@ const Navbar = () => {
           </div>
 
           {/* Actions: Theme Toggle, Cart, Auth */}
-          <ModeToggle />
+          <ThemeToggle />
           <Link to="/cart" className="relative">
             <Button variant="outline" size="icon" className="mr-2">
               <ShoppingBag className="h-4 w-4" />
             </Button>
-            {cartQuantity > 0 && (
+            {totalItems > 0 && (
               <span className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white text-xs rounded-full px-1.5 py-0.5">
-                {cartQuantity}
+                {totalItems}
               </span>
             )}
           </Link>
@@ -127,8 +128,10 @@ const Navbar = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar>
-                    <AvatarImage src={userData?.profilePicture} />
-                    <AvatarFallback>{userData?.name?.charAt(0).toUpperCase() || '?'}</AvatarFallback>
+                    <AvatarImage src="" />
+                    <AvatarFallback>
+                      {user.firstName ? user.firstName.charAt(0).toUpperCase() : "?"}
+                    </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -186,3 +189,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
