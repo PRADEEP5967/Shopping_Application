@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 import ProductDetail from '@/pages/ProductDetail';
@@ -24,7 +23,7 @@ export const MainRoutes = (
   <>
     <Route path="/" element={<Index />} />
     <Route path="/products" element={<Products />} />
-    <Route path="/product/:id" element={<ProductDetail />} />
+    <Route path="/product/:productId" element={<ProductDetail />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/orders" element={<Orders />} />
     <Route path="/categories" element={<CategoriesPage />} />
