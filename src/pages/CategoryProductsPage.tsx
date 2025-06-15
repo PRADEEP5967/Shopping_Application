@@ -19,7 +19,8 @@ const slugToCategoryMap: Record<string, string> = {
   tv: 'TV',
   headphones: 'Electronics',
   smartphone: 'Electronics',
-  monitor: 'Computers', // Map "monitor" slug to "Computers" category -- adjust as needed!
+  monitor: 'Computers',
+  shirt: 'Clothing', // Map "shirt" slug to "Clothing" category
   // Add other mappings as needed
 };
 
