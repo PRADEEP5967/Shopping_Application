@@ -22,6 +22,7 @@ const slugToCategoryMap: Record<string, string> = {
   smartphone: 'Electronics',
   monitor: 'Computers',
   shirt: 'Clothing', // Map "shirt" slug to "Clothing" category
+  dress: 'Clothing', // Map "dress" slug to "Clothing" category
   // Add other mappings as needed
 };
 
