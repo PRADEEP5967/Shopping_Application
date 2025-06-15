@@ -121,7 +121,7 @@ const ModernProductShowcase = () => {
                   <Card className="overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white/80 backdrop-blur-sm">
                     <div className="relative overflow-hidden aspect-square">
                       <img
-                        src={product.image}
+                        src={product.images[0]}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
@@ -212,7 +212,7 @@ const ModernProductShowcase = () => {
                     <div className="flex gap-6 p-6">
                       <div className="relative w-32 h-32 flex-shrink-0 overflow-hidden rounded-lg">
                         <img
-                          src={product.image}
+                          src={product.images[0]}
                           alt={product.name}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         />

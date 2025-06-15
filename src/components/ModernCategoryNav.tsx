@@ -25,7 +25,7 @@ const ModernCategoryNav = () => {
       trending: details.trending,
       description: details.description,
       productCount: Math.floor(Math.random() * 50) + 10, // Mock data
-      rating: (Math.random() * 2 + 3).toFixed(1), // Random rating between 3-5
+      rating: parseFloat((Math.random() * 2 + 3).toFixed(1)), // Convert to number
     };
   });
 
