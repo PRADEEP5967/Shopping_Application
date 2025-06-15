@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -49,20 +50,24 @@ const SearchPage = () => {
       <div className="mt-4" />
       <CartFlyout />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <main className="flex-grow container mx-auto px-4 py-6 sm:py-8">
+        <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           {/* Search Header */}
           <div className="text-center space-y-4">
-            <h1 className="text-3xl font-bold">Search Products</h1>
-            <AdvancedSearch />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Search Products</h1>
+            <div className="max-w-2xl mx-auto">
+              <AdvancedSearch />
+            </div>
           </div>
 
           {/* Search Results */}
-          <SearchResults 
-            query={query} 
-            results={searchResults} 
-            isLoading={isLoading} 
-          />
+          <div className="w-full">
+            <SearchResults 
+              query={query} 
+              results={searchResults} 
+              isLoading={isLoading} 
+            />
+          </div>
         </div>
       </main>
       

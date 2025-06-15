@@ -37,8 +37,8 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
   handleRatingChange,
 }) => {
   return (
-    <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-lg shadow-sm">
-      <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-lg shadow-sm gap-3 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
         <MobileFilterSheet 
           priceRange={priceRange}
           handlePriceChange={handlePriceChange}
@@ -48,29 +48,32 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
           selectedRating={selectedRating}
           handleRatingChange={handleRatingChange}
         />
-        <p className="text-sm text-gray-600 hidden md:block">
+        <p className="text-xs sm:text-sm text-gray-600 hidden md:block">
           Showing {filteredProductsCount} of {totalProductsCount} products
+        </p>
+        <p className="text-xs text-gray-600 md:hidden">
+          {filteredProductsCount} of {totalProductsCount}
         </p>
       </div>
       
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
         {/* View Mode Toggle */}
         <div className="flex items-center border rounded-lg p-1">
           <Button
             variant={viewMode === 'grid' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('grid')}
-            className="px-2"
+            className="px-2 sm:px-3 h-8 sm:h-9"
           >
-            <LayoutGrid className="h-4 w-4" />
+            <LayoutGrid className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
           <Button
             variant={viewMode === 'list' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('list')}
-            className="px-2"
+            className="px-2 sm:px-3 h-8 sm:h-9"
           >
-            <List className="h-4 w-4" />
+            <List className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </div>
         

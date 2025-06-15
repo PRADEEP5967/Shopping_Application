@@ -81,7 +81,7 @@ const CategoryGrid = () => {
   });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
       {categories.map((category, index) => {
         return (
           <Link 
@@ -91,9 +91,9 @@ const CategoryGrid = () => {
             style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className={`relative p-0 rounded-2xl overflow-hidden bg-gradient-to-br ${category.bgColor} border border-gray-100 shadow-sm group-hover:shadow-xl transition-all duration-300`}>
-              {/* Circle image with border */}
-              <div className={`flex justify-center -mt-8 mb-2`}>
-                <div className={`w-20 h-20 rounded-full overflow-hidden border-4 ${category.borderColor} bg-white shadow transition-all group-hover:scale-110`}>
+              {/* Circle image with border - responsive sizing */}
+              <div className={`flex justify-center -mt-6 sm:-mt-8 mb-2`}>
+                <div className={`w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-4 ${category.borderColor} bg-white shadow transition-all group-hover:scale-110`}>
                   <img
                     src={category.image}
                     alt={category.name}
@@ -103,14 +103,14 @@ const CategoryGrid = () => {
                   />
                 </div>
               </div>
-              <div className="relative z-10 p-8 pt-4">
-                <h3 className="text-xl font-bold mb-2 text-gray-900 text-center">{category.name}</h3>
-                <p className="text-gray-600 mb-4 text-sm leading-relaxed text-center">{category.description}</p>
+              <div className="relative z-10 p-4 sm:p-6 lg:p-8 pt-2 sm:pt-4">
+                <h3 className="text-lg sm:text-xl lg:text-2xl font-bold mb-2 text-gray-900 text-center">{category.name}</h3>
+                <p className="text-gray-600 mb-4 text-xs sm:text-sm lg:text-base leading-relaxed text-center">{category.description}</p>
                 <div className="flex items-center justify-between">
-                  <Badge variant="secondary" className="text-xs">
+                  <Badge variant="secondary" className="text-xs sm:text-sm">
                     {category.count}
                   </Badge>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300" />
                 </div>
               </div>
             </div>
