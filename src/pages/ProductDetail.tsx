@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -22,8 +21,8 @@ const ProductDetail = () => {
   const [product, setProduct] = useState<Product | undefined>(undefined);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
-  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
+  const { addItem } = useCart();
+  const { items: wishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
 
   useEffect(() => {
     if (productId) {
@@ -42,7 +41,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (!product) return;
-    addToCart(product, quantity, selectedVariant || undefined);
+    addItem(product, quantity, selectedVariant || undefined);
   };
 
   const handleWishlistToggle = () => {
