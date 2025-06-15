@@ -1,28 +1,25 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import CategoryGrid from '@/components/category/CategoryGrid';
 import CategoryHero from '@/components/category/CategoryHero';
+import CategoryGrid from '@/components/category/CategoryGrid';
 import CategoryFeatures from '@/components/category/CategoryFeatures';
 
 const CategoriesPage = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50/50">
       <Header />
-      <div className="mt-4" />
       <CartFlyout />
       
-      <main className="flex-grow">
-        <CategoryHero />
-
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <CategoryGrid />
-          </div>
-        </section>
-
-        <CategoryFeatures />
+      <CategoryHero />
+      
+      <main className="flex-grow container mx-auto px-4 py-8">
+        {/* General category features */}
+        <CategoryFeatures categoryName="All Categories" />
+        
+        <CategoryGrid />
       </main>
       
       <Footer />
