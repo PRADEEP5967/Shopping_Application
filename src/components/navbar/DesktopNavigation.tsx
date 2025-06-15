@@ -10,14 +10,15 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
-import CategoryPopoverContent from './CategoryPopoverContent';
+import { getProductCategories } from '@/data/products';
+import { categoryDetails, slugify } from '@/components/category/categoryData';
 
 const DesktopNavigation: React.FC = () => {
   const navigationItems = [
     {
       title: 'Categories',
       hasDropdown: true,
-      content: <CategoryPopoverContent />
+      content: <CategoriesDropdownContent />
     },
     {
       title: 'Products',
@@ -72,6 +73,53 @@ const DesktopNavigation: React.FC = () => {
           ))}
         </NavigationMenuList>
       </NavigationMenu>
+    </div>
+  );
+};
+
+const CategoriesDropdownContent: React.FC = () => {
+  const categoryNames = getProductCategories();
+  
+  const categories = categoryNames.map(name => {
+    const details = categoryDetails[name] || categoryDetails.default;
+    return {
+      id: name,
+      name,
+      icon: details.icon,
+      link: `/category/${slugify(name)}`,
+    };
+  });
+
+  return (
+    <div className="w-80 p-4 bg-white rounded-lg shadow-lg">
+      <h3 className="font-semibold text-lg mb-4">Shop by Category</h3>
+      <div className="grid grid-cols-2 gap-3">
+        {categories.map((category) => {
+          const Icon = category.icon;
+          return (
+            <Link
+              key={category.id}
+              to={category.link}
+              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+            >
+              <div className="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition-colors">
+                <Icon className="w-5 h-5 text-blue-600" />
+              </div>
+              <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                {category.name}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+      <div className="mt-4 pt-4 border-t border-gray-100">
+        <Link
+          to="/categories"
+          className="block text-center text-sm text-blue-600 hover:text-blue-800 font-medium"
+        >
+          View All Categories →
+        </Link>
+      </div>
     </div>
   );
 };
