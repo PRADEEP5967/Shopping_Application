@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -16,12 +15,12 @@ interface QuickViewModalProps {
 const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClose }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
+  const { addItem } = useCart();
 
   if (!product) return null;
 
   const handleAddToCart = () => {
-    addToCart({ ...product, quantity });
+    addItem(product, quantity);
     onClose();
   };
 
