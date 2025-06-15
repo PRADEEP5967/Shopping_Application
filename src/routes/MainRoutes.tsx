@@ -33,6 +33,7 @@ import SpecialOffers from '@/pages/SpecialOffers';
 import HeartPage from '@/pages/HeartPage';
 import BabyPage from '@/pages/BabyPage';
 import SofaPage from '@/pages/SofaPage';
+import DumbbellPage from '@/pages/DumbbellPage';
 
 // Feature Pages
 import Performance from '@/pages/Performance';
@@ -80,5 +81,6 @@ export const MainRoutes = (
     <Route path="/category/heart" element={<HeartPage />} />
     <Route path="/category/baby" element={<BabyPage />} />
     <Route path="/category/sofa" element={<SofaPage />} />
+    <Route path="/category/dumbbell" element={<DumbbellPage />} />
   </>
 );
