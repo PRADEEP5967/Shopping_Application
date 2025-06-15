@@ -42,6 +42,7 @@
     "@react-three/drei": "^9.122.0",
     "@tanstack/react-query": "^5.56.2",
     "@types/blob-stream": "^0.1.33",
+    "@types/three": "^0.133.1",
     "blob-stream": "^0.1.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
