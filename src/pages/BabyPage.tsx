@@ -10,56 +10,54 @@ import RelatedCategoriesGrid from "@/components/category/RelatedCategoriesGrid";
 
 const BabyPage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-yellow-50 via-orange-50 to-white">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-sky-50 via-emerald-50 to-white">
       <Header />
       <CartFlyout />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-r from-yellow-100/80 to-orange-100/80 overflow-hidden">
+        <section className="relative py-20 bg-gradient-to-r from-blue-100/80 to-green-100/80 overflow-hidden">
           <div className="absolute inset-0 bg-grid-white/[0.04] bg-[size:60px_60px] pointer-events-none" />
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-2xl mx-auto text-center">
-              <Badge className="mb-6 bg-yellow-200 text-yellow-800 border-none text-lg shadow animate-fade-in flex items-center justify-center">
+              <Badge className="mb-6 bg-blue-200 text-emerald-700 border-none text-lg shadow animate-fade-in flex items-center justify-center">
                 <Baby className="w-4 h-4 mr-2" />
-                Baby & Kids
+                Baby Essentials
               </Badge>
-              <h1 className="text-4xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-yellow-600 via-orange-600 to-red-700 bg-clip-text text-transparent animate-fade-in">
-                Little Ones, Big Dreams
+              <h1 className="text-4xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-sky-400 via-emerald-400 to-blue-500 bg-clip-text text-transparent animate-fade-in">
+                Gentle Care for Your Little One
               </h1>
               <p className="text-xl text-gray-700 mb-8 max-w-xl mx-auto animate-fade-in">
-                Everything your baby needs for comfort, safety, and joy. Safe, gentle, and designed with love.
+                Explore adorable baby clothing, safe accessories, gentle skincare, and all the must-haves for happy moments and peaceful nights.
               </p>
-              <Button size="lg" className="bg-yellow-600 text-white font-bold hover:bg-yellow-700 shadow">
-                Shop Baby Products
+              <Button size="lg" className="bg-emerald-500 text-white font-bold hover:bg-emerald-600 shadow">
+                Shop Baby Collection
               </Button>
             </div>
           </div>
         </section>
-
-        {/* Features Section */}
+        {/* Informative Features Section */}
         <section className="py-12 bg-white">
           <div className="container mx-auto px-4 max-w-3xl text-center">
-            <h2 className="text-2xl font-semibold mb-2 text-gray-700">Why Choose Our Baby Products?</h2>
+            <h2 className="text-2xl font-semibold mb-2 text-emerald-700">Why Parents Love Our Baby Store</h2>
             <p className="mb-4 text-gray-500">
-              Safe, certified, and lovingly designed products for your precious little ones.
+              Handpicked essentials for newborns and toddlers—safety tested, extra gentle, and always adorable.
             </p>
             <ul className="flex flex-col md:flex-row md:justify-center gap-5 mt-8 text-left mx-auto max-w-xl animate-fade-in">
-              <li className="flex-1 bg-yellow-50 p-6 rounded-xl shadow-sm border border-yellow-100">
-                <span className="text-gray-700 font-bold">🛡️ Safety First</span>
-                <div className="text-gray-600 mt-2 text-sm">All products meet strict safety standards.</div>
+              <li className="flex-1 bg-sky-50 p-6 rounded-xl shadow-sm border border-blue-100">
+                <span className="text-emerald-600 font-bold">🍼 Trusted Brands</span>
+                <div className="text-gray-600 mt-2 text-sm">Shop only the most trusted brands in baby care and essentials.</div>
               </li>
-              <li className="flex-1 bg-orange-50 p-6 rounded-xl shadow-sm border border-orange-100">
-                <span className="text-gray-700 font-bold">🌟 Gentle Care</span>
-                <div className="text-gray-600 mt-2 text-sm">Soft, hypoallergenic materials for sensitive skin.</div>
+              <li className="flex-1 bg-emerald-50 p-6 rounded-xl shadow-sm border border-emerald-100">
+                <span className="text-emerald-600 font-bold">👶 Soft & Gentle</span>
+                <div className="text-gray-600 mt-2 text-sm">All products tested for comfort and sensitive baby skin.</div>
               </li>
-              <li className="flex-1 bg-red-50 p-6 rounded-xl shadow-sm border border-red-100">
-                <span className="text-gray-700 font-bold">💝 Parent Approved</span>
-                <div className="text-gray-600 mt-2 text-sm">Trusted by parents worldwide.</div>
+              <li className="flex-1 bg-blue-50 p-6 rounded-xl shadow-sm border border-blue-100">
+                <span className="text-emerald-600 font-bold">⭐ Parent-Approved</span>
+                <div className="text-gray-600 mt-2 text-sm">Loved by parents for quality, value, and a touch of cuteness.</div>
               </li>
             </ul>
           </div>
         </section>
-
         {/* Related Categories */}
         <div className="container mx-auto px-4">
           <RelatedCategoriesGrid currentCategorySlug="baby" />

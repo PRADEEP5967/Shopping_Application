@@ -1,168 +1,282 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import ModernProductGrid from '@/components/ModernProductGrid';
-import ModernCategoryFilters from '@/components/category/ModernCategoryFilters';
+import EnhancedProductGrid from '@/components/product/EnhancedProductGrid';
+import AdvancedProductFilters from '@/components/product/AdvancedProductFilters';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
+import { 
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Package } from 'lucide-react';
+import { SlidersHorizontal, LayoutGrid, List } from 'lucide-react';
+
+interface FilterState {
+  searchQuery: string;
+  categories: string[];
+  brands: string[];
+  priceRange: [number, number];
+  rating: number;
+  inStock: boolean;
+  onSale: boolean;
+  sortBy: string;
+}
 
 const Products = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState('featured');
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [filters, setFilters] = useState<FilterState>({
+    searchQuery: searchParams.get('q') || '',
+    categories: searchParams.getAll('category') || [],
+    brands: [],
+    priceRange: [0, 1000],
+    rating: Number(searchParams.get('rating')) || 0,
+    inStock: false,
+    onSale: false,
+    sortBy: searchParams.get('sort') || 'featured',
+  });
+  
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  
+  // Get available categories and brands from products
+  const { availableCategories, availableBrands } = useMemo(() => {
+    const categories = Array.from(new Set(products.map(p => p.category)));
+    const brands = Array.from(new Set(products.map(p => p.brand).filter(Boolean))) as string[];
+    return { availableCategories: categories, availableBrands: brands };
+  }, [products]);
+  
+  // Load products on component mount
   useEffect(() => {
-    const allProducts = getAllProducts();
-    setProducts(allProducts);
-    setFilteredProducts(allProducts);
-    setIsLoading(false);
+    const loadProducts = async () => {
+      const allProducts = getAllProducts();
+      setProducts(allProducts);
+    };
+    
+    loadProducts();
   }, []);
-
-  useEffect(() => {
-    let filtered = [...products];
-
-    // Filter by price range
-    filtered = filtered.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    // Filter by brands
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter(product => 
-        product.brand && selectedBrands.includes(product.brand)
+  
+  // Apply filters and sorting
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+    
+    // Apply search filter
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      result = result.filter(product => 
+        product.name.toLowerCase().includes(query) || 
+        product.description.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query)
       );
     }
+    
+    // Apply category filter
+    if (filters.categories.length > 0) {
+      result = result.filter(product => 
+        filters.categories.includes(product.category)
+      );
+    }
+    
+    // Apply brand filter
+    if (filters.brands.length > 0) {
+      result = result.filter(product => 
+        product.brand && filters.brands.includes(product.brand)
+      );
+    }
+    
+    // Apply price range filter
+    result = result.filter(
+      product => product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1]
+    );
 
-    // Sort products
-    switch (sortBy) {
-      case 'price-low':
-        filtered.sort((a, b) => a.price - b.price);
+    // Apply rating filter
+    if (filters.rating > 0) {
+      result = result.filter(p => p.rating >= filters.rating);
+    }
+    
+    // Apply stock filter
+    if (filters.inStock) {
+      result = result.filter(p => p.inStock);
+    }
+    
+    // Apply sale filter
+    if (filters.onSale) {
+      result = result.filter(p => p.originalPrice && p.originalPrice > p.price);
+    }
+    
+    // Apply sorting
+    switch (filters.sortBy) {
+      case 'price-asc':
+        result.sort((a, b) => a.price - b.price);
         break;
-      case 'price-high':
-        filtered.sort((a, b) => b.price - a.price);
+      case 'price-desc':
+        result.sort((a, b) => b.price - a.price);
         break;
-      case 'rating':
-        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+      case 'name-asc':
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case 'newest':
-        filtered.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+        result.sort(() => Math.random() - 0.5);
+        break;
+      case 'rating':
+        result.sort((a, b) => b.rating - a.rating);
         break;
       default:
         break;
     }
+    
+    return result;
+  }, [products, filters]);
+  
+  // Count active filters
+  const activeFiltersCount = useMemo(() => {
+    let count = 0;
+    if (filters.searchQuery) count++;
+    if (filters.categories.length > 0) count += filters.categories.length;
+    if (filters.brands.length > 0) count += filters.brands.length;
+    if (filters.priceRange[0] > 0 || filters.priceRange[1] < 1000) count++;
+    if (filters.rating > 0) count++;
+    if (filters.inStock) count++;
+    if (filters.onSale) count++;
+    return count;
+  }, [filters]);
 
-    setFilteredProducts(filtered);
-  }, [products, priceRange, selectedBrands, sortBy]);
-
-  const handlePriceRangeChange = (range: number[]) => {
-    setPriceRange(range);
-  };
-
-  const handleBrandToggle = (brand: string) => {
-    setSelectedBrands(prev => 
-      prev.includes(brand) 
-        ? prev.filter(b => b !== brand)
-        : [...prev, brand]
-    );
-  };
-
+  // Update URL search params when filters change
+  useEffect(() => {
+    const params = new URLSearchParams();
+    
+    if (filters.searchQuery) params.set('q', filters.searchQuery);
+    if (filters.sortBy !== 'featured') params.set('sort', filters.sortBy);
+    if (filters.categories.length > 0) {
+      filters.categories.forEach(cat => params.append('category', cat));
+    }
+    if (filters.rating > 0) params.set('rating', String(filters.rating));
+    
+    setSearchParams(params, { replace: true });
+  }, [filters, setSearchParams]);
+  
   const clearFilters = () => {
-    setPriceRange([0, 1000]);
-    setSelectedBrands([]);
-    setSortBy('featured');
+    setFilters({
+      searchQuery: '',
+      categories: [],
+      brands: [],
+      priceRange: [0, 1000],
+      rating: 0,
+      inStock: false,
+      onSale: false,
+      sortBy: 'featured',
+    });
+    setSearchParams({});
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <CartFlyout />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-            <div className="h-32 bg-gray-200 rounded mb-6"></div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="h-64 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <CartFlyout />
       
-      <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="flex justify-center mb-4">
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                  <Package className="h-8 w-8" />
-                </div>
-              </div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">All Products</h1>
-              <p className="text-xl mb-6 text-white/90">
-                Discover our complete collection of premium products across all categories.
-              </p>
-              <Badge variant="secondary" className="text-lg px-4 py-2">
-                <Package className="h-4 w-4 mr-2" />
-                {products.length} Products
-              </Badge>
-            </div>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">All Products</h1>
+            <p className="text-gray-600 mt-1">
+              Showing {filteredProducts.length} products
+              {activeFiltersCount > 0 && ` with ${activeFiltersCount} filters applied`}
+            </p>
           </div>
-        </section>
-
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Filters Sidebar */}
-            <div className="lg:w-1/4">
-              <ModernCategoryFilters
-                products={products}
-                priceRange={priceRange}
-                selectedBrands={selectedBrands}
-                sortBy={sortBy}
-                onPriceRangeChange={handlePriceRangeChange}
-                onBrandToggle={handleBrandToggle}
-                onSortChange={setSortBy}
-                onClearFilters={clearFilters}
-              />
+          
+          <div className="flex items-center gap-2">
+            {/* View Mode Toggle */}
+            <div className="hidden md:flex items-center border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="h-4 w-4" />
+              </Button>
             </div>
             
-            {/* Products Grid */}
-            <div className="lg:w-3/4">
-              {filteredProducts.length > 0 ? (
-                <ModernProductGrid products={filteredProducts} />
-              ) : (
-                <div className="text-center py-12">
-                  <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">No products found</h3>
-                  <p className="text-gray-600 mb-4">
-                    Try adjusting your filters to see more results.
-                  </p>
-                  <button 
-                    onClick={clearFilters}
-                    className="text-blue-600 hover:underline"
-                  >
-                    Clear all filters
-                  </button>
-                </div>
-              )}
+            {/* Mobile Filter Button */}
+            {isMobile && (
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="relative">
+                    <SlidersHorizontal className="h-4 w-4 mr-2" />
+                    Filters
+                    {activeFiltersCount > 0 && (
+                      <Badge className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center">
+                        {activeFiltersCount}
+                      </Badge>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                    <SheetDescription>
+                      Narrow down products by applying filters
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <AdvancedProductFilters
+                      filters={filters}
+                      onFiltersChange={setFilters}
+                      availableCategories={availableCategories}
+                      availableBrands={availableBrands}
+                      activeFiltersCount={activeFiltersCount}
+                      onClearFilters={clearFilters}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            )}
+          </div>
+        </div>
+        
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Desktop Sidebar */}
+          {!isMobile && (
+            <div className="w-80 flex-shrink-0">
+              <div className="sticky top-8">
+                <AdvancedProductFilters
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  availableCategories={availableCategories}
+                  availableBrands={availableBrands}
+                  activeFiltersCount={activeFiltersCount}
+                  onClearFilters={clearFilters}
+                />
+              </div>
             </div>
+          )}
+          
+          {/* Products Grid */}
+          <div className="flex-grow">
+            <EnhancedProductGrid 
+              products={filteredProducts} 
+              viewMode={viewMode}
+              itemsPerPage={20}
+            />
           </div>
         </div>
       </main>

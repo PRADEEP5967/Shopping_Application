@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -14,7 +15,7 @@ import {
   Phone, 
   Bell,
   BellOff,
-  RefreshCw,
+  Refresh,
   ExternalLink,
   Weight,
   Ruler
@@ -202,7 +203,7 @@ const EnhancedOrderTracking: React.FC<EnhancedOrderTrackingProps> = ({ orderId: 
                   disabled={isRefreshing}
                   className="flex items-center gap-1"
                 >
-                  <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <Refresh className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
                 
