@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import ProductDetail from '@/pages/ProductDetail';
 import Checkout from '@/pages/Checkout';
 import Orders from '@/pages/Orders';
+import Cart from '@/pages/Cart';
 import CategoryProductsPage from '@/pages/CategoryProductsPage';
 import ClothingPage from '@/pages/ClothingPage';
 import ElectronicsPage from '@/pages/ElectronicsPage';
@@ -27,6 +28,7 @@ export const MainRoutes = (
     <Route path="/products" element={<Products />} />
     <Route path="/search" element={<SearchPage />} />
     <Route path="/product/:productId" element={<ProductDetail />} />
+    <Route path="/cart" element={<Cart />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/orders" element={<Orders />} />
     <Route path="/categories" element={<CategoriesPage />} />
