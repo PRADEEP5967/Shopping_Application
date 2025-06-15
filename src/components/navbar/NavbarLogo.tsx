@@ -6,18 +6,9 @@ const NavbarLogo = () => {
   return (
     <div className="flex items-center">
       <Link to="/" className="flex items-center gap-3 select-none group">
-        {/* Logo Image */}
-        <img
-          src="/lovable-uploads/ed6f414d-1f2f-430f-93d3-758d4fd9738f.png"
-          alt="Pradeep Sahani Logo"
-          className="w-10 h-10 rounded-md object-cover transition-transform duration-200 group-hover:scale-110"
-        />
         <div className="flex flex-col leading-tight">
           <span className="text-lg sm:text-xl font-bold text-primary">
-            Pradeep Sahani
-          </span>
-          <span className="text-sm font-medium text-primary/80 hidden sm:block">
-            Mart
+            PS Logo
           </span>
         </div>
       </Link>
