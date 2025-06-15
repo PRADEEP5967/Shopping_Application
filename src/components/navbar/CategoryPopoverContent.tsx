@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { LucideIcon, ArrowRight, Star } from "lucide-react";
+import { LucideIcon, ArrowRight, Star, X } from "lucide-react";
 
 interface CategoryPopoverContentProps {
   label: string;
@@ -40,8 +40,8 @@ const CategoryPopoverContent: React.FC<CategoryPopoverContentProps> = ({
       </div>
     </div>
 
-    {/* Image with overlay */}
-    <div className="relative h-32 overflow-hidden">
+    {/* Image with overlay and remove icon */}
+    <div className="relative h-32 overflow-hidden group">
       <img
         src={image}
         alt={label}
@@ -49,6 +49,11 @@ const CategoryPopoverContent: React.FC<CategoryPopoverContentProps> = ({
         loading="lazy"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+      
+      {/* Remove image icon */}
+      <button className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 hover:scale-100">
+        <X className="w-3 h-3" />
+      </button>
     </div>
 
     {/* Content */}

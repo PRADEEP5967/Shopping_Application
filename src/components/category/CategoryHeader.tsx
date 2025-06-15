@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Star, Package, TrendingUp } from 'lucide-react';
+import { Star, Package, TrendingUp, X } from 'lucide-react';
 
 interface CategoryHeaderProps {
   categoryName: string;
@@ -12,11 +12,11 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({ categoryName }) => {
   const isTrending = trendingCategories.includes(categoryName);
 
   return (
-    <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 overflow-hidden shadow-lg">
+    <div className="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl p-8 mb-8 overflow-hidden shadow-lg group">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] opacity-30" />
       
-      {/* Background image with overlay */}
+      {/* Background image with overlay and remove icon */}
       <div className="absolute inset-0 opacity-10">
         <img 
           src={`https://images.unsplash.com/photo-1581591524425-c7e0978865fc?q=80&w=2070&auto=format&fit=crop`}
@@ -24,6 +24,11 @@ const CategoryHeader: React.FC<CategoryHeaderProps> = ({ categoryName }) => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20" />
+        
+        {/* Remove image icon */}
+        <button className="absolute top-4 right-4 bg-red-500/90 hover:bg-red-600 text-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+          <X className="w-4 h-4" />
+        </button>
       </div>
       
       <div className="relative z-10">

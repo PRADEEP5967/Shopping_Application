@@ -17,7 +17,8 @@ import {
   ShoppingBag,
   ArrowRight,
   Grid3X3,
-  TrendingUp
+  TrendingUp,
+  X
 } from 'lucide-react';
 import { getProductCategories } from '@/data/products';
 
@@ -160,7 +161,7 @@ const ModernCategoryNav = () => {
                     <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 to-pink-400 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
                   )}
                   
-                  {/* Image with enhanced overlay */}
+                  {/* Image with enhanced overlay and remove icon */}
                   <div className="aspect-square relative overflow-hidden">
                     <img 
                       src={category.image}
@@ -169,6 +170,11 @@ const ModernCategoryNav = () => {
                       loading="lazy"
                       decoding="async"
                     />
+                    
+                    {/* Remove image icon */}
+                    <button className="absolute top-2 right-2 bg-red-500/90 hover:bg-red-600 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 z-20">
+                      <X className="w-3 h-3" />
+                    </button>
                     
                     {/* Dynamic gradient overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-t ${category.color} opacity-80 group-hover:opacity-70 transition-all duration-500`} />
