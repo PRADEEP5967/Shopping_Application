@@ -19,6 +19,7 @@ import RatingFilter from '@/components/shared/RatingFilter';
 const slugToCategoryMap: Record<string, string> = {
   tv: 'TV',
   headphones: 'Electronics', // Map "headphones" slug to "Electronics" category
+  smartphone: 'Electronics', // Map "smartphone" slug to "Electronics" category
   // Add other mappings as needed
 };
 
