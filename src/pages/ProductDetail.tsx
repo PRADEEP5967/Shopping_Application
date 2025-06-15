@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -7,44 +8,62 @@ import ProductImageGallery from '@/components/product/ProductImageGallery';
 import ProductInfo from '@/components/product/ProductInfo';
 import ProductActions from '@/components/product/ProductActions';
 import ProductTabs from '@/components/product/ProductTabs';
+import ProductVariantSelector from '@/components/product/ProductVariantSelector';
 import AIRecommendations from '@/components/AIRecommendations';
 import ProductFeatures from '@/components/product/ProductFeatures';
 import ProductSubscription from '@/components/ProductSubscription';
 import { getAllProducts, getProductById } from '@/data/products';
-import { Product } from '@/types';
+import { Product, ProductVariant } from '@/types';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<Product | undefined>(undefined);
-  const [reviews, setReviews] = useState<any[]>([]);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
+  const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   useEffect(() => {
     if (productId) {
       const foundProduct = getProductById(productId);
       setProduct(foundProduct);
+      
+      // Set default variant if product has variants
+      if (foundProduct?.variants && foundProduct.variants.length > 0) {
+        setSelectedVariant(foundProduct.variants[0]);
+      }
     }
   }, [productId]);
 
-  useEffect(() => {
-    // Mock reviews - in a real app, this would come from an API
-    setReviews([
-      {
-        id: 1,
-        author: 'John Doe',
-        rating: 5,
-        comment: 'Great product! Highly recommended.'
-      },
-      {
-        id: 2,
-        author: 'Jane Smith',
-        rating: 4,
-        comment: 'Good value for the price.'
-      }
-    ]);
-  }, []);
+  const isProductInWishlist = product ? wishlist.some(item => item.id === product.id) : false;
+  const isInStock = selectedVariant ? selectedVariant.inStock : product?.inStock || false;
 
-  const addReview = (productId: string, review: any) => {
-    setReviews([...reviews, { ...review, id: reviews.length + 1 }]);
+  const handleAddToCart = () => {
+    if (!product) return;
+    addToCart(product, quantity, selectedVariant || undefined);
+  };
+
+  const handleWishlistToggle = () => {
+    if (!product) return;
+    if (isProductInWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
+  const handleIncrementQuantity = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const handleDecrementQuantity = () => {
+    setQuantity(prev => Math.max(1, prev - 1));
+  };
+
+  const handleVariantSelect = (variant: ProductVariant) => {
+    setSelectedVariant(variant);
   };
 
   if (!product) {
@@ -85,10 +104,29 @@ const ProductDetail = () => {
 
           {/* Product Info */}
           <div className="space-y-6">
-            <ProductInfo product={product} />
+            <ProductInfo product={product} selectedVariant={selectedVariant} />
+            
+            {/* Product Variants */}
+            {product.variants && product.variants.length > 0 && (
+              <ProductVariantSelector
+                variants={product.variants}
+                selectedVariant={selectedVariant}
+                onVariantSelect={handleVariantSelect}
+              />
+            )}
             
             {/* Product Actions */}
-            <ProductActions product={product} />
+            <ProductActions 
+              product={product}
+              selectedVariant={selectedVariant}
+              quantity={quantity}
+              isProductInWishlist={isProductInWishlist}
+              isInStock={isInStock}
+              onAddToCart={handleAddToCart}
+              onWishlistToggle={handleWishlistToggle}
+              onIncrementQuantity={handleIncrementQuantity}
+              onDecrementQuantity={handleDecrementQuantity}
+            />
             
             {/* Product Subscription */}
             <ProductSubscription 
@@ -99,19 +137,13 @@ const ProductDetail = () => {
             />
             
             {/* Product Features */}
-            <ProductFeatures features={product.features || []} />
+            <ProductFeatures />
           </div>
         </div>
 
         {/* Product Tabs */}
         <div className="mt-12">
-          <ProductTabs 
-            product={product}
-            reviews={reviews}
-            onAddReview={(review) => {
-              addReview(product.id, review);
-            }}
-          />
+          <ProductTabs product={product} />
         </div>
 
         {/* AI Recommendations */}
