@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
@@ -14,12 +15,23 @@ import ModernProductGrid from "@/components/ModernProductGrid";
 import NoProductsFound from '@/components/category/NoProductsFound';
 import RatingFilter from '@/components/shared/RatingFilter';
 
+// Enhanced unslugify with acronym/edge-case handling
+const slugToCategoryMap: Record<string, string> = {
+  tv: 'TV',
+  // Add other mappings as needed
+};
+
 const unslugify = (slug: string) => {
+  if (!slug) return '';
+  const base = slug.toLowerCase();
+  if (slugToCategoryMap[base]) return slugToCategoryMap[base];
   return slug
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 };
+
+const normalize = (str: string) => str.toLowerCase();
 
 const CategoryProductsPage = () => {
   const { categoryName: categorySlug } = useParams<{ categoryName: string }>();
@@ -30,9 +42,23 @@ const CategoryProductsPage = () => {
   const [sortOption, setSortOption] = useState('featured');
   const [minRating, setMinRating] = useState<number>(0);
   
+  // Find the "real" category name from products (case-insensitive)
+  const allProducts = getAllProducts();
+  const allCategories = Array.from(new Set(allProducts.map(p => p.category)));
+
+  // Try to match by case-insensitive
+  const matchedCategory = allCategories.find(
+    (cat) => normalize(cat) === normalize(categoryName)
+  );
+
+  const realCategoryName = matchedCategory || categoryName;
+
+  // Only use products whose category matches the case-insensitive (realCategoryName)
   const categoryProducts = useMemo(() => {
-    return getAllProducts().filter(p => p.category === categoryName);
-  }, [categoryName]);
+    return getAllProducts().filter(
+      p => normalize(p.category) === normalize(realCategoryName)
+    );
+  }, [realCategoryName]);
 
   const brands = useMemo(() => {
     const brandSet = new Set(categoryProducts.map(p => p.brand).filter(Boolean) as string[]);
@@ -88,13 +114,14 @@ const CategoryProductsPage = () => {
     setMinRating(0);
   };
 
-  if (!categoryProducts.length) {
+  // If realCategoryName doesn't actually exist, show not found
+  if (!matchedCategory) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
         <CartFlyout />
         <main className="flex-grow container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold">Category not found: {categoryName}</h1>
+            <h1 className="text-2xl font-bold">Category not found: {categorySlug && categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)}</h1>
             <p>Please check the URL or go back to the categories page.</p>
         </main>
         <Footer />
@@ -107,7 +134,7 @@ const CategoryProductsPage = () => {
       <Header />
       <CartFlyout />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <CategoryHeader categoryName={categoryName} />
+        <CategoryHeader categoryName={realCategoryName} />
         
         <div className="flex items-start gap-8">
           <DesktopSidebar 
@@ -151,3 +178,4 @@ const CategoryProductsPage = () => {
 };
 
 export default CategoryProductsPage;
+
