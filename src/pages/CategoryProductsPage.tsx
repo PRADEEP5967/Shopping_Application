@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
@@ -11,7 +10,7 @@ import CategoryHeader from '@/components/category/CategoryHeader';
 import DesktopSidebar from '@/components/category/DesktopSidebar';
 import MobileFilterSheet from '@/components/category/MobileFilterSheet';
 import SortDropdown from '@/components/category/SortDropdown';
-import ProductGrid from '@/components/ProductGrid';
+import ModernProductGrid from "@/components/ModernProductGrid";
 import NoProductsFound from '@/components/category/NoProductsFound';
 import RatingFilter from '@/components/shared/RatingFilter';
 
@@ -139,7 +138,7 @@ const CategoryProductsPage = () => {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <ProductGrid products={filteredProducts} />
+              <ModernProductGrid products={filteredProducts} />
             ) : (
               <NoProductsFound onClearFilters={clearFilters} />
             )}

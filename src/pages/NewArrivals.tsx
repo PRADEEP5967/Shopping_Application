@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { getAllProducts } from '@/data/products';
 import { Sparkles, Calendar, TrendingUp, Filter } from 'lucide-react';
+import ModernProductGrid from "@/components/ModernProductGrid";
 
 const NewArrivals = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -163,27 +164,7 @@ const NewArrivals = () => {
             </div>
 
             {sortedProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {sortedProducts.map(product => (
-                  <div key={product.id} className="relative">
-                    <ProductCard product={product} />
-                    {product.trending && (
-                      <Badge 
-                        className="absolute top-2 left-2 bg-red-500 hover:bg-red-600 z-10"
-                      >
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                        Trending
-                      </Badge>
-                    )}
-                    <Badge 
-                      variant="secondary" 
-                      className="absolute top-2 right-2 bg-green-100 text-green-800 z-10"
-                    >
-                      NEW
-                    </Badge>
-                  </div>
-                ))}
-              </div>
+              <ModernProductGrid products={sortedProducts} />
             ) : (
               <Card>
                 <CardContent className="p-12 text-center">

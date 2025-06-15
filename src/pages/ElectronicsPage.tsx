@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import ProductGrid from '@/components/ProductGrid';
+import ModernProductGrid from "@/components/ModernProductGrid";
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -120,7 +120,7 @@ const ElectronicsPage = () => {
             
             {electronicsProducts.length > 0 ? (
               <div className="animate-fade-in">
-                <ProductGrid products={electronicsProducts} />
+                <ModernProductGrid products={electronicsProducts} />
               </div>
             ) : (
               <div className="text-center py-12">
