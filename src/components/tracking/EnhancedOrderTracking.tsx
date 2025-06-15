@@ -15,7 +15,7 @@ import {
   Phone, 
   Bell,
   BellOff,
-  Refresh,
+  RefreshCw,
   ExternalLink,
   Weight,
   Ruler
@@ -203,7 +203,7 @@ const EnhancedOrderTracking: React.FC<EnhancedOrderTrackingProps> = ({ orderId: 
                   disabled={isRefreshing}
                   className="flex items-center gap-1"
                 >
-                  <Refresh className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
                 
