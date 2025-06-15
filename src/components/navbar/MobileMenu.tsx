@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, Shield, ChevronRight, Search } from 'lucide-react';
+import { LogOut, Shield, ChevronRight, Search, BookOpen, TrendingUp } from 'lucide-react';
 import {
   Collapsible,
   CollapsibleContent,
@@ -95,6 +96,54 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, hand
                 role="menuitem"
               >
                 Categories
+              </Link>
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible>
+            <CollapsibleTrigger
+              className="flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md font-medium transition-colors"
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-label="Blog & Guides, open submenu"
+              tabIndex={0}
+            >
+              Blog & Guides
+              <ChevronRight className="h-4 w-4 transition-transform duration-200" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="space-y-1 pl-4 mt-1" role="menu" aria-label="Blog submenu">
+              <Link 
+                to="/blog" 
+                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Blog"
+                tabIndex={0}
+                role="menuitem"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Blog
+              </Link>
+              <Link 
+                to="/buying-guides" 
+                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Buying Guides"
+                tabIndex={0}
+                role="menuitem"
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Buying Guides
+              </Link>
+              <Link 
+                to="/product-comparison" 
+                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+                onClick={() => setIsMenuOpen(false)}
+                aria-label="Product Comparison"
+                tabIndex={0}
+                role="menuitem"
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Product Comparison
               </Link>
             </CollapsibleContent>
           </Collapsible>

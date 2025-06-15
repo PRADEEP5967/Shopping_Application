@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Plus, Edit, Trash2, Eye, FileText } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, Eye, FileText, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Pages = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -58,6 +59,30 @@ const Pages = () => {
       status: 'draft',
       lastModified: '2025-01-01',
       author: 'Admin'
+    },
+    {
+      id: 7,
+      title: 'Blog',
+      slug: '/blog',
+      status: 'published',
+      lastModified: '2025-01-15',
+      author: 'Content Team'
+    },
+    {
+      id: 8,
+      title: 'Buying Guides',
+      slug: '/buying-guides',
+      status: 'published',
+      lastModified: '2025-01-14',
+      author: 'Content Team'
+    },
+    {
+      id: 9,
+      title: 'Product Comparison',
+      slug: '/product-comparison',
+      status: 'published',
+      lastModified: '2025-01-13',
+      author: 'Content Team'
     }
   ];
 
@@ -119,6 +144,53 @@ const Pages = () => {
         </Card>
       </div>
 
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardContent className="p-6">
+            <h3 className="font-semibold mb-2">Content Pages</h3>
+            <p className="text-sm text-gray-600 mb-4">Manage blog posts, guides, and content</p>
+            <div className="space-y-2">
+              <Link to="/blog">
+                <Button variant="outline" size="sm" className="w-full justify-between">
+                  View Blog
+                  <ExternalLink className="h-3 w-3" />
+                </Button>
+              </Link>
+              <Link to="/buying-guides">
+                <Button variant="outline" size="sm" className="w-full justify-between">
+                  View Buying Guides
+                  <ExternalLink className="h-3 w-3" />
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardContent className="p-6">
+            <h3 className="font-semibold mb-2">Interactive Tools</h3>
+            <p className="text-sm text-gray-600 mb-4">Product comparison and interactive content</p>
+            <Link to="/product-comparison">
+              <Button variant="outline" size="sm" className="w-full justify-between">
+                View Product Comparison
+                <ExternalLink className="h-3 w-3" />
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+
+        <Card className="hover:shadow-lg transition-shadow">
+          <CardContent className="p-6">
+            <h3 className="font-semibold mb-2">SEO Analytics</h3>
+            <p className="text-sm text-gray-600 mb-4">Monitor page performance and SEO</p>
+            <Button variant="outline" size="sm" className="w-full">
+              View Analytics
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -168,9 +240,11 @@ const Pages = () => {
                     <TableCell>{page.author}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-1">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-3 w-3" />
-                        </Button>
+                        <Link to={page.slug}>
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-3 w-3" />
+                          </Button>
+                        </Link>
                         <Button variant="outline" size="sm">
                           <Edit className="h-3 w-3" />
                         </Button>

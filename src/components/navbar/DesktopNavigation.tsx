@@ -25,6 +25,11 @@ const DesktopNavigation: React.FC = () => {
       href: '/products'
     },
     {
+      title: 'Blog',
+      hasDropdown: true,
+      content: <BlogDropdownContent />
+    },
+    {
       title: 'Deals & Discounts',
       href: '/deals-discounts'
     },
@@ -118,6 +123,37 @@ const CategoriesDropdownContent: React.FC = () => {
           className="block text-center text-sm text-blue-600 hover:text-blue-800 font-medium"
         >
           View All Categories →
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+const BlogDropdownContent: React.FC = () => {
+  return (
+    <div className="w-80 p-4 bg-white rounded-lg shadow-lg">
+      <h3 className="font-semibold text-lg mb-4">Content & Guides</h3>
+      <div className="space-y-3">
+        <Link
+          to="/blog"
+          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        >
+          <div className="font-medium text-gray-900 group-hover:text-blue-600">Blog</div>
+          <div className="text-sm text-gray-500">Latest articles and news</div>
+        </Link>
+        <Link
+          to="/buying-guides"
+          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        >
+          <div className="font-medium text-gray-900 group-hover:text-blue-600">Buying Guides</div>
+          <div className="text-sm text-gray-500">Expert advice for your purchases</div>
+        </Link>
+        <Link
+          to="/product-comparison"
+          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        >
+          <div className="font-medium text-gray-900 group-hover:text-blue-600">Product Comparison</div>
+          <div className="text-sm text-gray-500">Compare products side-by-side</div>
         </Link>
       </div>
     </div>

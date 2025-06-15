@@ -24,6 +24,10 @@ import SearchPage from '@/pages/SearchPage';
 import OrderTracking from '@/pages/OrderTracking';
 import OrderDetail from '@/pages/OrderDetail';
 import OrderHistory from '@/pages/OrderHistory';
+import Blog from '@/pages/Blog';
+import BlogPost from '@/pages/BlogPost';
+import BuyingGuides from '@/pages/BuyingGuides';
+import ProductComparison from '@/pages/ProductComparison';
 
 export const MainRoutes = (
   <>
@@ -40,6 +44,13 @@ export const MainRoutes = (
     <Route path="/order-history" element={<OrderHistory />} />
     <Route path="/categories" element={<CategoriesPage />} />
     <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
+    
+    {/* Blog and Content Routes */}
+    <Route path="/blog" element={<Blog />} />
+    <Route path="/blog/:slug" element={<BlogPost />} />
+    <Route path="/buying-guides" element={<BuyingGuides />} />
+    <Route path="/buying-guides/:category" element={<BuyingGuides />} />
+    <Route path="/product-comparison" element={<ProductComparison />} />
     
     {/* Specific Category Pages */}
     <Route path="/category/clothing" element={<ClothingPage />} />
