@@ -13,6 +13,7 @@ import SortDropdown from '@/components/category/SortDropdown';
 import ModernProductGrid from "@/components/ModernProductGrid";
 import NoProductsFound from '@/components/category/NoProductsFound';
 import RatingFilter from '@/components/shared/RatingFilter';
+import RelatedCategoriesGrid from "@/components/category/RelatedCategoriesGrid";
 
 // Enhanced unslugify with acronym/edge-case handling
 const slugToCategoryMap: Record<string, string> = {
@@ -172,6 +173,10 @@ const CategoryProductsPage = () => {
             ) : (
               <NoProductsFound onClearFilters={clearFilters} />
             )}
+
+            {/* Related Categories Grid */}
+            <RelatedCategoriesGrid currentCategorySlug={categorySlug || ""} />
+
           </div>
         </div>
       </main>
