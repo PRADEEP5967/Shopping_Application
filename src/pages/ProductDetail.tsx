@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw, Share2, Plus, Minus, Check, ChevronLeft, ChevronRight, X, Zap, Award, Users } from 'lucide-react';
@@ -69,7 +70,7 @@ const ProductDetail = () => {
 
   const handleRemoveFromWishlist = () => {
     if (product) {
-      removeFromWishlist(product);
+      removeFromWishlist(product.id);
       toast({
         title: "Removed from wishlist",
         description: `${product.name} removed from your wishlist.`,
@@ -121,7 +122,7 @@ const ProductDetail = () => {
                 <div className="flex items-center mt-2">
                   <Star className="h-5 w-5 text-yellow-500 mr-1" />
                   <span className="text-gray-700">{product.rating ?? "N/A"}</span>
-                  <span className="text-gray-500 ml-2">({"numReviews" in product ? (product as any).numReviews : 0} reviews)</span>
+                  <span className="text-gray-500 ml-2">({product.reviewCount || 0} reviews)</span>
                 </div>
               </div>
               <div className="mt-4 md:mt-0">
