@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
@@ -18,8 +17,9 @@ import RatingFilter from '@/components/shared/RatingFilter';
 // Enhanced unslugify with acronym/edge-case handling
 const slugToCategoryMap: Record<string, string> = {
   tv: 'TV',
-  headphones: 'Electronics', // Map "headphones" slug to "Electronics" category
-  smartphone: 'Electronics', // Map "smartphone" slug to "Electronics" category
+  headphones: 'Electronics',
+  smartphone: 'Electronics',
+  monitor: 'Computers', // Map "monitor" slug to "Computers" category -- adjust as needed!
   // Add other mappings as needed
 };
 
@@ -180,4 +180,3 @@ const CategoryProductsPage = () => {
 };
 
 export default CategoryProductsPage;
-
