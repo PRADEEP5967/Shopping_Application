@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route } from 'react-router-dom';
 import ProductDetail from '@/pages/ProductDetail';
@@ -18,11 +19,13 @@ import PhotographyPage from '@/pages/PhotographyPage';
 import Products from '@/pages/Products';
 import Index from '@/pages/Index';
 import CategoriesPage from '@/pages/CategoriesPage';
+import SearchPage from '@/pages/SearchPage';
 
 export const MainRoutes = (
   <>
     <Route path="/" element={<Index />} />
     <Route path="/products" element={<Products />} />
+    <Route path="/search" element={<SearchPage />} />
     <Route path="/product/:productId" element={<ProductDetail />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/orders" element={<Orders />} />

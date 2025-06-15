@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import SearchResults from '@/components/SearchResults';
-import AdvancedSearch from '@/components/AdvancedSearch';
+import EnhancedAdvancedSearch from '@/components/search/EnhancedAdvancedSearch';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
 
@@ -36,7 +36,7 @@ const SearchPage = () => {
         
         setSearchResults(filtered);
         setIsLoading(false);
-      }, 500);
+      }, 300);
 
       return () => clearTimeout(timer);
     } else {
@@ -54,11 +54,27 @@ const SearchPage = () => {
         <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
           {/* Search Header */}
           <div className="text-center space-y-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">Search Products</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
+              Intelligent Search
+            </h1>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Search with voice, get intelligent suggestions, and find exactly what you're looking for
+            </p>
             <div className="max-w-2xl mx-auto">
-              <AdvancedSearch />
+              <EnhancedAdvancedSearch showVoiceSearch={true} />
             </div>
           </div>
+
+          {/* Search Stats */}
+          {query && (
+            <div className="text-center text-sm text-gray-500">
+              {isLoading ? (
+                'Searching...'
+              ) : (
+                `Found ${searchResults.length} results for "${query}"`
+              )}
+            </div>
+          )}
 
           {/* Search Results */}
           <div className="w-full">
