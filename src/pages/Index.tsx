@@ -25,7 +25,6 @@ import ModernImageSlider from '@/components/ModernImageSlider';
 import AnimatedFeatureCard from "@/components/modern/AnimatedFeatureCard";
 import { Zap, ShieldCheck, Headphones, Truck, RefreshCw, Star, Users, ShoppingBag } from "lucide-react";
 import { motion } from "framer-motion";
-import Home3DSlider from "@/components/Home3DSlider";
 
 // New: Home Advantages section data and animation
 const CATEGORY_ADVANTAGES = [
@@ -113,8 +112,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* New 3D slider right after hero */}
-      <Home3DSlider />
+      {/* Home3DSlider removed */}
 
       {/* As Seen On/Partner Logos with nicer animation and spacing */}
       <PartnerLogosSection />
