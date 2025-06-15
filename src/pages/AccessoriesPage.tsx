@@ -8,6 +8,7 @@ import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Star, TrendingUp, Package, Heart, Shield } from 'lucide-react';
+import BestFeaturesAccessories from "@/components/category/BestFeaturesAccessories";
 
 const AccessoriesPage = () => {
   const allProducts = getAllProducts();
@@ -83,6 +84,9 @@ const AccessoriesPage = () => {
             </div>
           </div>
         </section>
+
+        {/* Best Features Section */}
+        <BestFeaturesAccessories />
 
         {/* Stats Section */}
         <section className="py-12 bg-gradient-to-r from-primary/5 to-accent/5">
