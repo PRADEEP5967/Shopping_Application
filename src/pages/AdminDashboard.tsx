@@ -9,6 +9,7 @@ import { UserManagement } from '@/components/admin/UserManagement';
 import { InventoryManagement } from '@/components/admin/InventoryManagement';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { SettingsPanel } from '@/components/admin/SettingsPanel';
+import { ModernAdminFeatures } from '@/components/admin/ModernAdminFeatures';
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
 import { ArrowUpRight, BarChart3, Package, ShoppingCart, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,7 @@ const AdminDashboard = () => {
   return (
     <AdminDashboardLayout 
       title="Admin Dashboard" 
-      subtitle="Manage your e-commerce platform with full CRUD operations"
+      subtitle="Manage your e-commerce platform with modern tools and insights"
     >
       <AdminStats />
 
@@ -92,8 +93,9 @@ const AdminDashboard = () => {
       </div>
 
       <Tabs defaultValue="overview" className="mt-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="modern">Modern</TabsTrigger>
           <TabsTrigger value="products">Products</TabsTrigger>
           <TabsTrigger value="orders">Orders</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
@@ -184,6 +186,10 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="modern" className="mt-6">
+          <ModernAdminFeatures />
         </TabsContent>
 
         <TabsContent value="products" className="mt-6">

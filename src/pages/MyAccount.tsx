@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -5,10 +6,11 @@ import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { LogOut } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Import new components
+// Import existing components
 import AccountSidebar from '@/components/account/AccountSidebar';
 import DashboardTab from '@/components/account/DashboardTab';
 import ProfileTab from '@/components/account/ProfileTab';
@@ -17,6 +19,9 @@ import PaymentTab from '@/components/account/PaymentTab';
 import AddressesTab from '@/components/account/AddressesTab';
 import NotificationsTab from '@/components/account/NotificationsTab';
 import SecurityTab from '@/components/account/SecurityTab';
+
+// Import new modern features
+import { ModernAccountFeatures } from '@/components/account/ModernAccountFeatures';
 
 const MyAccount = () => {
   const { toast } = useToast();
@@ -51,6 +56,8 @@ const MyAccount = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardTab />;
+      case 'modern':
+        return <ModernAccountFeatures />;
       case 'profile':
         return <ProfileTab user={user} onSave={handleSave} />;
       case 'orders':
@@ -83,14 +90,34 @@ const MyAccount = () => {
         </div>
         
         <div className="flex flex-col md:flex-row gap-8">
-          <AccountSidebar 
-            user={user} 
-            activeTab={activeTab} 
-            setActiveTab={setActiveTab} 
-          />
+          <div className="md:w-64">
+            <AccountSidebar 
+              user={user} 
+              activeTab={activeTab} 
+              setActiveTab={setActiveTab} 
+            />
+          </div>
           
           <div className="flex-1">
-            {renderTabContent()}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-6">
+                <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+                <TabsTrigger value="modern" className="flex items-center gap-1">
+                  <Sparkles className="h-3 w-3" />
+                  Modern
+                </TabsTrigger>
+                <TabsTrigger value="profile">Profile</TabsTrigger>
+                <TabsTrigger value="orders">Orders</TabsTrigger>
+                <TabsTrigger value="payment">Payment</TabsTrigger>
+                <TabsTrigger value="addresses">Addresses</TabsTrigger>
+                <TabsTrigger value="notifications">Notifications</TabsTrigger>
+                <TabsTrigger value="security">Security</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value={activeTab}>
+                {renderTabContent()}
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>

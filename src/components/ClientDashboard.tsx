@@ -3,6 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ModernClientFeatures } from '@/components/modern/ModernClientFeatures';
 import { 
   ShoppingBag, 
   Heart, 
@@ -11,7 +13,8 @@ import {
   Package, 
   CreditCard,
   User,
-  Settings
+  Settings,
+  Sparkles
 } from 'lucide-react';
 
 const ClientDashboard = () => {
@@ -89,59 +92,112 @@ const ClientDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Orders */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Recent Orders
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div>
-                    <p className="font-medium">{order.id}</p>
-                    <p className="text-sm text-gray-600">{order.date}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">{order.total}</p>
-                    <Badge variant={order.status === 'Delivered' ? 'default' : 'secondary'}>
-                      {order.status}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <Button variant="outline" className="w-full mt-4">
-              View All Orders
-            </Button>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="overview" className="mt-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="modern" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Modern Features
+          </TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
+        </TabsList>
 
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              {quickActions.map((action, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="h-20 flex flex-col items-center justify-center gap-2"
-                >
-                  {action.icon}
-                  <span className="text-sm">{action.title}</span>
+        <TabsContent value="overview" className="mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Recent Orders */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Recent Orders
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentOrders.map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <p className="font-medium">{order.id}</p>
+                        <p className="text-sm text-gray-600">{order.date}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-semibold">{order.total}</p>
+                        <Badge variant={order.status === 'Delivered' ? 'default' : 'secondary'}>
+                          {order.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Button variant="outline" className="w-full mt-4">
+                  View All Orders
                 </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              </CardContent>
+            </Card>
+
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  {quickActions.map((action, index) => (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      className="h-20 flex flex-col items-center justify-center gap-2"
+                    >
+                      {action.icon}
+                      <span className="text-sm">{action.title}</span>
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="modern" className="mt-6">
+          <ModernClientFeatures />
+        </TabsContent>
+
+        <TabsContent value="activity" className="mt-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activity</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <ShoppingBag className="h-5 w-5 text-blue-500" />
+                  <div>
+                    <p className="font-medium">Order placed</p>
+                    <p className="text-sm text-gray-500">Order #ORD-003 for $45.00</p>
+                  </div>
+                  <span className="text-xs text-gray-400 ml-auto">2 hours ago</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <Heart className="h-5 w-5 text-red-500" />
+                  <div>
+                    <p className="font-medium">Added to wishlist</p>
+                    <p className="text-sm text-gray-500">Wireless Gaming Headset</p>
+                  </div>
+                  <span className="text-xs text-gray-400 ml-auto">1 day ago</span>
+                </div>
+                <div className="flex items-center gap-3 p-3 border rounded-lg">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  <div>
+                    <p className="font-medium">Earned reward points</p>
+                    <p className="text-sm text-gray-500">+50 points from purchase</p>
+                  </div>
+                  <span className="text-xs text-gray-400 ml-auto">3 days ago</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
