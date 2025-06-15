@@ -6,6 +6,8 @@ import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import SearchResults from '@/components/SearchResults';
 import EnhancedAdvancedSearch from '@/components/search/EnhancedAdvancedSearch';
+import VisualSearch from '@/components/search/VisualSearch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
 
@@ -13,6 +15,7 @@ const SearchPage = () => {
   const [searchParams] = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [visualResults, setVisualResults] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
   const query = searchParams.get('q') || '';
@@ -25,7 +28,6 @@ const SearchPage = () => {
     if (query && products.length > 0) {
       setIsLoading(true);
       
-      // Simulate search delay
       const timer = setTimeout(() => {
         const filtered = products.filter(product =>
           product.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -44,6 +46,10 @@ const SearchPage = () => {
     }
   }, [query, products]);
 
+  const handleVisualSearchResults = (results: Product[]) => {
+    setVisualResults(results);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -52,38 +58,49 @@ const SearchPage = () => {
       
       <main className="flex-grow container mx-auto px-4 py-6 sm:py-8">
         <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
-          {/* Search Header */}
           <div className="text-center space-y-4">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">
               Intelligent Search
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Search with voice, get intelligent suggestions, and find exactly what you're looking for
+              Search with text, voice, or images to find exactly what you're looking for
             </p>
-            <div className="max-w-2xl mx-auto">
-              <EnhancedAdvancedSearch showVoiceSearch={true} />
-            </div>
           </div>
 
-          {/* Search Stats */}
-          {query && (
-            <div className="text-center text-sm text-gray-500">
-              {isLoading ? (
-                'Searching...'
-              ) : (
-                `Found ${searchResults.length} results for "${query}"`
+          <Tabs defaultValue="text" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="text">Text & Voice Search</TabsTrigger>
+              <TabsTrigger value="visual">Visual Search</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="text" className="space-y-6">
+              <div className="max-w-2xl mx-auto">
+                <EnhancedAdvancedSearch showVoiceSearch={true} />
+              </div>
+              
+              {query && (
+                <div className="text-center text-sm text-gray-500">
+                  {isLoading ? (
+                    'Searching...'
+                  ) : (
+                    `Found ${searchResults.length} results for "${query}"`
+                  )}
+                </div>
               )}
-            </div>
-          )}
 
-          {/* Search Results */}
-          <div className="w-full">
-            <SearchResults 
-              query={query} 
-              results={searchResults} 
-              isLoading={isLoading} 
-            />
-          </div>
+              <div className="w-full">
+                <SearchResults 
+                  query={query} 
+                  results={searchResults} 
+                  isLoading={isLoading} 
+                />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="visual" className="space-y-6">
+              <VisualSearch onResult={handleVisualSearchResults} />
+            </TabsContent>
+          </Tabs>
         </div>
       </main>
       

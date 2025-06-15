@@ -21,6 +21,8 @@ import Products from '@/pages/Products';
 import Index from '@/pages/Index';
 import CategoriesPage from '@/pages/CategoriesPage';
 import SearchPage from '@/pages/SearchPage';
+import VisualSearchPage from '@/pages/VisualSearchPage';
+import SubscriptionsPage from '@/pages/SubscriptionsPage';
 import OrderTracking from '@/pages/OrderTracking';
 import OrderDetail from '@/pages/OrderDetail';
 import OrderHistory from '@/pages/OrderHistory';

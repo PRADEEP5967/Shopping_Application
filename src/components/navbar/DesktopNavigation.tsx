@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -154,6 +153,20 @@ const BlogDropdownContent: React.FC = () => {
         >
           <div className="font-medium text-gray-900 group-hover:text-blue-600">Product Comparison</div>
           <div className="text-sm text-gray-500">Compare products side-by-side</div>
+        </Link>
+        <Link
+          to="/visual-search"
+          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        >
+          <div className="font-medium text-gray-900 group-hover:text-blue-600">Visual Search</div>
+          <div className="text-sm text-gray-500">Search with images</div>
+        </Link>
+        <Link
+          to="/subscriptions"
+          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        >
+          <div className="font-medium text-gray-900 group-hover:text-blue-600">Subscriptions</div>
+          <div className="text-sm text-gray-500">Manage auto-delivery</div>
         </Link>
       </div>
     </div>
