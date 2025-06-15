@@ -1,7 +1,11 @@
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
+import PartnerLogosSection from '@/components/sections/PartnerLogosSection';
+import QuickLinksFlashSection from '@/components/sections/QuickLinksFlashSection';
+import AnimatedCountersSection from '@/components/sections/AnimatedCountersSection';
 import CategoryNav from '@/components/CategoryNav';
 import ModernCategoryNav from '@/components/ModernCategoryNav';
 import TestimonialsSlider from "@/components/TestimonialsSlider";
@@ -63,12 +67,19 @@ const Index = () => {
       <Header />
       <CartFlyout />
 
-      {/* Modern Hero Section */}
+      {/* Improved Hero Section */}
       <main className="flex-grow">
         <HeroSection />
+        {/* Partner/As Seen On Logos */}
+        <PartnerLogosSection />
+
+        {/* New Quick Links / Flash & Trending Shortcuts */}
+        <QuickLinksFlashSection />
+
+        {/* Modern Image Slider retained */}
         <ModernImageSlider />
 
-        {/* Modern Feature Callouts */}
+        {/* Animated Feature Callouts */}
         <section className="py-20 bg-gradient-to-br from-primary/5 via-accent/10 to-secondary/5">
           <div className="container mx-auto px-4">
             <motion.div 
@@ -102,6 +113,9 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Animated Counters Section */}
+        <AnimatedCountersSection />
+
         {/* Quick Links Section */}
         <QuickLinksSection />
 
@@ -117,7 +131,7 @@ const Index = () => {
         {/* Modern Team Home Section */}
         <ModernTeamHomeSection />
 
-        {/* Testimonials */}
+        {/* Testimonials Slider */}
         <TestimonialsSlider />
         <ModernTestimonials />
 
