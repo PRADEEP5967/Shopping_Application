@@ -8,18 +8,29 @@ import { Link, useLocation } from "react-router-dom";
  */
 const NAV_LINKS = [
   {
-    label: "Smartphone",
-    href: "/category/smartphone",
+    label: "About Us",
+    href: "/about-us",
   },
   {
-    label: "Monitor",
-    href: "/category/monitor",
+    label: "Products",
+    href: "/products",
   },
   {
-    label: "Shirt",
-    href: "/category/shirt",
+    label: "Services",
+    href: "/services",
   },
-  // Add more if you like...
+  {
+    label: "Portfolio",
+    href: "/portfolio",
+  },
+  {
+    label: "Contact Us",
+    href: "/contact-us",
+  },
+  {
+    label: "Careers",
+    href: "/careers",
+  },
 ];
 
 const DesktopNavigation: React.FC = () => {
@@ -47,4 +58,3 @@ const DesktopNavigation: React.FC = () => {
 };
 
 export default DesktopNavigation;
-
