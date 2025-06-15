@@ -1,13 +1,9 @@
 
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Home from '@/pages/Home';
-import Products from '@/pages/Products';
 import ProductDetail from '@/pages/ProductDetail';
-import Cart from '@/pages/Cart';
 import Checkout from '@/pages/Checkout';
 import Orders from '@/pages/Orders';
-import Categories from '@/pages/Categories';
 import CategoryProductsPage from '@/pages/CategoryProductsPage';
 import ClothingPage from '@/pages/ClothingPage';
 import ElectronicsPage from '@/pages/ElectronicsPage';
@@ -20,16 +16,18 @@ import DumbbellPage from '@/pages/DumbbellPage';
 import SmartHomePage from '@/pages/SmartHomePage';
 import GamingPage from '@/pages/GamingPage';
 import PhotographyPage from '@/pages/PhotographyPage';
+import Products from '@/pages/Products';
+import Index from '@/pages/Index';
+import CategoriesPage from '@/pages/CategoriesPage';
 
 export const MainRoutes = (
   <>
-    <Route path="/" element={<Home />} />
+    <Route path="/" element={<Index />} />
     <Route path="/products" element={<Products />} />
     <Route path="/product/:id" element={<ProductDetail />} />
-    <Route path="/cart" element={<Cart />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/orders" element={<Orders />} />
-    <Route path="/categories" element={<Categories />} />
+    <Route path="/categories" element={<CategoriesPage />} />
     <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
     
     {/* Specific Category Pages */}

@@ -70,4 +70,4 @@ const PhotographyPage: React.FC = () => {
   );
 };
 
-export default GamingPage;
+export default PhotographyPage;
