@@ -21,6 +21,9 @@ import Products from '@/pages/Products';
 import Index from '@/pages/Index';
 import CategoriesPage from '@/pages/CategoriesPage';
 import SearchPage from '@/pages/SearchPage';
+import OrderTracking from '@/pages/OrderTracking';
+import OrderDetail from '@/pages/OrderDetail';
+import OrderHistory from '@/pages/OrderHistory';
 
 export const MainRoutes = (
   <>
@@ -31,6 +34,10 @@ export const MainRoutes = (
     <Route path="/cart" element={<Cart />} />
     <Route path="/checkout" element={<Checkout />} />
     <Route path="/orders" element={<Orders />} />
+    <Route path="/order-tracking" element={<OrderTracking />} />
+    <Route path="/order-tracking/:orderId" element={<OrderTracking />} />
+    <Route path="/order-detail/:orderId" element={<OrderDetail />} />
+    <Route path="/order-history" element={<OrderHistory />} />
     <Route path="/categories" element={<CategoriesPage />} />
     <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
     
