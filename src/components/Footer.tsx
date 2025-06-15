@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -65,10 +64,10 @@ const Footer = () => {
           <div className="space-y-4">
             <Link to="/" className="flex items-center space-x-2">
               <Package className="h-6 w-6 text-primary" />
-              <span className="text-xl font-bold">NextCommerce</span>
+              <span className="text-xl font-bold">Pradeep Sahani Mart</span>
             </Link>
             <p className="text-gray-400 text-sm">
-              Experience premium online shopping with NextCommerce - your one-stop solution for high-quality products and exceptional service.
+              Experience premium online shopping with Pradeep Sahani Mart - your one-stop solution for high-quality products and exceptional service.
             </p>
             <div className="space-y-2 pt-2">
               <div className="flex items-center space-x-3 text-sm">
@@ -230,4 +229,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
