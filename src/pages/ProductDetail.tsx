@@ -49,7 +49,7 @@ const ProductDetail = () => {
 
   const handleAddToCart = () => {
     if (product) {
-      addItem(product, quantity);
+      addItem(product, quantity); // product: Product, quantity: number
       toast({
         title: "Added to cart",
         description: `${product.name} x${quantity} added to your cart.`,
@@ -120,8 +120,8 @@ const ProductDetail = () => {
                 <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
                 <div className="flex items-center mt-2">
                   <Star className="h-5 w-5 text-yellow-500 mr-1" />
-                  <span className="text-gray-700">{product.rating}</span>
-                  <span className="text-gray-500 ml-2">({product.numReviews} reviews)</span>
+                  <span className="text-gray-700">{product.rating ?? "N/A"}</span>
+                  <span className="text-gray-500 ml-2">({"numReviews" in product ? (product as any).numReviews : 0} reviews)</span>
                 </div>
               </div>
               <div className="mt-4 md:mt-0">

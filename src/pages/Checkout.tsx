@@ -11,12 +11,10 @@ import { useToast } from '@/components/ui/use-toast';
 import { ArrowRight, Lock, MapPin, CreditCard, CheckCircle } from 'lucide-react';
 
 const Checkout = () => {
-  const { cartItems, clearCart, getTotalPrice } = useCart();
+  const { items, clearCart, subtotal } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
-
-  const totalPrice = getTotalPrice();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +40,7 @@ const Checkout = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
         
-        {cartItems.length === 0 ? (
+        {items.length === 0 ? (
           <div className="text-center py-16">
             <h2 className="text-2xl font-semibold mb-4">Your cart is empty</h2>
             <p className="text-gray-600 mb-6">
@@ -60,23 +58,26 @@ const Checkout = () => {
               <Card>
                 <CardContent className="p-6">
                   <ul>
-                    {cartItems.map(item => (
-                      <li key={item.id} className="flex items-center justify-between py-3 border-b">
+                    {items.map(item => (
+                      <li key={item.product.id + (item.variant?.id || '')} className="flex items-center justify-between py-3 border-b">
                         <div className="flex items-center">
-                          <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
+                          <img src={item.product.images?.[0]} alt={item.product.name} className="w-16 h-16 object-cover rounded mr-4" />
                           <div>
-                            <h3 className="font-medium">{item.name}</h3>
-                            <p className="text-gray-600 text-sm">Quantity: 1</p>
+                            <h3 className="font-medium">{item.product.name}</h3>
+                            {item.variant && (
+                              <p className="text-gray-600 text-sm">{item.variant.name}</p>
+                            )}
+                            <p className="text-gray-600 text-sm">Quantity: {item.quantity}</p>
                           </div>
                         </div>
-                        <div className="font-semibold">${item.price.toFixed(2)}</div>
+                        <div className="font-semibold">${(item.variant ? item.variant.price : item.product.price).toFixed(2)}</div>
                       </li>
                     ))}
                   </ul>
                   
                   <div className="mt-4 flex justify-between font-semibold">
                     <span>Total:</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>${subtotal.toFixed(2)}</span>
                   </div>
                 </CardContent>
               </Card>
