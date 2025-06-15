@@ -27,53 +27,53 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
   const { items: wishlistItems } = useWishlist();
 
   return (
-    <div className="flex items-center space-x-2">
-      {/* Search Button - Desktop */}
+    <div className="flex items-center space-x-1 sm:space-x-2">
+      {/* Search Button - Desktop and Tablet */}
       <Button 
         variant="ghost" 
         size="sm" 
         onClick={toggleSearch}
-        className="hidden md:flex"
+        className="hidden sm:flex p-2 sm:p-2.5"
         title="Search"
       >
-        <Search className="h-5 w-5" />
+        <Search className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
 
-      {/* Wishlist */}
+      {/* Wishlist - responsive sizing */}
       <Link to="/wishlist">
-        <Button variant="ghost" size="sm" className="relative" title="Wishlist">
-          <Heart className="h-5 w-5" />
+        <Button variant="ghost" size="sm" className="relative p-2 sm:p-2.5" title="Wishlist">
+          <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
           {wishlistItems.length > 0 && (
-            <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">
+            <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 p-0 text-xs flex items-center justify-center">
               {wishlistItems.length}
             </Badge>
           )}
         </Button>
       </Link>
 
-      {/* Cart */}
+      {/* Cart - responsive sizing */}
       <Link to="/checkout">
-        <Button variant="ghost" size="sm" className="relative" title="Shopping Cart">
-          <ShoppingCart className="h-5 w-5" />
+        <Button variant="ghost" size="sm" className="relative p-2 sm:p-2.5" title="Shopping Cart">
+          <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
           {totalItems > 0 && (
-            <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center">
+            <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 p-0 text-xs flex items-center justify-center">
               {totalItems}
             </Badge>
           )}
         </Button>
       </Link>
 
-      {/* User Menu */}
+      {/* User Menu - responsive */}
       {isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-              <Avatar className="h-7 w-7">
+            <Button variant="ghost" size="sm" className="flex items-center space-x-1 sm:space-x-2 p-1 sm:p-2">
+              <Avatar className="h-6 w-6 sm:h-7 sm:w-7">
                 <AvatarImage 
                   src="https://avatars.githubusercontent.com/u/pradeepsahani" 
                   alt="Pradeep Sahani" 
                 />
-                <AvatarFallback className="bg-primary text-white text-sm">PS</AvatarFallback>
+                <AvatarFallback className="bg-primary text-white text-xs sm:text-sm">PS</AvatarFallback>
               </Avatar>
               <span className="hidden lg:inline text-sm">{user?.firstName}</span>
             </Button>
@@ -113,8 +113,8 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
         </DropdownMenu>
       ) : (
         <Link to="/login">
-          <Button variant="outline" size="sm">
-            <User className="h-4 w-4 mr-2" />
+          <Button variant="outline" size="sm" className="text-xs sm:text-sm p-2 sm:p-2.5">
+            <User className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Login</span>
           </Button>
         </Link>

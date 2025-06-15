@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -32,15 +33,25 @@ const Navbar: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 w-full">
       <div className="bg-white/95 dark:bg-background/95 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            <NavbarLogo />
-            <div className="flex-1 flex justify-center">
+        <div className="container mx-auto px-2 sm:px-4">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            {/* Logo - responsive sizing */}
+            <div className="flex-shrink-0">
+              <NavbarLogo />
+            </div>
+            
+            {/* Desktop Navigation - hidden on mobile and tablet */}
+            <div className="hidden xl:flex flex-1 justify-center">
               <DesktopNavigation />
             </div>
-            <div className="flex items-center gap-x-2">
+            
+            {/* Actions - responsive layout */}
+            <div className="flex items-center gap-1 sm:gap-2">
               <NavbarActions toggleSearch={toggleSearch} handleLogout={handleLogout} />
-              <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+              {/* Mobile menu button - shown on tablet and mobile */}
+              <div className="xl:hidden">
+                <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+              </div>
             </div>
           </div>
         </div>

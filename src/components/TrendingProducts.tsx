@@ -19,13 +19,15 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
-        setProductsPerView(1);
+        setProductsPerView(2); // Show 2 on mobile
       } else if (window.innerWidth < 768) {
-        setProductsPerView(2);
+        setProductsPerView(2); // Show 2 on small tablets
       } else if (window.innerWidth < 1024) {
-        setProductsPerView(3);
+        setProductsPerView(3); // Show 3 on tablets
+      } else if (window.innerWidth < 1280) {
+        setProductsPerView(4); // Show 4 on desktop
       } else {
-        setProductsPerView(4);
+        setProductsPerView(5); // Show 5 on large screens
       }
     };
     
@@ -72,32 +74,32 @@ const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
   }
 
   return (
-    <section className="py-12 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-8 sm:py-12 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Trending Now</h2>
-            <p className="mt-2 text-gray-600">Top trending products this week</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">Trending Now</h2>
+            <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600">Top trending products this week</p>
           </div>
-          <div className="flex gap-2 mt-4 md:mt-0">
+          <div className="flex gap-2">
             <button 
               onClick={prevSlide}
               aria-label="Previous" 
-              className="rounded-full w-10 h-10 bg-white shadow flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+              className="rounded-full w-8 h-8 sm:w-10 sm:h-10 bg-white shadow flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={16} className="sm:w-5 sm:h-5" />
             </button>
             <button 
               onClick={nextSlide}
               aria-label="Next" 
-              className="rounded-full w-10 h-10 bg-white shadow flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+              className="rounded-full w-8 h-8 sm:w-10 sm:h-10 bg-white shadow flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
             >
-              <ArrowRight size={20} />
+              <ArrowRight size={16} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
           {visibleProducts.map((product, index) => (
             <ModernProductCard 
               key={`${product.id}-${index}`} 
