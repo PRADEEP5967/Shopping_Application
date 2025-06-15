@@ -1,143 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import CartFlyout from '@/components/CartFlyout';
-import ModernProductGrid from "@/components/ModernProductGrid";
-import { getAllProducts } from '@/data/products';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Star, TrendingUp, Package, Heart, Shield } from 'lucide-react';
-import BestFeaturesAccessories from "@/components/category/BestFeaturesAccessories";
 
-const AccessoriesPage = () => {
-  const allProducts = getAllProducts();
-  const accessoriesProducts = allProducts.filter(product => product.category === 'Accessories');
+import React from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CartFlyout from "@/components/CartFlyout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Watch } from "lucide-react";
+import RelatedCategoriesGrid from "@/components/category/RelatedCategoriesGrid";
 
-  const subcategories = [
-    { name: 'Bags & Backpacks', icon: Package, count: '15+' },
-    { name: 'Wallets & Cases', icon: Shield, count: '8+' },
-    { name: 'Lifestyle', icon: Heart, count: '12+' }
-  ];
-
+const AccessoriesPage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-violet-50 to-white">
       <Header />
       <CartFlyout />
-      
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+        <section className="relative py-20 bg-gradient-to-r from-purple-100/80 to-violet-100/80 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/[0.04] bg-[size:60px_60px] pointer-events-none" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 animate-fade-in">
-                <Star className="w-3 h-3 mr-1" />
-                Premium Collection
+            <div className="max-w-2xl mx-auto text-center">
+              <Badge className="mb-6 bg-purple-200 text-purple-800 border-none text-lg shadow animate-fade-in flex items-center justify-center">
+                <Watch className="w-4 h-4 mr-2" />
+                Accessories & More
               </Badge>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
-                Accessories Collection
+              <h1 className="text-4xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-700 bg-clip-text text-transparent animate-fade-in">
+                Complete Your Look
               </h1>
-              
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
-                Discover our curated selection of premium accessories designed to complement your style and elevate your everyday look.
+              <p className="text-xl text-gray-700 mb-8 max-w-xl mx-auto animate-fade-in">
+                Discover the perfect accessories to complement your style and enhance your everyday essentials.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-                <Button size="lg" className="group hover:scale-105 transition-all">
-                  Shop Now
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button size="lg" variant="outline" className="hover:bg-primary hover:text-white transition-all">
-                  <TrendingUp className="mr-2 w-5 h-5" />
-                  View Trending
-                </Button>
-              </div>
+              <Button size="lg" className="bg-purple-600 text-white font-bold hover:bg-purple-700 shadow">
+                Shop Accessories
+              </Button>
             </div>
           </div>
         </section>
 
-        {/* Subcategories */}
+        {/* Features Section */}
         <section className="py-12 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold mb-2">Browse Subcategories</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {subcategories.map((sub, index) => {
-                const IconComponent = sub.icon;
-                return (
-                  <div key={sub.name} className="group p-6 bg-gray-50 rounded-xl hover:bg-primary hover:text-white transition-all duration-300 cursor-pointer animate-fade-in">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/10 group-hover:bg-white/20 rounded-lg flex items-center justify-center transition-all">
-                        <IconComponent className="w-6 h-6 text-primary group-hover:text-white" />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold">{sub.name}</h3>
-                        <p className="text-sm text-gray-600 group-hover:text-white/80">{sub.count} products</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+          <div className="container mx-auto px-4 max-w-3xl text-center">
+            <h2 className="text-2xl font-semibold mb-2 text-gray-700">Why Choose Our Accessories?</h2>
+            <p className="mb-4 text-gray-500">
+              Carefully curated accessories that blend style, functionality, and quality craftsmanship.
+            </p>
+            <ul className="flex flex-col md:flex-row md:justify-center gap-5 mt-8 text-left mx-auto max-w-xl animate-fade-in">
+              <li className="flex-1 bg-purple-50 p-6 rounded-xl shadow-sm border border-purple-100">
+                <span className="text-gray-700 font-bold">✨ Style Perfect</span>
+                <div className="text-gray-600 mt-2 text-sm">Accessories that elevate any outfit or setup.</div>
+              </li>
+              <li className="flex-1 bg-violet-50 p-6 rounded-xl shadow-sm border border-violet-100">
+                <span className="text-gray-700 font-bold">🎯 Functional</span>
+                <div className="text-gray-600 mt-2 text-sm">Beauty meets utility in every piece.</div>
+              </li>
+              <li className="flex-1 bg-indigo-50 p-6 rounded-xl shadow-sm border border-indigo-100">
+                <span className="text-gray-700 font-bold">💎 Premium Quality</span>
+                <div className="text-gray-600 mt-2 text-sm">Durable materials built to last.</div>
+              </li>
+            </ul>
           </div>
         </section>
 
-        {/* Best Features Section */}
-        <BestFeaturesAccessories />
-
-        {/* Stats Section */}
-        <section className="py-12 bg-gradient-to-r from-primary/5 to-accent/5">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-              <div className="animate-fade-in">
-                <div className="text-3xl font-bold text-primary mb-2">{accessoriesProducts.length}+</div>
-                <div className="text-gray-600">Products</div>
-              </div>
-              <div className="animate-fade-in">
-                <div className="text-3xl font-bold text-primary mb-2">4.8</div>
-                <div className="text-gray-600">Avg Rating</div>
-              </div>
-              <div className="animate-fade-in">
-                <div className="text-3xl font-bold text-primary mb-2">1000+</div>
-                <div className="text-gray-600">Happy Customers</div>
-              </div>
-              <div className="animate-fade-in">
-                <div className="text-3xl font-bold text-primary mb-2">24/7</div>
-                <div className="text-gray-600">Support</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Products Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 animate-fade-in">Featured Accessories</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto animate-fade-in">
-                From premium backpacks to elegant wallets, discover accessories that combine style with functionality.
-              </p>
-            </div>
-            
-            {accessoriesProducts.length > 0 ? (
-              <div className="animate-fade-in">
-                <ModernProductGrid products={accessoriesProducts} />
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">No accessories products available at the moment.</p>
-                <Link to="/products">
-                  <Button>View All Products</Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Related Categories */}
+        <div className="container mx-auto px-4">
+          <RelatedCategoriesGrid currentCategorySlug="accessories" />
+        </div>
       </main>
-      
       <Footer />
     </div>
   );

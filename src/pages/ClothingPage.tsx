@@ -1,119 +1,70 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import CartFlyout from '@/components/CartFlyout';
-import ModernProductGrid from "@/components/ModernProductGrid";
-import { getAllProducts } from '@/data/products';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Sparkles, Heart } from 'lucide-react';
-import BestFeaturesClothing from "@/components/category/BestFeaturesClothing";
 
-const ClothingPage = () => {
-  const allProducts = getAllProducts();
-  const clothingProducts = allProducts.filter(product => product.category === 'Clothing');
+import React from "react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CartFlyout from "@/components/CartFlyout";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Shirt } from "lucide-react";
+import RelatedCategoriesGrid from "@/components/category/RelatedCategoriesGrid";
 
+const ClothingPage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-pink-50 via-rose-50 to-white">
       <Header />
       <CartFlyout />
-      
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative py-20 bg-gradient-to-br from-pink-50 via-rose-50 to-orange-50 overflow-hidden">
-          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+        <section className="relative py-20 bg-gradient-to-r from-pink-100/80 to-rose-100/80 overflow-hidden">
+          <div className="absolute inset-0 bg-grid-white/[0.04] bg-[size:60px_60px] pointer-events-none" />
           <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <Badge className="mb-6 bg-pink-100 text-pink-700 border-pink-200 animate-fade-in">
-                <Heart className="w-3 h-3 mr-1" />
-                Fashion Forward
+            <div className="max-w-2xl mx-auto text-center">
+              <Badge className="mb-6 bg-pink-200 text-pink-800 border-none text-lg shadow animate-fade-in flex items-center justify-center">
+                <Shirt className="w-4 h-4 mr-2" />
+                Fashion & Clothing
               </Badge>
-              
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-orange-600 bg-clip-text text-transparent animate-fade-in">
-                Clothing Collection
+              <h1 className="text-4xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-pink-600 via-rose-600 to-red-700 bg-clip-text text-transparent animate-fade-in">
+                Express Your Style
               </h1>
-              
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
-                Express your unique style with our carefully curated clothing collection. From casual comfort to elegant sophistication.
+              <p className="text-xl text-gray-700 mb-8 max-w-xl mx-auto animate-fade-in">
+                Discover the latest fashion trends with our curated collection of clothing for every style and occasion.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-                <Button size="lg" className="group bg-pink-600 hover:bg-pink-700 hover:scale-105 transition-all">
-                  <Sparkles className="mr-2 w-5 h-5" />
-                  Explore Fashion
-                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button size="lg" variant="outline" className="hover:bg-pink-600 hover:text-white transition-all">
-                  New Arrivals
-                </Button>
-              </div>
+              <Button size="lg" className="bg-pink-600 text-white font-bold hover:bg-pink-700 shadow">
+                Shop Fashion
+              </Button>
             </div>
           </div>
         </section>
 
-        {/* Style Categories */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 animate-fade-in">Style Categories</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="group text-center animate-fade-in hover:scale-105 transition-transform">
-                <div className="w-24 h-24 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-12 h-12 text-pink-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Casual Wear</h3>
-                <p className="text-gray-600">Comfortable and stylish everyday clothing for relaxed moments.</p>
-              </div>
-              <div className="group text-center animate-fade-in hover:scale-105 transition-transform">
-                <div className="w-24 h-24 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-12 h-12 text-orange-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Premium Basics</h3>
-                <p className="text-gray-600">High-quality essentials that form the foundation of your wardrobe.</p>
-              </div>
-              <div className="group text-center animate-fade-in hover:scale-105 transition-transform">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <ArrowRight className="w-12 h-12 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">Statement Pieces</h3>
-                <p className="text-gray-600">Bold designs that help you express your unique personality.</p>
-              </div>
-            </div>
+        {/* Features Section */}
+        <section className="py-12 bg-white">
+          <div className="container mx-auto px-4 max-w-3xl text-center">
+            <h2 className="text-2xl font-semibold mb-2 text-gray-700">Why Choose Our Fashion?</h2>
+            <p className="mb-4 text-gray-500">
+              Premium quality clothing with the latest trends and timeless classics for every wardrobe.
+            </p>
+            <ul className="flex flex-col md:flex-row md:justify-center gap-5 mt-8 text-left mx-auto max-w-xl animate-fade-in">
+              <li className="flex-1 bg-pink-50 p-6 rounded-xl shadow-sm border border-pink-100">
+                <span className="text-gray-700 font-bold">👗 Latest Trends</span>
+                <div className="text-gray-600 mt-2 text-sm">Stay ahead with our fashion-forward designs.</div>
+              </li>
+              <li className="flex-1 bg-rose-50 p-6 rounded-xl shadow-sm border border-rose-100">
+                <span className="text-gray-700 font-bold">🌟 Premium Quality</span>
+                <div className="text-gray-600 mt-2 text-sm">High-quality materials and expert craftsmanship.</div>
+              </li>
+              <li className="flex-1 bg-red-50 p-6 rounded-xl shadow-sm border border-red-100">
+                <span className="text-gray-700 font-bold">📏 Perfect Fit</span>
+                <div className="text-gray-600 mt-2 text-sm">Size guides and fit guarantees for confidence.</div>
+              </li>
+            </ul>
           </div>
         </section>
 
-        {/* Best Features Section */}
-        <BestFeaturesClothing />
-
-        {/* Products Section */}
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4 animate-fade-in">Featured Clothing</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto animate-fade-in">
-                Discover clothing that blends comfort, quality, and contemporary style.
-              </p>
-            </div>
-            
-            {clothingProducts.length > 0 ? (
-              <div className="animate-fade-in">
-                <ModernProductGrid products={clothingProducts} />
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-500 mb-4">No clothing products available at the moment.</p>
-                <Link to="/products">
-                  <Button>View All Products</Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
+        {/* Related Categories */}
+        <div className="container mx-auto px-4">
+          <RelatedCategoriesGrid currentCategorySlug="clothing" />
+        </div>
       </main>
-      
       <Footer />
     </div>
   );

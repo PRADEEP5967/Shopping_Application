@@ -1,109 +1,51 @@
-import React from 'react';
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
-import CartFlyout from '@/components/CartFlyout';
 import Footer from '@/components/Footer';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import CartFlyout from '@/components/CartFlyout';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  Package, 
-  Calendar, 
-  Search, 
-  Filter, 
-  Eye, 
-  Download,
-  Truck,
-  CheckCircle,
-  Clock,
-  XCircle
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { getAllOrders } from '@/data/products';
+import { formatCurrency } from '@/lib/utils';
+import { ArrowLeft, Search, Calendar, Package, Filter } from 'lucide-react';
 
 const OrderHistory = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
-  const { isAuthenticated, isAdmin } = useAuth();
-  const navigate = useNavigate();
-
-  // Redirect if not authenticated
-  useEffect(() => {
-    if (!isAuthenticated && !isAdmin) {
-      navigate('/login', { replace: true });
+  
+  const orders = getAllOrders();
+  
+  const filteredOrders = orders.filter(order => {
+    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
+    
+    let matchesDate = true;
+    if (dateFilter !== 'all') {
+      const orderDate = new Date(order.createdAt);
+      const now = new Date();
+      const daysAgo = Math.floor((now.getTime() - orderDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      switch (dateFilter) {
+        case '7days':
+          matchesDate = daysAgo <= 7;
+          break;
+        case '30days':
+          matchesDate = daysAgo <= 30;
+          break;
+        case '90days':
+          matchesDate = daysAgo <= 90;
+          break;
+      }
     }
-  }, [isAuthenticated, isAdmin, navigate]);
-
-  // Mock order data
-  const orders = [
-    {
-      id: 'ORD-2024-001',
-      date: new Date('2024-01-15'),
-      status: 'delivered',
-      total: 129.99,
-      items: 3,
-      trackingNumber: 'TRK-789456123',
-      estimatedDelivery: new Date('2024-01-20'),
-      items_detail: [
-        { name: 'Wireless Headphones', quantity: 1, price: 79.99 },
-        { name: 'Phone Case', quantity: 2, price: 25.00 }
-      ]
-    },
-    {
-      id: 'ORD-2024-002',
-      date: new Date('2024-01-20'),
-      status: 'shipped',
-      total: 89.50,
-      items: 2,
-      trackingNumber: 'TRK-456789012',
-      estimatedDelivery: new Date('2024-01-25'),
-      items_detail: [
-        { name: 'Bluetooth Speaker', quantity: 1, price: 59.99 },
-        { name: 'USB Cable', quantity: 1, price: 29.51 }
-      ]
-    },
-    {
-      id: 'ORD-2024-003',
-      date: new Date('2024-01-22'),
-      status: 'processing',
-      total: 199.99,
-      items: 1,
-      trackingNumber: null,
-      estimatedDelivery: new Date('2024-01-28'),
-      items_detail: [
-        { name: 'Smart Watch', quantity: 1, price: 199.99 }
-      ]
-    },
-    {
-      id: 'ORD-2024-004',
-      date: new Date('2024-01-10'),
-      status: 'cancelled',
-      total: 45.00,
-      items: 1,
-      trackingNumber: null,
-      estimatedDelivery: null,
-      items_detail: [
-        { name: 'Wireless Mouse', quantity: 1, price: 45.00 }
-      ]
-    }
-  ];
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'delivered':
-        return <CheckCircle className="h-4 w-4" />;
-      case 'shipped':
-        return <Truck className="h-4 w-4" />;
-      case 'processing':
-        return <Clock className="h-4 w-4" />;
-      case 'cancelled':
-        return <XCircle className="h-4 w-4" />;
-      default:
-        return <Package className="h-4 w-4" />;
-    }
-  };
+    
+    return matchesSearch && matchesStatus && matchesDate;
+  });
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -120,30 +62,6 @@ const OrderHistory = () => {
     }
   };
 
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.items_detail.some(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-    
-    let matchesDate = true;
-    if (dateFilter === 'week') {
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      matchesDate = order.date >= weekAgo;
-    } else if (dateFilter === 'month') {
-      const monthAgo = new Date();
-      monthAgo.setMonth(monthAgo.getMonth() - 1);
-      matchesDate = order.date >= monthAgo;
-    } else if (dateFilter === 'year') {
-      const yearAgo = new Date();
-      yearAgo.setFullYear(yearAgo.getFullYear() - 1);
-      matchesDate = order.date >= yearAgo;
-    }
-    
-    return matchesSearch && matchesStatus && matchesDate;
-  });
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -152,58 +70,65 @@ const OrderHistory = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Order History</h1>
-            <p className="text-gray-600">Track and manage all your orders</p>
+          <div className="flex items-center gap-4 mb-8">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold">Order History</h1>
+              <p className="text-gray-600">View and manage all your past orders</p>
+            </div>
           </div>
 
           {/* Filters */}
           <Card className="mb-6">
-            <CardContent className="p-6">
-              <div className="flex flex-col lg:flex-row gap-4">
-                {/* Search */}
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                    <Input
-                      placeholder="Search orders by ID or product name..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Filter className="h-5 w-5" />
+                Filter Orders
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Search by order ID..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
                 </div>
-
-                {/* Status Filter */}
-                <div className="flex items-center gap-2">
-                  <Filter className="h-4 w-4 text-gray-500" />
-                  <select 
-                    value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
-                    className="border rounded-md px-3 py-2 text-sm bg-white min-w-[120px]"
-                  >
-                    <option value="all">All Status</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-
-                {/* Date Filter */}
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
-                  <select 
-                    value={dateFilter}
-                    onChange={(e) => setDateFilter(e.target.value)}
-                    className="border rounded-md px-3 py-2 text-sm bg-white min-w-[120px]"
-                  >
-                    <option value="all">All Time</option>
-                    <option value="week">Last Week</option>
-                    <option value="month">Last Month</option>
-                    <option value="year">Last Year</option>
-                  </select>
-                </div>
+                
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="processing">Processing</SelectItem>
+                    <SelectItem value="shipped">Shipped</SelectItem>
+                    <SelectItem value="delivered">Delivered</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+                
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Filter by date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="7days">Last 7 Days</SelectItem>
+                    <SelectItem value="30days">Last 30 Days</SelectItem>
+                    <SelectItem value="90days">Last 90 Days</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </CardContent>
           </Card>
@@ -211,83 +136,48 @@ const OrderHistory = () => {
           {/* Orders List */}
           <div className="space-y-4">
             {filteredOrders.length > 0 ? (
-              filteredOrders.map(order => (
+              filteredOrders.map((order) => (
                 <Card key={order.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                      {/* Order Info */}
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-semibold text-lg">{order.id}</h3>
-                          <Badge className={`flex items-center gap-1 ${getStatusColor(order.status)}`}>
-                            {getStatusIcon(order.status)}
-                            {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                          <Package className="h-5 w-5 text-gray-400" />
+                          <h3 className="font-semibold">Order {order.id}</h3>
+                          <Badge className={getStatusColor(order.status)}>
+                            {order.status}
                           </Badge>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 text-sm text-gray-600">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {order.date.toLocaleDateString()}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            {new Date(order.createdAt).toLocaleDateString()}
                           </div>
-                          <div className="flex items-center gap-1">
-                            <Package className="h-3 w-3" />
-                            {order.items} {order.items === 1 ? 'item' : 'items'}
+                          <div>
+                            Items: {order.items.length}
                           </div>
                           <div className="font-semibold text-gray-900">
-                            Total: ${order.total.toFixed(2)}
-                          </div>
-                          {order.trackingNumber && (
-                            <div className="flex items-center gap-1">
-                              <Truck className="h-3 w-3" />
-                              {order.trackingNumber}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Items Preview */}
-                        <div className="mt-3">
-                          <div className="text-sm text-gray-600">
-                            {order.items_detail.map((item, index) => (
-                              <span key={index}>
-                                {item.name} {item.quantity > 1 && `(${item.quantity}x)`}
-                                {index < order.items_detail.length - 1 && ', '}
-                              </span>
-                            ))}
+                            {formatCurrency(order.totalAmount)}
                           </div>
                         </div>
-
-                        {/* Delivery Info */}
-                        {order.estimatedDelivery && order.status !== 'cancelled' && (
-                          <div className="mt-2 text-sm text-gray-600">
-                            {order.status === 'delivered' ? 'Delivered on' : 'Estimated delivery'}: {' '}
-                            <span className="font-medium">
-                              {order.estimatedDelivery.toLocaleDateString()}
-                            </span>
-                          </div>
-                        )}
                       </div>
-
-                      {/* Actions */}
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <Link to={`/order-detail/${order.id}`}>
-                          <Button variant="outline" size="sm" className="flex items-center gap-1 w-full sm:w-auto">
-                            <Eye className="h-3 w-3" />
-                            View Details
-                          </Button>
-                        </Link>
-                        
-                        {order.status === 'delivered' && (
-                          <Button variant="outline" size="sm" className="flex items-center gap-1 w-full sm:w-auto">
-                            <Download className="h-3 w-3" />
-                            Invoice
-                          </Button>
-                        )}
-                        
-                        {order.trackingNumber && order.status === 'shipped' && (
-                          <Button size="sm" className="flex items-center gap-1 w-full sm:w-auto">
-                            <Truck className="h-3 w-3" />
-                            Track
+                      
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => navigate(`/order-detail/${order.id}`)}
+                        >
+                          View Details
+                        </Button>
+                        {(order.status === 'shipped' || order.status === 'processing') && (
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => navigate(`/order-tracking/${order.id}`)}
+                          >
+                            Track Order
                           </Button>
                         )}
                       </div>
@@ -301,68 +191,19 @@ const OrderHistory = () => {
                   <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="text-lg font-semibold mb-2">No orders found</h3>
                   <p className="text-gray-600 mb-4">
-                    {searchTerm || statusFilter !== 'all' || dateFilter !== 'all' 
-                      ? 'Try adjusting your search or filters' 
-                      : "You haven't placed any orders yet"}
+                    {searchTerm || statusFilter !== 'all' || dateFilter !== 'all'
+                      ? 'Try adjusting your filters to see more results.'
+                      : 'You haven\'t placed any orders yet.'}
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                    {(searchTerm || statusFilter !== 'all' || dateFilter !== 'all') && (
-                      <Button 
-                        variant="outline" 
-                        onClick={() => {
-                          setSearchTerm('');
-                          setStatusFilter('all');
-                          setDateFilter('all');
-                        }}
-                      >
-                        Clear Filters
-                      </Button>
-                    )}
-                    <Link to="/products">
-                      <Button>Start Shopping</Button>
-                    </Link>
-                  </div>
+                  {(!searchTerm && statusFilter === 'all' && dateFilter === 'all') && (
+                    <Button onClick={() => navigate('/products')}>
+                      Start Shopping
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             )}
           </div>
-
-          {/* Summary Stats */}
-          {filteredOrders.length > 0 && (
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle>Order Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">
-                      {filteredOrders.length}
-                    </div>
-                    <div className="text-sm text-gray-600">Total Orders</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${filteredOrders.reduce((sum, order) => sum + order.total, 0).toFixed(2)}
-                    </div>
-                    <div className="text-sm text-gray-600">Total Spent</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-purple-600">
-                      {filteredOrders.reduce((sum, order) => sum + order.items, 0)}
-                    </div>
-                    <div className="text-sm text-gray-600">Items Ordered</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-orange-600">
-                      ${(filteredOrders.reduce((sum, order) => sum + order.total, 0) / filteredOrders.length || 0).toFixed(2)}
-                    </div>
-                    <div className="text-sm text-gray-600">Average Order</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </main>
       
