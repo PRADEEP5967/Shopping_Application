@@ -6,7 +6,6 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import CategoryHeader from '@/components/category/CategoryHeader';
-import DesktopSidebar from '@/components/category/DesktopSidebar';
 import ModernProductGrid from "@/components/ModernProductGrid";
 import NoProductsFound from '@/components/category/NoProductsFound';
 import RelatedCategoriesGrid from "@/components/category/RelatedCategoriesGrid";
@@ -14,6 +13,8 @@ import CategoryFeatures from '@/components/category/CategoryFeatures';
 import QuickFiltersBar from '@/components/category/QuickFiltersBar';
 import ProductsHeader from '@/components/category/ProductsHeader';
 import CategoryNotFound from '@/components/category/CategoryNotFound';
+import ModernCategoryFilters from '@/components/category/ModernCategoryFilters';
+import CategoryInsights from '@/components/category/CategoryInsights';
 
 import { useCategoryProducts } from '@/hooks/useCategoryProducts';
 import { useProductFilters } from '@/hooks/useProductFilters';
@@ -51,7 +52,7 @@ const CategoryProductsPage = () => {
     );
   };
 
-  const handleQuickFilter = (filterType: keyof typeof quickFilters) => {
+  const handleQuickFilter = (filterType: 'inStock' | 'onSale' | 'highRated') => {
     setQuickFilters(prev => ({
       ...prev,
       [filterType]: !prev[filterType]
@@ -79,6 +80,12 @@ const CategoryProductsPage = () => {
     return count;
   }, [selectedBrands, priceRange, minRating, quickFilters]);
 
+  const averageRating = useMemo(() => {
+    if (categoryProducts.length === 0) return 0;
+    const sum = categoryProducts.reduce((acc, product) => acc + product.rating, 0);
+    return sum / categoryProducts.length;
+  }, [categoryProducts]);
+
   // If realCategoryName doesn't actually exist, show not found
   if (!matchedCategory) {
     return <CategoryNotFound categorySlug={categorySlug || ""} />;
@@ -90,6 +97,14 @@ const CategoryProductsPage = () => {
       <CartFlyout />
       <main className="flex-grow container mx-auto px-4 py-8">
         <CategoryHeader categoryName={realCategoryName} />
+        
+        {/* Category Insights */}
+        <CategoryInsights 
+          categoryName={realCategoryName}
+          productCount={categoryProducts.length}
+          averageRating={averageRating}
+          trendy={['Electronics', 'Gaming', 'Smart Home'].includes(realCategoryName)}
+        />
         
         {/* Category Features Section */}
         <CategoryFeatures categoryName={realCategoryName} />
@@ -103,15 +118,20 @@ const CategoryProductsPage = () => {
         />
         
         <div className="flex items-start gap-8">
-          <DesktopSidebar 
-            priceRange={priceRange}
-            handlePriceChange={setPriceRange}
-            brands={brands}
-            selectedBrands={selectedBrands}
-            handleBrandToggle={handleBrandToggle}
-            selectedRating={minRating}
-            handleRatingChange={setMinRating}
-          />
+          {/* Modern Desktop Sidebar */}
+          <div className="hidden lg:block w-80 flex-shrink-0">
+            <ModernCategoryFilters
+              priceRange={priceRange}
+              onPriceChange={setPriceRange}
+              brands={brands}
+              selectedBrands={selectedBrands}
+              onBrandToggle={handleBrandToggle}
+              selectedRating={minRating}
+              onRatingChange={setMinRating}
+              activeFiltersCount={activeFiltersCount}
+              onClearFilters={clearFilters}
+            />
+          </div>
           
           <div className="flex-1">
             <ProductsHeader
