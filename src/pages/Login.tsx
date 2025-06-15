@@ -5,14 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Separator } from '@/components/ui/separator';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogIn, Package, UserPlus } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
+import SocialLogin from '@/components/auth/SocialLogin';
+import PasswordlessLogin from '@/components/auth/PasswordlessLogin';
+import { LogIn, Package, UserPlus, Mail, Phone } from 'lucide-react';
 
 const Login = () => {
+  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
@@ -22,7 +27,6 @@ const Login = () => {
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
-    // Redirect if already authenticated
     if (isAuthenticated) {
       navigate('/my-account');
     }
@@ -32,7 +36,8 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    const success = await login(email, password);
+    const loginValue = loginMethod === 'email' ? email : phone;
+    const success = await login(loginValue, password);
     if (success) {
       navigate(from, { replace: true });
     }
@@ -40,7 +45,6 @@ const Login = () => {
     setIsLoading(false);
   };
   
-  // Quick user login for demo purposes
   const handleQuickUserLogin = async () => {
     setIsLoading(true);
     const success = await login("user@example.com", "user123");
@@ -66,42 +70,111 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+            <Tabs defaultValue="password" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="password">Password</TabsTrigger>
+                <TabsTrigger value="passwordless">Passwordless</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="password" className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="loginMethod">Login with</Label>
+                    <div className="flex gap-2">
+                      <Button
+                        type="button"
+                        variant={loginMethod === 'email' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setLoginMethod('email')}
+                        className="flex-1"
+                      >
+                        <Mail className="h-4 w-4 mr-2" />
+                        Email
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={loginMethod === 'phone' ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setLoginMethod('phone')}
+                        className="flex-1"
+                      >
+                        <Phone className="h-4 w-4 mr-2" />
+                        Phone
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="login">
+                      {loginMethod === 'email' ? 'Email' : 'Phone Number'}
+                    </Label>
+                    {loginMethod === 'email' ? (
+                      <Input
+                        id="login"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    ) : (
+                      <Input
+                        id="login"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                      />
+                    )}
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      'Signing in...'
+                    ) : (
+                      <>
+                        <LogIn className="h-4 w-4 mr-2" />
+                        Sign In
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+              
+              <TabsContent value="passwordless" className="space-y-4">
+                <PasswordlessLogin />
+              </TabsContent>
+            </Tabs>
+            
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator />
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-card px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
               </div>
               
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
+              <div className="mt-4">
+                <SocialLogin />
               </div>
-              
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  'Signing in...'
-                ) : (
-                  <>
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Sign In
-                  </>
-                )}
-              </Button>
-            </form>
+            </div>
             
             <div className="mt-6">
               <div className="relative">
