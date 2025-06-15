@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -95,7 +94,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10">

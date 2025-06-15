@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import { Info, Users, History, Award, Globe, Zap, Shield, Heart } from 'lucide-react';
@@ -9,7 +9,7 @@ const githubImgUrl = "/lovable-uploads/0fe50496-21b2-45c7-a290-b3539fc12445.png"
 const About = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       <CartFlyout />
       
       <main className="flex-grow">

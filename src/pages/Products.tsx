@@ -1,8 +1,7 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import ProductGrid from '@/components/ProductGrid';
@@ -44,7 +43,7 @@ const Products = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   
   // Get all available categories from products
-  const categories = React.useMemo(() => {
+  const categories = useMemo(() => {
     const allCategories = products.map(product => product.category);
     return Array.from(new Set(allCategories));
   }, [products]);
@@ -218,7 +217,7 @@ const Products = () => {
   
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8">

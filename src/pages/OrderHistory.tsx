@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import Header from '@/components/Header';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -145,7 +147,7 @@ const OrderHistory = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8">

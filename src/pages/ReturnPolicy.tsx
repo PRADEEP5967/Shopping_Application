@@ -1,6 +1,5 @@
-
 import React from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -64,7 +63,7 @@ const ReturnPolicy = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">

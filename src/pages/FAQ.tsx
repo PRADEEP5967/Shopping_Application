@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import Navbar from '@/components/Navbar';
+import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -116,7 +115,7 @@ const FAQ = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
+      <Header />
       
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
