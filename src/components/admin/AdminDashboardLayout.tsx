@@ -101,13 +101,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col">
-      <div className="p-4 sm:p-6 border-b">
-        <h2 className="font-bold text-lg sm:text-xl text-gray-800">Admin Panel</h2>
+      <div className="p-3 sm:p-4 lg:p-6 border-b">
+        <h2 className="font-bold text-base sm:text-lg lg:text-xl text-gray-800">Admin Panel</h2>
         <p className="text-xs sm:text-sm text-gray-500 mt-1">Manage your store</p>
       </div>
       
-      <nav className="flex-1 p-3 py-4 overflow-y-auto">
-        <div className="space-y-6">
+      <nav className="flex-1 p-2 sm:p-3 py-3 sm:py-4 overflow-y-auto">
+        <div className="space-y-4 sm:space-y-6">
           {/* Main Navigation */}
           <div>
             <div className="space-y-1">
@@ -115,13 +115,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm" 
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3" 
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -130,7 +130,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
           
           {/* Content Section */}
           <div>
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="px-2 sm:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               Content
             </h3>
             <div className="space-y-1">
@@ -138,13 +138,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm"
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -153,7 +153,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
           
           {/* Analytics Section */}
           <div>
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="px-2 sm:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               Analytics
             </h3>
             <div className="space-y-1">
@@ -161,13 +161,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm"
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -176,7 +176,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
           
           {/* Modern Analytics Section */}
           <div>
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
+            <h3 className="px-2 sm:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-3 sm:mt-4 mb-2">
               Modern Reports
             </h3>
             <div className="space-y-1">
@@ -184,13 +184,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm"
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -199,7 +199,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
           
           {/* Compliance & Security Section */}
           <div>
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-4 mb-2">
+            <h3 className="px-2 sm:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-3 sm:mt-4 mb-2">
               Security & Compliance
             </h3>
             <div className="space-y-1">
@@ -207,13 +207,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm"
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -222,7 +222,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
           
           {/* System Section */}
           <div>
-            <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+            <h3 className="px-2 sm:px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
               System
             </h3>
             <div className="space-y-1">
@@ -230,13 +230,13 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
                 <Button 
                   key={item.path}
                   variant={isActive(item.path) ? "default" : "ghost"} 
-                  className="w-full justify-start text-sm"
+                  className="w-full justify-start text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => {
                     navigate(item.path);
                     setIsMobileSidebarOpen(false);
                   }}
                 >
-                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <item.icon className="mr-2 h-3 w-3 sm:h-4 sm:w-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Button>
               ))}
@@ -253,7 +253,7 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
       
       <div className="flex-1 flex">
         {/* Desktop Sidebar */}
-        <aside className="hidden lg:block w-64 border-r bg-white shadow-sm">
+        <aside className="hidden lg:block w-56 xl:w-64 border-r bg-white shadow-sm">
           <SidebarContent />
         </aside>
         
@@ -265,21 +265,21 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
         </Sheet>
         
         {/* Main content */}
-        <main className="flex-1 py-4 px-4 sm:py-6 sm:px-6 lg:px-8 overflow-x-hidden">
-          <div className="mb-4 sm:mb-6">
-            <div className="flex items-center gap-3 mb-2">
+        <main className="flex-1 py-3 px-3 sm:py-4 sm:px-4 lg:py-6 lg:px-8 overflow-x-hidden">
+          <div className="mb-3 sm:mb-4 lg:mb-6">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2">
               {/* Mobile Menu Button */}
               <Sheet open={isMobileSidebarOpen} onOpenChange={setIsMobileSidebarOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="sm" className="lg:hidden">
+                  <Button variant="outline" size="sm" className="lg:hidden h-8 w-8 p-0">
                     <Menu className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
               </Sheet>
               
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">{title}</h1>
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">{title}</h1>
             </div>
-            {subtitle && <p className="text-sm sm:text-base text-gray-600">{subtitle}</p>}
+            {subtitle && <p className="text-sm sm:text-base text-gray-600 px-0 sm:px-0">{subtitle}</p>}
           </div>
           
           <div className="max-w-full overflow-x-auto">
