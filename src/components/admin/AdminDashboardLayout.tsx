@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +21,12 @@ import {
   Activity,
   Clock,
   Menu,
-  X
+  X,
+  Gauge,
+  ChartPie,
+  Shield,
+  ShieldCheck,
+  KeySquare
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -68,11 +74,10 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
     { path: '/admin/pages', icon: Files, label: 'Pages' },
   ];
 
-  // Add our new modern analytics links to the sidebar!
   const modernAnalyticsMenuItems = [
-    { path: '/admin/real-time-analysis', icon: 'gauge', label: 'Real-Time Analysis' },
-    { path: '/admin/customer-reports', icon: 'users', label: 'Customer Reports' },
-    { path: '/admin/insights', icon: 'chart-pie', label: 'Insights' },
+    { path: '/admin/real-time-analysis', icon: Gauge, label: 'Real-Time Analysis' },
+    { path: '/admin/customer-reports', icon: Users, label: 'Customer Reports' },
+    { path: '/admin/insights', icon: ChartPie, label: 'Insights' },
   ];
 
   const analyticsMenuItems = [
@@ -89,21 +94,10 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
   ];
 
   const complianceMenuItems = [
-    { path: "/admin/ssl-encryption", icon: "shield-check", label: "SSL Encryption" },
-    { path: "/admin/pci-compliance", icon: "shield", label: "PCI Compliance" },
-    { path: "/admin/2fa-support", icon: "key-square", label: "2FA Support" },
+    { path: "/admin/ssl-encryption", icon: ShieldCheck, label: "SSL Encryption" },
+    { path: "/admin/pci-compliance", icon: Shield, label: "PCI Compliance" },
+    { path: "/admin/2fa-support", icon: KeySquare, label: "2FA Support" },
   ];
-
-  // Map string 'icon' to actual Lucide icon
-  const iconMap: Record<string, React.ElementType> = {
-    'gauge': require('lucide-react').Gauge,
-    'users': require('lucide-react').Users,
-    'chart-pie': require('lucide-react').ChartPie,
-    "shield": require('lucide-react').Shield,
-    "shield-check": require('lucide-react').ShieldCheck,
-    "key-square": require('lucide-react').KeySquare,
-    // ... add other icons if needed ...
-  };
 
   const SidebarContent = () => (
     <div className="h-full flex flex-col">
@@ -186,23 +180,20 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
               Modern Reports
             </h3>
             <div className="space-y-1">
-              {modernAnalyticsMenuItems.map((item) => {
-                const Icon = iconMap[item.icon];
-                return (
-                  <Button 
-                    key={item.path}
-                    variant={isActive(item.path) ? "default" : "ghost"} 
-                    className="w-full justify-start text-sm"
-                    onClick={() => {
-                      navigate(item.path);
-                      setIsMobileSidebarOpen(false);
-                    }}
-                  >
-                    {Icon ? <Icon className="mr-2 h-4 w-4 shrink-0" /> : null}
-                    <span className="truncate">{item.label}</span>
-                  </Button>
-                );
-              })}
+              {modernAnalyticsMenuItems.map((item) => (
+                <Button 
+                  key={item.path}
+                  variant={isActive(item.path) ? "default" : "ghost"} 
+                  className="w-full justify-start text-sm"
+                  onClick={() => {
+                    navigate(item.path);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                >
+                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Button>
+              ))}
             </div>
           </div>
           
@@ -212,23 +203,20 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({
               Security & Compliance
             </h3>
             <div className="space-y-1">
-              {complianceMenuItems.map((item) => {
-                const Icon = iconMap[item.icon];
-                return (
-                  <Button 
-                    key={item.path}
-                    variant={isActive(item.path) ? "default" : "ghost"} 
-                    className="w-full justify-start text-sm"
-                    onClick={() => {
-                      navigate(item.path);
-                      setIsMobileSidebarOpen(false);
-                    }}
-                  >
-                    {Icon ? <Icon className="mr-2 h-4 w-4 shrink-0" /> : null}
-                    <span className="truncate">{item.label}</span>
-                  </Button>
-                );
-              })}
+              {complianceMenuItems.map((item) => (
+                <Button 
+                  key={item.path}
+                  variant={isActive(item.path) ? "default" : "ghost"} 
+                  className="w-full justify-start text-sm"
+                  onClick={() => {
+                    navigate(item.path);
+                    setIsMobileSidebarOpen(false);
+                  }}
+                >
+                  <item.icon className="mr-2 h-4 w-4 shrink-0" />
+                  <span className="truncate">{item.label}</span>
+                </Button>
+              ))}
             </div>
           </div>
           

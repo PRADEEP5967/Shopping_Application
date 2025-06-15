@@ -30,11 +30,14 @@ import TwoFASupport from '@/pages/admin/TwoFASupport';
 
 export const AdminRoutes = (
   <>
+    {/* Main Admin Dashboard - exact path match */}
     <Route path="/admin" element={
       <AdminDashboardLayout title="Dashboard">
         <AdminDashboard />
       </AdminDashboardLayout>
     } />
+    
+    {/* Product Management */}
     <Route path="/admin/add-product" element={
       <AdminDashboardLayout title="Add Product">
         <AdminProductAdd />
@@ -45,6 +48,8 @@ export const AdminRoutes = (
         <AdminProducts />
       </AdminDashboardLayout>
     } />
+    
+    {/* Order & Customer Management */}
     <Route path="/admin/orders" element={
       <AdminDashboardLayout title="Order Management">
         <AdminOrders />
@@ -55,6 +60,8 @@ export const AdminRoutes = (
         <AdminCustomers />
       </AdminDashboardLayout>
     } />
+    
+    {/* Content Management */}
     <Route path="/admin/categories" element={
       <AdminDashboardLayout title="Category Management">
         <AdminCategories />
@@ -70,6 +77,13 @@ export const AdminRoutes = (
         <AdminInventory />
       </AdminDashboardLayout>
     } />
+    <Route path="/admin/pages" element={
+      <AdminDashboardLayout title="Page Management">
+        <AdminPages />
+      </AdminDashboardLayout>
+    } />
+    
+    {/* Analytics & Reports */}
     <Route path="/admin/analytics" element={
       <AdminDashboardLayout title="Analytics Dashboard">
         <AdminAnalytics />
@@ -85,28 +99,8 @@ export const AdminRoutes = (
         <AdminABTesting />
       </AdminDashboardLayout>
     } />
-    <Route path="/admin/settings" element={
-      <AdminDashboardLayout title="Settings">
-        <AdminSettings />
-      </AdminDashboardLayout>
-    } />
-    <Route path="/admin/notifications" element={
-      <AdminDashboardLayout title="Notifications">
-        <AdminNotifications />
-      </AdminDashboardLayout>
-    } />
-    <Route path="/admin/help" element={
-      <AdminDashboardLayout title="Help & Documentation">
-        <AdminHelp />
-      </AdminDashboardLayout>
-    } />
-    <Route path="/admin/pages" element={
-      <AdminDashboardLayout title="Page Management">
-        <AdminPages />
-      </AdminDashboardLayout>
-    } />
     
-    {/* Modern Admin Analytics/Reports Pages */}
+    {/* Modern Analytics/Reports Pages */}
     <Route path="/admin/real-time-analysis" element={
       <AdminDashboardLayout title="Real-Time Data Analysis">
         <RealTimeAnalysis />
@@ -137,6 +131,23 @@ export const AdminRoutes = (
     <Route path="/admin/2fa-support" element={
       <AdminDashboardLayout title="2FA Support">
         <TwoFASupport />
+      </AdminDashboardLayout>
+    } />
+    
+    {/* System Management */}
+    <Route path="/admin/settings" element={
+      <AdminDashboardLayout title="Settings">
+        <AdminSettings />
+      </AdminDashboardLayout>
+    } />
+    <Route path="/admin/notifications" element={
+      <AdminDashboardLayout title="Notifications">
+        <AdminNotifications />
+      </AdminDashboardLayout>
+    } />
+    <Route path="/admin/help" element={
+      <AdminDashboardLayout title="Help & Documentation">
+        <AdminHelp />
       </AdminDashboardLayout>
     } />
   </>
