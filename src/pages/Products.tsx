@@ -15,7 +15,6 @@ const Products = () => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedRating, setSelectedRating] = useState(0);
   const [sortBy, setSortBy] = useState('featured');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -41,13 +40,6 @@ const Products = () => {
       );
     }
 
-    // Filter by rating
-    if (selectedRating > 0) {
-      filtered = filtered.filter(product => 
-        product.rating && product.rating >= selectedRating
-      );
-    }
-
     // Sort products
     switch (sortBy) {
       case 'price-low':
@@ -67,7 +59,7 @@ const Products = () => {
     }
 
     setFilteredProducts(filtered);
-  }, [products, priceRange, selectedBrands, sortBy, selectedRating]);
+  }, [products, priceRange, selectedBrands, sortBy]);
 
   const handlePriceRangeChange = (range: number[]) => {
     setPriceRange(range);
@@ -81,30 +73,10 @@ const Products = () => {
     );
   };
 
-  const handleRatingChange = (rating: number) => {
-    setSelectedRating(rating);
-  };
-
   const clearFilters = () => {
     setPriceRange([0, 1000]);
     setSelectedBrands([]);
     setSortBy('featured');
-    setSelectedRating(0);
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (priceRange[0] > 0 || priceRange[1] < 1000) count++;
-    if (selectedBrands.length > 0) count++;
-    if (selectedRating > 0) count++;
-    return count;
-  };
-
-  const getUniqueBrands = () => {
-    const brands = products
-      .map(product => product.brand)
-      .filter(Boolean) as string[];
-    return [...new Set(brands)].sort();
   };
 
   if (isLoading) {
@@ -160,14 +132,13 @@ const Products = () => {
             {/* Filters Sidebar */}
             <div className="lg:w-1/4">
               <ModernCategoryFilters
+                products={products}
                 priceRange={priceRange}
-                onPriceChange={handlePriceRangeChange}
-                brands={getUniqueBrands()}
                 selectedBrands={selectedBrands}
+                sortBy={sortBy}
+                onPriceRangeChange={handlePriceRangeChange}
                 onBrandToggle={handleBrandToggle}
-                selectedRating={selectedRating}
-                onRatingChange={handleRatingChange}
-                activeFiltersCount={getActiveFiltersCount()}
+                onSortChange={setSortBy}
                 onClearFilters={clearFilters}
               />
             </div>

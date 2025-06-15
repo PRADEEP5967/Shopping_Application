@@ -1,29 +1,20 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import OrderSummaryCard from '@/components/checkout/OrderSummaryCard';
 import { useCart } from '@/contexts/CartContext';
 import { Navigate } from 'react-router-dom';
-import { CreditCard } from 'lucide-react';
+import { ShoppingBag, CreditCard } from 'lucide-react';
 
 const Checkout = () => {
   const { items } = useCart();
-  const navigate = useNavigate();
 
   // Redirect to cart if no items
   if (items.length === 0) {
     return <Navigate to="/cart" replace />;
   }
-
-  const handleOrderComplete = (orderData: any) => {
-    // Store order data in localStorage or send to backend
-    localStorage.setItem('lastOrder', JSON.stringify(orderData));
-    // Navigate to order confirmation page
-    navigate('/order-confirmation');
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -47,7 +38,7 @@ const Checkout = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Checkout Form */}
             <div className="order-2 lg:order-1">
-              <CheckoutForm onOrderComplete={handleOrderComplete} />
+              <CheckoutForm />
             </div>
 
             {/* Order Summary */}
