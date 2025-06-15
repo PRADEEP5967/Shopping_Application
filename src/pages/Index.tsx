@@ -20,6 +20,10 @@ import { FeaturedProductsSection } from '@/components/sections/FeaturedProductsS
 import { CustomerServiceSection } from '@/components/sections/CustomerServiceSection';
 import { PromoSection } from '@/components/sections/PromoSection';
 import { NewsletterSection } from '@/components/sections/NewsletterSection';
+import { FeaturedCategoriesSection } from '@/components/sections/FeaturedCategoriesSection';
+import { PromotionalBannerSection } from '@/components/sections/PromotionalBannerSection';
+import { PersonalizedRecommendationsSection } from '@/components/sections/PersonalizedRecommendationsSection';
+import { TrustSignalsSection } from '@/components/sections/TrustSignalsSection';
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import ModernCategoryNav from '@/components/ModernCategoryNav';
 
@@ -39,6 +43,12 @@ const Index = () => {
 
       {/* Hero Section */}
       <HeroBlissSection />
+
+      {/* Featured Categories Section - NEW */}
+      <FeaturedCategoriesSection />
+
+      {/* Promotional Banner Section - NEW */}
+      <PromotionalBannerSection />
 
       {/* Partner Logos */}
       <PartnerLogosSection />
@@ -66,6 +76,12 @@ const Index = () => {
       <section id="featured-products">
         <FeaturedProductsSection featuredProducts={featuredProducts} />
       </section>
+
+      {/* Personalized Recommendations Section - NEW */}
+      <PersonalizedRecommendationsSection />
+
+      {/* Trust Signals Section - NEW */}
+      <TrustSignalsSection />
 
       {/* Testimonials and Trust—slider and visuals */}
       <section className="bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-900 py-20 animate-fade-in">
