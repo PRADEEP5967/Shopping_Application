@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -16,6 +17,7 @@ const CategoryProductsPage = () => {
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState('featured');
+  const [selectedRating, setSelectedRating] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -46,6 +48,13 @@ const CategoryProductsPage = () => {
       );
     }
 
+    // Filter by rating
+    if (selectedRating > 0) {
+      filtered = filtered.filter(product => 
+        product.rating && product.rating >= selectedRating
+      );
+    }
+
     // Sort products
     switch (sortBy) {
       case 'price-low':
@@ -58,16 +67,14 @@ const CategoryProductsPage = () => {
         filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case 'newest':
-        // Assuming newer products have higher IDs
         filtered.sort((a, b) => parseInt(b.id) - parseInt(a.id));
         break;
       default:
-        // Featured - keep original order
         break;
     }
 
     setFilteredProducts(filtered);
-  }, [products, priceRange, selectedBrands, sortBy]);
+  }, [products, priceRange, selectedBrands, sortBy, selectedRating]);
 
   const handlePriceRangeChange = (range: number[]) => {
     setPriceRange(range);
@@ -81,10 +88,30 @@ const CategoryProductsPage = () => {
     );
   };
 
+  const handleRatingChange = (rating: number) => {
+    setSelectedRating(rating);
+  };
+
   const clearFilters = () => {
     setPriceRange([0, 1000]);
     setSelectedBrands([]);
     setSortBy('featured');
+    setSelectedRating(0);
+  };
+
+  const getActiveFiltersCount = () => {
+    let count = 0;
+    if (priceRange[0] > 0 || priceRange[1] < 1000) count++;
+    if (selectedBrands.length > 0) count++;
+    if (selectedRating > 0) count++;
+    return count;
+  };
+
+  const getUniqueBrands = () => {
+    const brands = products
+      .map(product => product.brand)
+      .filter(Boolean) as string[];
+    return [...new Set(brands)].sort();
   };
 
   if (isLoading) {
@@ -130,23 +157,21 @@ const CategoryProductsPage = () => {
       <CartFlyout />
       
       <main className="flex-grow">
-        <CategoryHeader 
-          categoryName={categoryName || ''}
-          productCount={filteredProducts.length}
-        />
+        <CategoryHeader categoryName={categoryName || ''} />
         
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Filters Sidebar */}
             <div className="lg:w-1/4">
               <ModernCategoryFilters
-                products={products}
                 priceRange={priceRange}
+                onPriceChange={handlePriceRangeChange}
+                brands={getUniqueBrands()}
                 selectedBrands={selectedBrands}
-                sortBy={sortBy}
-                onPriceRangeChange={handlePriceRangeChange}
                 onBrandToggle={handleBrandToggle}
-                onSortChange={setSortBy}
+                selectedRating={selectedRating}
+                onRatingChange={handleRatingChange}
+                activeFiltersCount={getActiveFiltersCount()}
                 onClearFilters={clearFilters}
               />
             </div>
