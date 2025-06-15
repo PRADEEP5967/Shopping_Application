@@ -10,7 +10,7 @@ interface QuickFiltersBarProps {
     onSale: boolean;
     highRated: boolean;
   };
-  handleQuickFilter: (filterType: keyof typeof quickFilters) => void;
+  handleQuickFilter: (filterType: 'inStock' | 'onSale' | 'highRated') => void;
   activeFiltersCount: number;
   clearFilters: () => void;
 }
