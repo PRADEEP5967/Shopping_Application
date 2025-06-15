@@ -30,6 +30,7 @@ import ReturnsExchanges from '@/pages/ReturnsExchanges';
 import SearchPage from '@/pages/SearchPage';
 import Careers from '@/pages/Careers';
 import SpecialOffers from '@/pages/SpecialOffers';
+import HeartPage from '@/pages/HeartPage';
 
 // Feature Pages
 import Performance from '@/pages/Performance';
@@ -74,5 +75,6 @@ export const MainRoutes = (
     <Route path="/careers" element={<Careers />} />
     <Route path="/search" element={<SearchPage />} />
     <Route path="/special-offers" element={<SpecialOffers />} />
+    <Route path="/category/heart" element={<HeartPage />} />
   </>
 );
