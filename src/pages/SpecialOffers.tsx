@@ -14,6 +14,7 @@ const SpecialOffers = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <Header />
+      <div className="mt-4" />
       <CartFlyout />
       <main className="flex-grow">
         {/* Hero Section */}

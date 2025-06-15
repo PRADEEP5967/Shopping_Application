@@ -29,6 +29,7 @@ const WishlistPage = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <div className="mt-4" />
       <CartFlyout />
       
       <main className="flex-grow container mx-auto px-4 py-8">
