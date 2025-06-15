@@ -70,7 +70,7 @@ const ProductDetail = () => {
 
   const handleRemoveFromWishlist = () => {
     if (product) {
-      removeFromWishlist(product.id);
+      removeFromWishlist(product.id); // pass ID not object
       toast({
         title: "Removed from wishlist",
         description: `${product.name} removed from your wishlist.`,

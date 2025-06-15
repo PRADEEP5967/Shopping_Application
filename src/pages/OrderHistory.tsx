@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
+import Footer from '@/components/Footer';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
