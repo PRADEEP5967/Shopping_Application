@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -22,6 +21,7 @@ const ProductComparisonPage = () => {
       price: 999,
       originalPrice: 1099,
       rating: 4.8,
+      reviewCount: 342,
       images: ['https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?q=80&w=400'],
       category: 'Smartphones',
       brand: 'Apple',
@@ -35,6 +35,7 @@ const ProductComparisonPage = () => {
       price: 1199,
       originalPrice: 1299,
       rating: 4.7,
+      reviewCount: 289,
       images: ['https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=400'],
       category: 'Smartphones',
       brand: 'Samsung',
@@ -48,6 +49,7 @@ const ProductComparisonPage = () => {
       price: 899,
       originalPrice: 999,
       rating: 4.6,
+      reviewCount: 156,
       images: ['https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=400'],
       category: 'Smartphones',
       brand: 'Google',
@@ -61,6 +63,7 @@ const ProductComparisonPage = () => {
       price: 1999,
       originalPrice: 2199,
       rating: 4.9,
+      reviewCount: 127,
       images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=400'],
       category: 'Laptops',
       brand: 'Apple',
@@ -74,6 +77,7 @@ const ProductComparisonPage = () => {
       price: 1299,
       originalPrice: 1499,
       rating: 4.5,
+      reviewCount: 94,
       images: ['https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?q=80&w=400'],
       category: 'Laptops',
       brand: 'Dell',
@@ -87,6 +91,7 @@ const ProductComparisonPage = () => {
       price: 399,
       originalPrice: 449,
       rating: 4.8,
+      reviewCount: 203,
       images: ['https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400'],
       category: 'Headphones',
       brand: 'Sony',
