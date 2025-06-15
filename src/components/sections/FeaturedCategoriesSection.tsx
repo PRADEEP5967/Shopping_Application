@@ -14,7 +14,7 @@ export const FeaturedCategoriesSection: React.FC = () => {
     const details = categoryDetails[name] || categoryDetails.default;
     return {
       name,
-      icon: details.icon,
+      IconComponent: details.icon,
       image: details.image,
       link: `/category/${slugify(name)}`,
       badge: details.badge,
@@ -40,38 +40,41 @@ export const FeaturedCategoriesSection: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
-          {featuredCategories.map((category, index) => (
-            <Link
-              key={category.name}
-              to={category.link}
-              className="group relative bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
-            >
-              <div className="aspect-square relative overflow-hidden">
-                <img 
-                  src={category.image} 
-                  alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                {category.trending && (
-                  <Badge className="absolute top-2 right-2 bg-red-500 text-white text-xs">
-                    Trending
-                  </Badge>
-                )}
-              </div>
-              <div className="p-3 sm:p-4 text-center">
-                <div className="flex justify-center mb-2">
-                  {category.icon}
+          {featuredCategories.map((category, index) => {
+            const IconComponent = category.IconComponent;
+            return (
+              <Link
+                key={category.name}
+                to={category.link}
+                className="group relative bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+              >
+                <div className="aspect-square relative overflow-hidden">
+                  <img 
+                    src={category.image} 
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {category.trending && (
+                    <Badge className="absolute top-2 right-2 bg-red-500 text-white text-xs">
+                      Trending
+                    </Badge>
+                  )}
                 </div>
-                <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
-                  {category.name}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">
-                  {category.description}
-                </p>
-              </div>
-            </Link>
-          ))}
+                <div className="p-3 sm:p-4 text-center">
+                  <div className="flex justify-center mb-2">
+                    {IconComponent && <IconComponent className="h-6 w-6 text-primary" />}
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1">
+                    {category.name}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500 line-clamp-2">
+                    {category.description}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
 
         <div className="text-center mt-8 sm:mt-12">
