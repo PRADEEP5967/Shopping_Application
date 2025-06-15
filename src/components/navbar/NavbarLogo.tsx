@@ -8,8 +8,8 @@ const NavbarLogo = () => {
       <Link to="/" className="flex items-center gap-3 select-none group">
         {/* Logo Image */}
         <img
-          src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=80&h=80&fit=cover"
-          alt="Modern Store Logo"
+          src="/lovable-uploads/ed6f414d-1f2f-430f-93d3-758d4fd9738f.png"
+          alt="Pradeep Sahani Logo"
           className="w-10 h-10 rounded-md object-cover transition-transform duration-200 group-hover:scale-110"
         />
         <div className="flex flex-col leading-tight">

@@ -22,7 +22,11 @@ export const AdminNavbar = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
             <Link to="/" className="flex items-center space-x-2">
-              <Store className="h-6 w-6 text-primary" />
+              <img
+                src="/lovable-uploads/ed6f414d-1f2f-430f-93d3-758d4fd9738f.png"
+                alt="Pradeep Sahani Logo"
+                className="h-8 w-8 rounded object-cover"
+              />
               <div className="flex flex-col leading-tight">
                 <span className="font-bold text-lg">PRADEEP SAHANI</span>
                 <span className="text-sm font-medium text-primary/80">MART</span>
