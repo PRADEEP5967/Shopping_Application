@@ -14,6 +14,8 @@ import { ModernTestimonials } from '@/components/modern/ModernTestimonials';
 import { StatsSection } from '@/components/modern/StatsSection';
 import { FeaturedProductsSection } from '@/components/sections/FeaturedProductsSection';
 import { PersonalizedRecommendationsSection } from '@/components/sections/PersonalizedRecommendationsSection';
+import { PromotionalBannerSection } from '@/components/sections/PromotionalBannerSection';
+import { TrustSignalsSection } from '@/components/sections/TrustSignalsSection';
 import CategoryNav from '@/components/CategoryNav';
 import { getAllProducts, getProductCategories, getFeaturedProducts } from '@/data/products';
 
@@ -41,6 +43,9 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Promotional Banner Section */}
+        <PromotionalBannerSection />
+
         <ModernFeatures />
         
         {/* Featured Products Section */}
@@ -52,6 +57,9 @@ const Index = () => {
         
         {/* Personalized Recommendations Section */}
         <PersonalizedRecommendationsSection />
+        
+        {/* Trust Signals Section */}
+        <TrustSignalsSection />
         
         <StatsSection />
         <ModernTestimonials />
