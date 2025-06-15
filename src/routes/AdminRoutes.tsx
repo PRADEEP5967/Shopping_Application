@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 import AdminDashboardLayout from '@/components/admin/AdminDashboardLayout';
@@ -17,6 +16,8 @@ import AdminSettings from '@/pages/admin/Settings';
 import AdminNotifications from '@/pages/admin/Notifications';
 import AdminHelp from '@/pages/admin/Help';
 import AdminPages from '@/pages/admin/Pages';
+import ABTestingManager from '@/components/analytics/ABTestingManager';
+import CustomerAnalytics from '@/pages/admin/CustomerAnalytics';
 
 // Modern Report/Admin Pages
 import RealTimeAnalysis from '@/pages/admin/RealTimeAnalysis';
@@ -89,14 +90,19 @@ export const AdminRoutes = (
         <AdminAnalytics />
       </AdminDashboardLayout>
     } />
-    <Route path="/admin/activity" element={
-      <AdminDashboardLayout title="Activity Log">
-        <AdminActivity />
+    <Route path="/admin/customer-analytics" element={
+      <AdminDashboardLayout title="Customer Analytics">
+        <CustomerAnalytics />
       </AdminDashboardLayout>
     } />
     <Route path="/admin/ab-testing" element={
       <AdminDashboardLayout title="A/B Testing">
-        <AdminABTesting />
+        <ABTestingManager />
+      </AdminDashboardLayout>
+    } />
+    <Route path="/admin/activity" element={
+      <AdminDashboardLayout title="Activity Log">
+        <AdminActivity />
       </AdminDashboardLayout>
     } />
     

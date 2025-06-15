@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Route } from 'react-router-dom';
 import ProductDetail from '@/pages/ProductDetail';
@@ -30,6 +29,7 @@ import Blog from '@/pages/Blog';
 import BlogPost from '@/pages/BlogPost';
 import BuyingGuides from '@/pages/BuyingGuides';
 import ProductComparison from '@/pages/ProductComparison';
+import PersonalizedOffersPage from '@/pages/PersonalizedOffersPage';
 
 export const MainRoutes = (
   <>
@@ -66,5 +66,10 @@ export const MainRoutes = (
     <Route path="/category/smart-home" element={<SmartHomePage />} />
     <Route path="/category/gaming" element={<GamingPage />} />
     <Route path="/category/photography" element={<PhotographyPage />} />
+    
+    {/* Analytics and Personalization Routes */}
+    <Route path="/offers" element={<PersonalizedOffersPage />} />
+    <Route path="/visual-search" element={<VisualSearchPage />} />
+    <Route path="/subscriptions" element={<SubscriptionsPage />} />
   </>
 );
