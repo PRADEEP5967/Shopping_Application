@@ -18,6 +18,7 @@ import RatingFilter from '@/components/shared/RatingFilter';
 // Enhanced unslugify with acronym/edge-case handling
 const slugToCategoryMap: Record<string, string> = {
   tv: 'TV',
+  headphones: 'Electronics', // Map "headphones" slug to "Electronics" category
   // Add other mappings as needed
 };
 
