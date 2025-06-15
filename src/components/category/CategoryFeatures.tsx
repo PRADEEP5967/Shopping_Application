@@ -1,43 +1,81 @@
 
 import React from 'react';
-import { Grid3X3, Sparkles, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Star, Shield, Truck, Award, Zap, Heart } from 'lucide-react';
 
-const CategoryFeatures = () => {
+interface CategoryFeaturesProps {
+  categoryName: string;
+}
+
+const CategoryFeatures: React.FC<CategoryFeaturesProps> = ({ categoryName }) => {
+  const getCategoryFeatures = (category: string) => {
+    switch (category.toLowerCase()) {
+      case 'electronics':
+        return [
+          { icon: Zap, title: 'Latest Technology', description: 'Cutting-edge innovations' },
+          { icon: Shield, title: 'Warranty Protected', description: '2-year guarantee' },
+          { icon: Star, title: 'Top Rated', description: '4.5+ star products' },
+          { icon: Truck, title: 'Fast Delivery', description: 'Same day in select cities' }
+        ];
+      case 'clothing':
+        return [
+          { icon: Heart, title: 'Fashion Forward', description: 'Latest trends & styles' },
+          { icon: Shield, title: 'Quality Fabric', description: 'Premium materials' },
+          { icon: Truck, title: 'Easy Returns', description: '30-day return policy' },
+          { icon: Award, title: 'Size Guide', description: 'Perfect fit guarantee' }
+        ];
+      case 'computers':
+        return [
+          { icon: Zap, title: 'High Performance', description: 'Powerful processing' },
+          { icon: Shield, title: 'Extended Warranty', description: '3-year coverage' },
+          { icon: Star, title: 'Expert Tested', description: 'Professional reviews' },
+          { icon: Truck, title: 'Setup Service', description: 'Free installation' }
+        ];
+      default:
+        return [
+          { icon: Star, title: 'Quality Assured', description: 'Premium products only' },
+          { icon: Shield, title: 'Secure Shopping', description: 'Protected purchases' },
+          { icon: Truck, title: 'Fast Shipping', description: 'Quick delivery' },
+          { icon: Award, title: 'Best Value', description: 'Competitive prices' }
+        ];
+    }
+  };
+
+  const features = getCategoryFeatures(categoryName);
+
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 animate-fade-in">Why Shop by Category?</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto animate-fade-in">
-            Browse our organized categories to find products that match your specific needs and preferences.
-          </p>
+    <div className="mb-8">
+      <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl p-6">
+        <div className="text-center mb-6">
+          <Badge className="mb-2">{categoryName} Features</Badge>
+          <h2 className="text-xl font-semibold text-gray-900">
+            Why Choose Our {categoryName} Collection?
+          </h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center animate-fade-in">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Grid3X3 className="w-8 h-8 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Organized Shopping</h3>
-            <p className="text-gray-600">Find products easily with our well-organized category structure.</p>
-          </div>
-          <div className="text-center animate-fade-in">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Zap className="w-8 h-8 text-green-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Quick Discovery</h3>
-            <p className="text-gray-600">Discover new products and brands within your favorite categories.</p>
-          </div>
-          <div className="text-center animate-fade-in">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Sparkles className="w-8 h-8 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Curated Selection</h3>
-            <p className="text-gray-600">Every category features hand-picked, high-quality products.</p>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {features.map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div 
+                key={index}
+                className="text-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+                  <Icon className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium text-gray-900 mb-1 text-sm">
+                  {feature.title}
+                </h3>
+                <p className="text-xs text-gray-600">
+                  {feature.description}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
