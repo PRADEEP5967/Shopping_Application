@@ -1,3 +1,4 @@
+
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
@@ -19,7 +20,7 @@ const Home3DSlider: React.FC = () => {
           <div className="flex-1 w-full h-60 md:h-80 ">
             <Canvas camera={{ position: [4, 4, 4], fov: 50 }}>
               <ambientLight intensity={0.9} />
-              <directionalLight position={[10, 10, 5] as const} intensity={1.5} />
+              <directionalLight position={[10, 10, 5] as [number, number, number]} intensity={1.5} />
               <Suspense fallback={null}>
                 <Cube />
               </Suspense>
