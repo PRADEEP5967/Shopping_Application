@@ -7,7 +7,7 @@ import CartFlyout from '@/components/CartFlyout';
 import EnhancedProductGrid from '@/components/product/EnhancedProductGrid';
 import AdvancedProductFilters from '@/components/product/AdvancedProductFilters';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { getAllProducts } from '@/data/products';
+import { useApiProducts, useApiCategories } from '@/hooks/useApiProducts';
 import { Product } from '@/types';
 import { 
   Sheet,
@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { SlidersHorizontal, LayoutGrid, List } from 'lucide-react';
+import { SlidersHorizontal, LayoutGrid, List, Loader2, RefreshCw } from 'lucide-react';
 
 interface FilterState {
   searchQuery: string;
@@ -34,7 +34,6 @@ interface FilterState {
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [filters, setFilters] = useState<FilterState>({
     searchQuery: searchParams.get('q') || '',
@@ -49,26 +48,18 @@ const Products = () => {
   
   const isMobile = useMediaQuery("(max-width: 768px)");
   
-  // Get available categories and brands from products
-  const { availableCategories, availableBrands } = useMemo(() => {
-    const categories = Array.from(new Set(products.map(p => p.category)));
-    const brands = Array.from(new Set(products.map(p => p.brand).filter(Boolean))) as string[];
-    return { availableCategories: categories, availableBrands: brands };
-  }, [products]);
+  // Use real API data instead of mock data
+  const { products: apiProducts, isLoading: productsLoading, error: productsError, refetch } = useApiProducts();
+  const { categories: apiCategories, isLoading: categoriesLoading } = useApiCategories();
   
-  // Load products on component mount
-  useEffect(() => {
-    const loadProducts = async () => {
-      const allProducts = getAllProducts();
-      setProducts(allProducts);
-    };
-    
-    loadProducts();
-  }, []);
+  // Get available brands from API products
+  const availableBrands = useMemo(() => {
+    return Array.from(new Set(apiProducts.map(p => p.brand).filter(Boolean))) as string[];
+  }, [apiProducts]);
   
-  // Apply filters and sorting
+  // Apply filters and sorting to API products
   const filteredProducts = useMemo(() => {
-    let result = [...products];
+    let result = [...apiProducts];
     
     // Apply search filter
     if (filters.searchQuery) {
@@ -139,7 +130,7 @@ const Products = () => {
     }
     
     return result;
-  }, [products, filters]);
+  }, [apiProducts, filters]);
   
   // Count active filters
   const activeFiltersCount = useMemo(() => {
@@ -181,6 +172,43 @@ const Products = () => {
     });
     setSearchParams({});
   };
+
+  // Show loading state
+  if (productsLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <CartFlyout />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+            <p className="text-gray-600">Loading products from APIs...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Show error state
+  if (productsError) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <CartFlyout />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <p className="text-red-600">Error loading products. Please try again.</p>
+            <Button onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Retry
+            </Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -190,14 +218,29 @@ const Products = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">All Products</h1>
+            <h1 className="text-2xl md:text-3xl font-bold">Live API Products</h1>
             <p className="text-gray-600 mt-1">
-              Showing {filteredProducts.length} products
+              Showing {filteredProducts.length} products from real e-commerce APIs
               {activeFiltersCount > 0 && ` with ${activeFiltersCount} filters applied`}
             </p>
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant="secondary">FakeStore API</Badge>
+              <Badge variant="secondary">DummyJSON API</Badge>
+              <Badge variant="secondary">Open Food Facts</Badge>
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
+            <Button 
+              onClick={() => refetch()} 
+              variant="outline" 
+              size="sm"
+              disabled={productsLoading}
+            >
+              {productsLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
+              Refresh
+            </Button>
+            
             {/* View Mode Toggle */}
             <div className="hidden md:flex items-center border rounded-lg p-1">
               <Button
@@ -234,14 +277,14 @@ const Products = () => {
                   <SheetHeader>
                     <SheetTitle>Filters</SheetTitle>
                     <SheetDescription>
-                      Narrow down products by applying filters
+                      Filter products from live APIs
                     </SheetDescription>
                   </SheetHeader>
                   <div className="mt-6">
                     <AdvancedProductFilters
                       filters={filters}
                       onFiltersChange={setFilters}
-                      availableCategories={availableCategories}
+                      availableCategories={apiCategories}
                       availableBrands={availableBrands}
                       activeFiltersCount={activeFiltersCount}
                       onClearFilters={clearFilters}
@@ -261,7 +304,7 @@ const Products = () => {
                 <AdvancedProductFilters
                   filters={filters}
                   onFiltersChange={setFilters}
-                  availableCategories={availableCategories}
+                  availableCategories={apiCategories}
                   availableBrands={availableBrands}
                   activeFiltersCount={activeFiltersCount}
                   onClearFilters={clearFilters}

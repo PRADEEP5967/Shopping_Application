@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -146,6 +145,22 @@ const ShopDropdownContent: React.FC = () => (
           <div className="text-sm text-gray-500">Browse our complete collection</div>
         </div>
         <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
+      </Link>
+      
+      <Link
+        to="/api-showcase"
+        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group border border-blue-100"
+      >
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-100 p-2 rounded-lg">
+            <Sparkles className="h-4 w-4 text-blue-600" />
+          </div>
+          <div>
+            <div className="font-medium text-gray-900 group-hover:text-primary">Live API Products</div>
+            <div className="text-sm text-gray-500">Real data from multiple APIs</div>
+          </div>
+        </div>
+        <Badge variant="secondary" className="bg-blue-100 text-blue-700">Live</Badge>
       </Link>
       
       <Link
