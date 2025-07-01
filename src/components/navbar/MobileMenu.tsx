@@ -1,9 +1,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Home, Package, Grid3X3, Percent, BookOpen, Database } from 'lucide-react';
+import { X, Home, ShoppingBag, User, Heart, Search, Gift, Grid3X3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
@@ -11,117 +15,211 @@ interface MobileMenuProps {
   handleLogout: () => void;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ 
-  isMenuOpen, 
+const MobileMenu: React.FC<MobileMenuProps> = ({
+  isMenuOpen,
   setIsMenuOpen,
-  handleLogout 
+  handleLogout
 }) => {
-  const { user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const { items: cartItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
 
-  const handleLinkClick = () => {
-    setIsMenuOpen(false);
-  };
+  const closeMenu = () => setIsMenuOpen(false);
 
-  const navItems = [
-    { href: '/', label: 'Home', icon: Home },
-    { href: '/products', label: 'Products', icon: Package },
-    { href: '/api-showcase', label: 'Live API', icon: Database },
-    { href: '/categories', label: 'Categories', icon: Grid3X3 },
-    { href: '/deals', label: 'Deals', icon: Percent },
-    { href: '/blog', label: 'Blog', icon: BookOpen },
+  const mainNavItems = [
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Products', href: '/products', icon: ShoppingBag },
+    { name: 'Categories', href: '/categories', icon: Grid3X3 },
+    { name: 'Deals', href: '/deals-discounts', icon: Gift, badge: 'Hot' },
+    { name: 'Search', href: '/search', icon: Search },
+  ];
+
+  const quickActions = [
+    { 
+      name: 'Cart', 
+      href: '/cart', 
+      icon: ShoppingBag, 
+      badge: cartItems.length > 0 ? cartItems.length : null 
+    },
+    { 
+      name: 'Wishlist', 
+      href: '/wishlist', 
+      icon: Heart, 
+      badge: wishlistItems.length > 0 ? wishlistItems.length : null 
+    },
   ];
 
   return (
-    <div
-      className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-        isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-      } lg:hidden`}
-    >
-      <div className="flex flex-col h-full">
+    <>
+      {/* Backdrop */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Menu Slide-out */}
+      <div
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">Menu</h2>
+        <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+          <div className="flex items-center gap-3">
+            {isAuthenticated && user ? (
+              <>
+                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">
+                    {user.email?.[0]?.toUpperCase() || 'U'}
+                  </span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Welcome back!</p>
+                  <p className="text-xs text-gray-500 truncate max-w-32">
+                    {user.email}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <p className="font-medium">Menu</p>
+                <p className="text-xs text-gray-500">Navigate your store</p>
+              </div>
+            )}
+          </div>
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsMenuOpen(false)}
-            className="p-2"
+            onClick={closeMenu}
+            className="h-8 w-8 p-0 hover:bg-gray-200"
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* Navigation Links */}
-        <nav className="flex-1 overflow-y-auto p-4">
-          <div className="space-y-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  onClick={handleLinkClick}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <Icon className="h-5 w-5" />
-                  <span className="font-medium">{item.label}</span>
-                </Link>
-              );
-            })}
+        <div className="flex flex-col h-full overflow-y-auto">
+          {/* Main Navigation */}
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+              Main Menu
+            </h3>
+            <nav className="space-y-1">
+              {mainNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    {item.badge && (
+                      <Badge 
+                        variant="destructive" 
+                        className="h-5 text-xs animate-pulse"
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
           </div>
 
-          {/* Divider */}
-          <div className="border-t my-6" />
+          <Separator />
+
+          {/* Quick Actions */}
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+              Quick Actions
+            </h3>
+            <div className="space-y-1">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <Link
+                    key={action.name}
+                    to={action.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+                      <span className="font-medium">{action.name}</span>
+                    </div>
+                    {action.badge && (
+                      <Badge variant="secondary" className="h-5 min-w-5 text-xs">
+                        {action.badge}
+                      </Badge>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <Separator />
 
           {/* Account Section */}
-          <div className="space-y-2">
-            {user ? (
-              <>
+          <div className="p-4 flex-1">
+            {isAuthenticated ? (
+              <div className="space-y-2">
                 <Link
                   to="/my-account"
-                  onClick={handleLinkClick}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
                 >
-                  <div className="h-5 w-5 bg-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-xs text-white font-medium">
-                      {user.email?.[0]?.toUpperCase()}
-                    </span>
-                  </div>
+                  <User className="h-5 w-5 text-gray-400 group-hover:text-primary" />
                   <span className="font-medium">My Account</span>
                 </Link>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   onClick={() => {
                     handleLogout();
-                    handleLinkClick();
+                    closeMenu();
                   }}
-                  className="w-full justify-start px-3 py-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="w-full justify-start gap-3 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
                 >
                   Sign Out
                 </Button>
-              </>
+              </div>
             ) : (
-              <>
-                <Link
-                  to="/login"
-                  onClick={handleLinkClick}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-                >
-                  <span className="font-medium">Sign In</span>
+              <div className="space-y-3">
+                <Link to="/login" onClick={closeMenu}>
+                  <Button className="w-full">Sign In</Button>
                 </Link>
-                <Link
-                  to="/register"
-                  onClick={handleLinkClick}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-                >
-                  <span className="font-medium">Sign Up</span>
+                <Link to="/register" onClick={closeMenu}>
+                  <Button variant="outline" className="w-full">Create Account</Button>
                 </Link>
-              </>
+              </div>
             )}
           </div>
-        </nav>
+
+          {/* Footer */}
+          <div className="p-4 border-t bg-gray-50 mt-auto">
+            <div className="text-center">
+              <p className="text-xs text-gray-500 mb-1">Need help?</p>
+              <Link
+                to="/contact"
+                onClick={closeMenu}
+                className="text-xs text-primary hover:underline font-medium"
+              >
+                Contact Support
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
