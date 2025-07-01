@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ProductDetail from '@/pages/ProductDetail';
@@ -31,6 +32,7 @@ import BuyingGuides from '@/pages/BuyingGuides';
 import ProductComparison from '@/pages/ProductComparison';
 import PersonalizedOffersPage from '@/pages/PersonalizedOffersPage';
 import ApiShowcase from '@/pages/ApiShowcase';
+import DealsDiscounts from '@/pages/DealsDiscounts';
 
 const MainRoutes = () => {
   return (
@@ -48,6 +50,10 @@ const MainRoutes = () => {
       <Route path="/order-history" element={<OrderHistory />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
+      
+      {/* Deals and Offers */}
+      <Route path="/deals" element={<DealsDiscounts />} />
+      <Route path="/offers" element={<PersonalizedOffersPage />} />
       
       {/* Blog and Content Routes */}
       <Route path="/blog" element={<Blog />} />
@@ -70,7 +76,6 @@ const MainRoutes = () => {
       <Route path="/category/photography" element={<PhotographyPage />} />
       
       {/* Analytics and Personalization Routes */}
-      <Route path="/offers" element={<PersonalizedOffersPage />} />
       <Route path="/visual-search" element={<VisualSearchPage />} />
       <Route path="/subscriptions" element={<SubscriptionsPage />} />
       <Route path="/api-showcase" element={<ApiShowcase />} />

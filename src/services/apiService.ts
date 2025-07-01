@@ -29,10 +29,26 @@ export class ECommerceAPIService {
     openFood: 'https://world.openfoodfacts.org/api/v0'
   };
 
+  private async fetchWithTimeout(url: string, timeout: number = 10000): Promise<Response> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
+    }
+  }
+
   // Fake Store API methods
   async getFakeStoreProducts(): Promise<ApiProduct[]> {
     try {
-      const response = await fetch(`${this.baseUrls.fakeStore}/products`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.fakeStore}/products`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const products = await response.json();
       
       return products.map((product: any) => ({
@@ -53,7 +69,9 @@ export class ECommerceAPIService {
 
   async getFakeStoreCategories(): Promise<string[]> {
     try {
-      const response = await fetch(`${this.baseUrls.fakeStore}/products/categories`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.fakeStore}/products/categories`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       return await response.json();
     } catch (error) {
       console.error('Error fetching FakeStore categories:', error);
@@ -63,7 +81,9 @@ export class ECommerceAPIService {
 
   async getFakeStoreProductsByCategory(category: string): Promise<ApiProduct[]> {
     try {
-      const response = await fetch(`${this.baseUrls.fakeStore}/products/category/${category}`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.fakeStore}/products/category/${encodeURIComponent(category)}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const products = await response.json();
       
       return products.map((product: any) => ({
@@ -85,7 +105,9 @@ export class ECommerceAPIService {
   // DummyJSON API methods
   async getDummyJsonProducts(limit: number = 30, skip: number = 0): Promise<ApiResponse<ApiProduct[]>> {
     try {
-      const response = await fetch(`${this.baseUrls.dummyJson}/products?limit=${limit}&skip=${skip}`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.dummyJson}/products?limit=${limit}&skip=${skip}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const data = await response.json();
       
       const products = data.products.map((product: any) => ({
@@ -117,7 +139,9 @@ export class ECommerceAPIService {
 
   async getDummyJsonCategories(): Promise<string[]> {
     try {
-      const response = await fetch(`${this.baseUrls.dummyJson}/products/categories`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.dummyJson}/products/categories`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       return await response.json();
     } catch (error) {
       console.error('Error fetching DummyJSON categories:', error);
@@ -127,7 +151,9 @@ export class ECommerceAPIService {
 
   async searchDummyJsonProducts(query: string): Promise<ApiProduct[]> {
     try {
-      const response = await fetch(`${this.baseUrls.dummyJson}/products/search?q=${query}`);
+      const response = await this.fetchWithTimeout(`${this.baseUrls.dummyJson}/products/search?q=${encodeURIComponent(query)}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const data = await response.json();
       
       return data.products.map((product: any) => ({
@@ -153,9 +179,11 @@ export class ECommerceAPIService {
   // Open Food Facts API methods
   async getOpenFoodProducts(page: number = 1): Promise<ApiProduct[]> {
     try {
-      const response = await fetch(
+      const response = await this.fetchWithTimeout(
         `${this.baseUrls.openFood}/search.json?page=${page}&page_size=20&sort_by=popularity`
       );
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      
       const data = await response.json();
       
       return data.products
@@ -183,17 +211,27 @@ export class ECommerceAPIService {
   // Combined method to get products from all sources
   async getAllProducts(): Promise<ApiProduct[]> {
     try {
-      const [fakeStoreProducts, dummyJsonResponse, openFoodProducts] = await Promise.all([
+      const [fakeStoreProducts, dummyJsonResponse, openFoodProducts] = await Promise.allSettled([
         this.getFakeStoreProducts(),
         this.getDummyJsonProducts(20),
         this.getOpenFoodProducts()
       ]);
 
-      return [
-        ...fakeStoreProducts,
-        ...dummyJsonResponse.data,
-        ...openFoodProducts.slice(0, 10) // Limit food products
-      ];
+      const allProducts: ApiProduct[] = [];
+
+      if (fakeStoreProducts.status === 'fulfilled') {
+        allProducts.push(...fakeStoreProducts.value);
+      }
+
+      if (dummyJsonResponse.status === 'fulfilled') {
+        allProducts.push(...dummyJsonResponse.value.data);
+      }
+
+      if (openFoodProducts.status === 'fulfilled') {
+        allProducts.push(...openFoodProducts.value.slice(0, 10)); // Limit food products
+      }
+
+      return allProducts;
     } catch (error) {
       console.error('Error fetching all products:', error);
       return [];

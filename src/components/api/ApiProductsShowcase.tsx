@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
-import { Loader2, Search, Store, Package, Coffee } from 'lucide-react';
+import { Loader2, Search, Store, Package, Coffee, AlertCircle, RefreshCw } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useApiProducts, useFakeStoreProducts, useDummyJsonProducts, useProductSearch } from '@/hooks/useApiProducts';
 import ModernProductGrid from '@/components/ModernProductGrid';
 
@@ -13,14 +14,18 @@ const ApiProductsShowcase: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   
-  const { products: allProducts, isLoading: allLoading, refetch: refetchAll } = useApiProducts();
-  const { products: fakeStoreProducts, isLoading: fakeStoreLoading } = useFakeStoreProducts();
-  const { products: dummyJsonProducts, total: dummyJsonTotal, isLoading: dummyJsonLoading } = useDummyJsonProducts(20);
-  const { products: searchResults, isLoading: searchLoading } = useProductSearch(searchQuery);
+  const { products: allProducts, isLoading: allLoading, error: allError, refetch: refetchAll } = useApiProducts();
+  const { products: fakeStoreProducts, isLoading: fakeStoreLoading, error: fakeStoreError } = useFakeStoreProducts();
+  const { products: dummyJsonProducts, total: dummyJsonTotal, isLoading: dummyJsonLoading, error: dummyJsonError } = useDummyJsonProducts(20);
+  const { products: searchResults, isLoading: searchLoading, error: searchError } = useProductSearch(searchQuery);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // Search is handled by the useProductSearch hook
+  };
+
+  const handleRefresh = () => {
+    refetchAll();
   };
 
   return (
@@ -45,6 +50,25 @@ const ApiProductsShowcase: React.FC = () => {
           </Button>
         </form>
       </div>
+
+      {/* Error Alerts */}
+      {(allError || fakeStoreError || dummyJsonError || searchError) && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            Some APIs are experiencing issues. Displaying available data.
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={handleRefresh}
+              className="ml-2"
+            >
+              <RefreshCw className="h-4 w-4 mr-1" />
+              Retry
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* API Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -93,8 +117,12 @@ const ApiProductsShowcase: React.FC = () => {
             <div className="flex justify-center py-8">
               <Loader2 className="h-8 w-8 animate-spin" />
             </div>
-          ) : (
+          ) : searchResults.length > 0 ? (
             <ModernProductGrid products={searchResults} />
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No products found for "{searchQuery}"</p>
+            </div>
           )}
         </div>
       )}
@@ -112,11 +140,11 @@ const ApiProductsShowcase: React.FC = () => {
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">All Products from APIs</h3>
               <Button 
-                onClick={() => refetchAll()} 
+                onClick={handleRefresh} 
                 variant="outline"
                 disabled={allLoading}
               >
-                {allLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                {allLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
                 Refresh
               </Button>
             </div>
@@ -124,8 +152,12 @@ const ApiProductsShowcase: React.FC = () => {
               <div className="flex justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
-            ) : (
+            ) : allProducts.length > 0 ? (
               <ModernProductGrid products={allProducts} />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No products available. Please try refreshing.</p>
+              </div>
             )}
           </TabsContent>
           
@@ -138,22 +170,30 @@ const ApiProductsShowcase: React.FC = () => {
               <div className="flex justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
-            ) : (
+            ) : fakeStoreProducts.length > 0 ? (
               <ModernProductGrid products={fakeStoreProducts} />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No FakeStore products available.</p>
+              </div>
             )}
           </TabsContent>
           
           <TabsContent value="dummyjson" className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-semibold">DummyJSON API Products</h3>
-              <Badge variant="outline">Showing 20 of {dummyJsonTotal}</Badge>
+              <Badge variant="outline">Showing {dummyJsonProducts.length} of {dummyJsonTotal}</Badge>
             </div>
             {dummyJsonLoading ? (
               <div className="flex justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin" />
               </div>
-            ) : (
+            ) : dummyJsonProducts.length > 0 ? (
               <ModernProductGrid products={dummyJsonProducts} />
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No DummyJSON products available.</p>
+              </div>
             )}
           </TabsContent>
         </Tabs>
