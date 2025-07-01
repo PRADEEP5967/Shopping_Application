@@ -20,12 +20,10 @@ import {
   TrendingUp,
   Star,
   ArrowRight,
-  Tag
+  Zap
 } from 'lucide-react';
-import { getProductCategories } from '@/data/products';
-import { categoryDetails, slugify } from '@/components/category/categoryData';
 
-const DesktopNavigation: React.FC = () => {
+const ImprovedDesktopNavigation: React.FC = () => {
   const location = useLocation();
   const currentPath = location.pathname;
 
@@ -69,7 +67,7 @@ const DesktopNavigation: React.FC = () => {
 
   return (
     <NavigationMenu>
-      <NavigationMenuList className="gap-2">
+      <NavigationMenuList className="gap-1">
         {navigationItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -78,10 +76,10 @@ const DesktopNavigation: React.FC = () => {
                 <>
                   <NavigationMenuTrigger 
                     className={cn(
-                      "group flex items-center gap-2 h-10 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg border-0",
-                      "hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary",
-                      "data-[state=open]:bg-primary/10 data-[state=open]:text-primary",
-                      item.isActive && "bg-primary/15 text-primary font-semibold shadow-sm"
+                      "group flex items-center gap-2 h-10 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg",
+                      "hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary",
+                      "data-[state=open]:bg-gray-100 data-[state=open]:text-primary",
+                      item.isActive && "bg-primary/10 text-primary font-semibold"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -89,7 +87,7 @@ const DesktopNavigation: React.FC = () => {
                     {item.badge && (
                       <Badge 
                         variant="destructive" 
-                        className="h-4 px-1.5 text-[10px] animate-pulse ml-1"
+                        className="h-4 px-1.5 text-[10px] animate-pulse"
                       >
                         {item.badge}
                       </Badge>
@@ -105,8 +103,8 @@ const DesktopNavigation: React.FC = () => {
                     to={item.href}
                     className={cn(
                       "group flex items-center gap-2 h-10 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg",
-                      "hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary",
-                      item.isActive && "bg-primary/15 text-primary font-semibold shadow-sm"
+                      "hover:bg-gray-100 hover:text-primary focus:bg-gray-100 focus:text-primary",
+                      item.isActive && "bg-primary/10 text-primary font-semibold"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -114,7 +112,7 @@ const DesktopNavigation: React.FC = () => {
                     {item.badge && (
                       <Badge 
                         variant="destructive" 
-                        className="h-4 px-1.5 text-[10px] ml-1"
+                        className="h-4 px-1.5 text-[10px]"
                       >
                         {item.badge}
                       </Badge>
@@ -145,7 +143,7 @@ const ShopDropdownContent: React.FC = () => (
           <div className="font-medium text-gray-900 group-hover:text-primary">All Products</div>
           <div className="text-sm text-gray-500">Browse our complete collection</div>
         </div>
-        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
+        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-primary" />
       </Link>
       
       <Link
@@ -182,55 +180,43 @@ const ShopDropdownContent: React.FC = () => (
   </div>
 );
 
-const CategoriesDropdownContent: React.FC = () => {
-  const categoryNames = getProductCategories().slice(0, 6);
-  
-  const categories = categoryNames.map(name => {
-    const details = categoryDetails[name] || categoryDetails.default;
-    return {
-      name,
-      icon: details.icon,
-      link: `/category/${slugify(name)}`,
-    };
-  });
-
-  return (
-    <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
-      <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-        <Grid3X3 className="h-5 w-5 text-primary" />
-        Browse Categories
-      </h3>
-      <div className="grid grid-cols-2 gap-3">
-        {categories.map((category) => {
-          const Icon = category.icon;
-          return (
-            <Link
-              key={category.name}
-              to={category.link}
-              className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
-            >
-              <div className="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition-colors">
-                <Icon className="w-4 h-4 text-blue-600" />
-              </div>
-              <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                {category.name}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-      <div className="mt-4 pt-4 border-t">
+const CategoriesDropdownContent: React.FC = () => (
+  <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
+    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+      <Grid3X3 className="h-5 w-5 text-primary" />
+      Browse Categories
+    </h3>
+    <div className="grid grid-cols-2 gap-3">
+      {[
+        { name: 'Electronics', href: '/category/electronics' },
+        { name: 'Clothing', href: '/category/clothing' },
+        { name: 'Home & Garden', href: '/category/home' },
+        { name: 'Sports', href: '/category/sports' },
+        { name: 'Beauty', href: '/category/beauty' },
+        { name: 'Books', href: '/category/books' }
+      ].map((category) => (
         <Link
-          to="/categories"
-          className="flex items-center justify-center gap-2 text-primary hover:text-primary/80 font-medium text-sm transition-colors"
+          key={category.name}
+          to={category.href}
+          className="p-3 rounded-lg hover:bg-gray-50 transition-colors text-center group"
         >
-          View All Categories
-          <ArrowRight className="h-3 w-3" />
+          <div className="font-medium text-gray-900 group-hover:text-primary text-sm">
+            {category.name}
+          </div>
         </Link>
-      </div>
+      ))}
     </div>
-  );
-};
+    <div className="mt-4 pt-4 border-t">
+      <Link
+        to="/categories"
+        className="flex items-center justify-center gap-2 text-primary hover:text-primary/80 font-medium text-sm"
+      >
+        View All Categories
+        <ArrowRight className="h-3 w-3" />
+      </Link>
+    </div>
+  </div>
+);
 
 const DealsDropdownContent: React.FC = () => (
   <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
@@ -245,7 +231,7 @@ const DealsDropdownContent: React.FC = () => (
         className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors group border border-red-100"
       >
         <div className="bg-red-100 p-2 rounded-lg">
-          <Tag className="h-4 w-4 text-red-600" />
+          <Zap className="h-4 w-4 text-red-600" />
         </div>
         <div>
           <div className="font-medium text-gray-900 group-hover:text-red-600">Flash Sale</div>
@@ -279,8 +265,7 @@ const BlogDropdownContent: React.FC = () => (
       {[
         { name: 'Blog', href: '/blog', desc: 'Latest articles and news' },
         { name: 'Buying Guides', href: '/buying-guides', desc: 'Expert advice for purchases' },
-        { name: 'Product Comparison', href: '/product-comparison', desc: 'Compare products side-by-side' },
-        { name: 'Visual Search', href: '/visual-search', desc: 'Search with images' }
+        { name: 'Product Comparison', href: '/product-comparison', desc: 'Compare products side-by-side' }
       ].map((item) => (
         <Link
           key={item.name}
@@ -295,4 +280,4 @@ const BlogDropdownContent: React.FC = () => (
   </div>
 );
 
-export default DesktopNavigation;
+export default ImprovedDesktopNavigation;

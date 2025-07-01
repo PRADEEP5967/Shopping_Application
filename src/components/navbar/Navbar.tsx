@@ -30,38 +30,64 @@ const Navbar: React.FC = () => {
     navigate('/login');
   }, [logout, navigate]);
 
+  // Close mobile menu when clicking outside
+  const closeMobileMenu = useCallback(() => {
+    setIsMenuOpen(false);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 w-full">
-      <div className="bg-white/95 dark:bg-background/95 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-2 sm:px-4">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            {/* Logo - responsive sizing */}
-            <div className="flex-shrink-0">
-              <NavbarLogo />
-            </div>
+    <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-16 lg:h-18">
+          {/* Logo Section */}
+          <div className="flex-shrink-0 z-50">
+            <NavbarLogo />
+          </div>
+          
+          {/* Desktop Navigation - centered */}
+          <nav className="hidden lg:flex flex-1 justify-center" aria-label="Main navigation">
+            <DesktopNavigation />
+          </nav>
+          
+          {/* Actions Section */}
+          <div className="flex items-center gap-2 lg:gap-3">
+            <NavbarActions 
+              toggleSearch={toggleSearch} 
+              handleLogout={handleLogout} 
+            />
             
-            {/* Desktop Navigation - hidden on mobile and tablet */}
-            <div className="hidden xl:flex flex-1 justify-center">
-              <DesktopNavigation />
-            </div>
-            
-            {/* Actions - responsive layout */}
-            <div className="flex items-center gap-1 sm:gap-2">
-              <NavbarActions toggleSearch={toggleSearch} handleLogout={handleLogout} />
-              {/* Mobile menu button - shown on tablet and mobile */}
-              <div className="xl:hidden">
-                <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-              </div>
+            {/* Mobile menu button */}
+            <div className="lg:hidden">
+              <MobileMenuButton 
+                isMenuOpen={isMenuOpen} 
+                toggleMenu={toggleMenu} 
+              />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+          onClick={closeMobileMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Menu */}
       <MobileMenu 
         isMenuOpen={isMenuOpen} 
         setIsMenuOpen={setIsMenuOpen}
         handleLogout={handleLogout} 
       />
-      <SearchOverlay isSearchOpen={isSearchOpen} toggleSearch={toggleSearch} />
+
+      {/* Search Overlay */}
+      <SearchOverlay 
+        isSearchOpen={isSearchOpen} 
+        toggleSearch={toggleSearch} 
+      />
     </header>
   );
 };

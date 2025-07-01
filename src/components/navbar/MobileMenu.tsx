@@ -1,16 +1,13 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { X, Home, ShoppingBag, User, Heart, Search, Gift, Grid3X3 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, Shield, ChevronRight, Search, BookOpen, TrendingUp } from 'lucide-react';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import AdvancedSearch from '@/components/AdvancedSearch';
+import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 interface MobileMenuProps {
   isMenuOpen: boolean;
@@ -18,209 +15,211 @@ interface MobileMenuProps {
   handleLogout: () => void;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ isMenuOpen, setIsMenuOpen, handleLogout }) => {
-  const { user, isAuthenticated, isAdmin } = useAuth();
+const MobileMenu: React.FC<MobileMenuProps> = ({
+  isMenuOpen,
+  setIsMenuOpen,
+  handleLogout
+}) => {
+  const { isAuthenticated, user } = useAuth();
+  const { items: cartItems } = useCart();
+  const { items: wishlistItems } = useWishlist();
 
-  if (!isMenuOpen) return null;
+  const closeMenu = () => setIsMenuOpen(false);
+
+  const mainNavItems = [
+    { name: 'Home', href: '/', icon: Home },
+    { name: 'Products', href: '/products', icon: ShoppingBag },
+    { name: 'Categories', href: '/categories', icon: Grid3X3 },
+    { name: 'Deals', href: '/deals-discounts', icon: Gift, badge: 'Hot' },
+    { name: 'Search', href: '/search', icon: Search },
+  ];
+
+  const quickActions = [
+    { 
+      name: 'Cart', 
+      href: '/cart', 
+      icon: ShoppingBag, 
+      badge: cartItems.length > 0 ? cartItems.length : null 
+    },
+    { 
+      name: 'Wishlist', 
+      href: '/wishlist', 
+      icon: Heart, 
+      badge: wishlistItems.length > 0 ? wishlistItems.length : null 
+    },
+  ];
 
   return (
-    <nav
-      className="lg:hidden bg-white shadow-lg border-t"
-      aria-label="Mobile site navigation"
-      role="navigation"
-    >
-      <div className="container mx-auto px-4 py-4 space-y-4 max-h-[calc(100vh-4rem)] overflow-y-auto" tabIndex={-1}>
-        {/* Search Bar - Mobile */}
-        <div className="lg:hidden">
-          <AdvancedSearch onClose={() => setIsMenuOpen(false)} />
+    <>
+      {/* Backdrop */}
+      {isMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 lg:hidden"
+          onClick={closeMenu}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile Menu Slide-out */}
+      <div
+        className={`fixed top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${
+          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+          <div className="flex items-center gap-3">
+            {isAuthenticated && user ? (
+              <>
+                <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                  <span className="text-white text-sm font-semibold">
+                    {user.email?.[0]?.toUpperCase() || 'U'}
+                  </span>
+                </div>
+                <div>
+                  <p className="font-medium text-sm">Welcome back!</p>
+                  <p className="text-xs text-gray-500 truncate max-w-32">
+                    {user.email}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div>
+                <p className="font-medium">Menu</p>
+                <p className="text-xs text-gray-500">Navigate your store</p>
+              </div>
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={closeMenu}
+            className="h-8 w-8 p-0 hover:bg-gray-200"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
-        
-        {/* User Profile Section */}
-        {isAuthenticated && (
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg" aria-label="User profile">
-            <Avatar className="h-10 w-10">
-              <AvatarImage 
-                src="https://avatars.githubusercontent.com/u/your-github-username" 
-                alt="Pradeep Sahani" 
-              />
-              <AvatarFallback className="bg-primary text-white">PS</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Welcome, {user?.firstName}!</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+
+        <div className="flex flex-col h-full overflow-y-auto">
+          {/* Main Navigation */}
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+              Main Menu
+            </h3>
+            <nav className="space-y-1">
+              {mainNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    {item.badge && (
+                      <Badge 
+                        variant="destructive" 
+                        className="h-5 text-xs animate-pulse"
+                      >
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          <Separator />
+
+          {/* Quick Actions */}
+          <div className="p-4">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">
+              Quick Actions
+            </h3>
+            <div className="space-y-1">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <Link
+                    key={action.name}
+                    to={action.href}
+                    onClick={closeMenu}
+                    className="flex items-center justify-between px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+                      <span className="font-medium">{action.name}</span>
+                    </div>
+                    {action.badge && (
+                      <Badge variant="secondary" className="h-5 min-w-5 text-xs">
+                        {action.badge}
+                      </Badge>
+                    )}
+                  </Link>
+                );
+              })}
             </div>
           </div>
-        )}
 
-        {/* Navigation Links */}
-        <div className="space-y-2" role="menu" aria-label="Primary">
-          <Link 
-            to="/" 
-            className="block py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md font-medium transition-colors" 
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Homepage"
-            tabIndex={0}
-            role="menuitem"
-          >
-            Home
-          </Link>
-          
-          <Collapsible>
-            <CollapsibleTrigger
-              className="flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md font-medium transition-colors"
-              aria-haspopup="menu"
-              aria-expanded="false"
-              aria-label="Shop, open submenu"
-              tabIndex={0}
-            >
-              Shop
-              <ChevronRight className="h-4 w-4 transition-transform duration-200" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 pl-4 mt-1" role="menu" aria-label="Shop submenu">
-              <Link 
-                to="/products" 
-                className="block py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="All Products"
-                tabIndex={0}
-                role="menuitem"
-              >
-                All Products
-              </Link>
-              <Link 
-                to="/categories" 
-                className="block py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Categories"
-                tabIndex={0}
-                role="menuitem"
-              >
-                Categories
-              </Link>
-            </CollapsibleContent>
-          </Collapsible>
+          <Separator />
 
-          <Collapsible>
-            <CollapsibleTrigger
-              className="flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md font-medium transition-colors"
-              aria-haspopup="menu"
-              aria-expanded="false"
-              aria-label="Blog & Guides, open submenu"
-              tabIndex={0}
-            >
-              Blog & Guides
-              <ChevronRight className="h-4 w-4 transition-transform duration-200" />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="space-y-1 pl-4 mt-1" role="menu" aria-label="Blog submenu">
-              <Link 
-                to="/blog" 
-                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Blog"
-                tabIndex={0}
-                role="menuitem"
-              >
-                <BookOpen className="h-4 w-4 mr-2" />
-                Blog
-              </Link>
-              <Link 
-                to="/buying-guides" 
-                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Buying Guides"
-                tabIndex={0}
-                role="menuitem"
-              >
-                <BookOpen className="h-4 w-4 mr-2" />
-                Buying Guides
-              </Link>
-              <Link 
-                to="/product-comparison" 
-                className="flex items-center py-2 px-2 text-sm text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-                onClick={() => setIsMenuOpen(false)}
-                aria-label="Product Comparison"
-                tabIndex={0}
-                role="menuitem"
-              >
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Product Comparison
-              </Link>
-            </CollapsibleContent>
-          </Collapsible>
-
-          {/* Main Single Links */}
-          {['performance', 'efficiency', 'quality', 'about-us', 'contact-us', 'careers'].map((path) => (
-            <Link 
-              key={path}
-              to={`/${path}`} 
-              className="block py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md font-medium transition-colors capitalize focus-visible:ring-2 focus-visible:ring-primary"
-              onClick={() => setIsMenuOpen(false)}
-              aria-label={path.replace('-', ' ')}
-              tabIndex={0}
-              role="menuitem"
-            >
-              {path.replace('-', ' ')}
-            </Link>
-          ))}
-        </div>
-
-        {/* User Actions */}
-        <div className="space-y-2 pt-4 border-t" aria-label="User actions">
-          <Link 
-            to="/wishlist" 
-            className="block py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="Wishlist"
-            tabIndex={0}
-            role="menuitem"
-          >
-            Wishlist
-          </Link>
-          <Link 
-            to="/my-account" 
-            className="block py-3 px-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition-colors focus-visible:ring-2 focus-visible:ring-primary"
-            onClick={() => setIsMenuOpen(false)}
-            aria-label="My Account"
-            tabIndex={0}
-            role="menuitem"
-          >
-            My Account
-          </Link>
-          
-          {isAuthenticated ? (
-            <div className="space-y-2">
-              {isAdmin && (
-                <Link to="/admin" onClick={() => setIsMenuOpen(false)} aria-label="Admin Panel">
-                  <Button variant="outline" className="w-full justify-start" tabIndex={0}>
-                    <Shield className="h-4 w-4 mr-2" />
-                    Admin Panel
-                  </Button>
+          {/* Account Section */}
+          <div className="p-4 flex-1">
+            {isAuthenticated ? (
+              <div className="space-y-2">
+                <Link
+                  to="/my-account"
+                  onClick={closeMenu}
+                  className="flex items-center gap-3 px-3 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary rounded-lg transition-colors group"
+                >
+                  <User className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+                  <span className="font-medium">My Account</span>
                 </Link>
-              )}
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  handleLogout();
-                  setIsMenuOpen(false);
-                }}
-                className="w-full justify-start"
-                aria-label="Logout"
-                tabIndex={0}
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    handleLogout();
+                    closeMenu();
+                  }}
+                  className="w-full justify-start gap-3 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+                >
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                <Link to="/login" onClick={closeMenu}>
+                  <Button className="w-full">Sign In</Button>
+                </Link>
+                <Link to="/register" onClick={closeMenu}>
+                  <Button variant="outline" className="w-full">Create Account</Button>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="p-4 border-t bg-gray-50 mt-auto">
+            <div className="text-center">
+              <p className="text-xs text-gray-500 mb-1">Need help?</p>
+              <Link
+                to="/contact"
+                onClick={closeMenu}
+                className="text-xs text-primary hover:underline font-medium"
               >
-                <LogOut className="h-4 w-4 mr-2" />
-                Logout
-              </Button>
+                Contact Support
+              </Link>
             </div>
-          ) : (
-            <Link to="/login" onClick={() => setIsMenuOpen(false)} aria-label="Login or Register">
-              <Button className="w-full" tabIndex={0}>
-                Login / Register
-              </Button>
-            </Link>
-          )}
+          </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 };
 
