@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import NotFound from '@/pages/NotFound';
 
 // Import route modules
-import { MainRoutes } from './MainRoutes';
+import MainRoutes from './MainRoutes';
 import { AdminRoutes } from './AdminRoutes';
 import { PendingRoutes } from './PendingRoutes';
 
@@ -12,7 +12,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Main Application Routes */}
-      {MainRoutes}
+      <Route path="/*" element={<MainRoutes />} />
       
       {/* Admin Routes */}
       {AdminRoutes}
