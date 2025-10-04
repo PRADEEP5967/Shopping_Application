@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Review, ProductReviewStats } from '@/types/reviews';
 import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
 
 type ReviewsContextType = {
   reviews: Review[];
@@ -15,25 +17,103 @@ const ReviewsContext = createContext<ReviewsContextType | undefined>(undefined);
 
 export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const { isAuthenticated } = useAuth();
 
-  // Load reviews from localStorage on mount
   useEffect(() => {
-    const savedReviews = localStorage.getItem('reviews');
-    if (savedReviews) {
-      try {
-        setReviews(JSON.parse(savedReviews));
-      } catch (error) {
-        console.error('Failed to parse reviews from localStorage', error);
+    loadReviews();
+  }, []);
+
+  const loadReviews = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('reviews')
+        .select(`
+          *,
+          profiles!reviews_user_id_fkey(
+            first_name,
+            last_name
+          )
+        `);
+
+      if (error) throw error;
+
+      if (data) {
+        const formattedReviews: Review[] = data.map(review => ({
+          id: review.id,
+          productId: review.product_id,
+          userId: review.user_id,
+          userName: `${(review.profiles as any)?.first_name} ${(review.profiles as any)?.last_name}`,
+          rating: review.rating,
+          title: review.title || '',
+          comment: review.comment || '',
+          helpful: review.helpful_count,
+          verifiedPurchase: review.verified_purchase,
+          createdAt: review.created_at,
+          updatedAt: review.updated_at,
+        }));
+        setReviews(formattedReviews);
+      }
+    } catch (error) {
+      console.error('Error loading reviews:', error);
+      const savedReviews = localStorage.getItem('reviews');
+      if (savedReviews) {
+        try {
+          setReviews(JSON.parse(savedReviews));
+        } catch (error) {
+          console.error('Failed to parse reviews from localStorage', error);
+        }
       }
     }
-  }, []);
+  };
 
   // Save reviews to localStorage whenever reviews change
   useEffect(() => {
     localStorage.setItem('reviews', JSON.stringify(reviews));
   }, [reviews]);
 
-  const addReview = (reviewData: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'helpful'>) => {
+  const addReview = async (reviewData: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'helpful'>) => {
+    try {
+      const { data: session } = await supabase.auth.getSession();
+
+      if (session.session && isAuthenticated) {
+        const { data, error } = await supabase
+          .from('reviews')
+          .insert({
+            product_id: reviewData.productId,
+            user_id: reviewData.userId,
+            rating: reviewData.rating,
+            title: reviewData.title,
+            comment: reviewData.comment,
+            verified_purchase: reviewData.verifiedPurchase,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          const newReview: Review = {
+            id: data.id,
+            productId: data.product_id,
+            userId: data.user_id,
+            userName: reviewData.userName,
+            rating: data.rating,
+            title: data.title || '',
+            comment: data.comment || '',
+            helpful: data.helpful_count,
+            verifiedPurchase: data.verified_purchase,
+            createdAt: data.created_at,
+            updatedAt: data.updated_at,
+          };
+          setReviews(prev => [newReview, ...prev]);
+          toast.success('Review added successfully!');
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error adding review:', error);
+    }
+
     const newReview: Review = {
       ...reviewData,
       id: `review-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -43,6 +123,7 @@ export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
 
     setReviews(prev => [newReview, ...prev]);
+    localStorage.setItem('reviews', JSON.stringify([newReview, ...reviews]));
     toast.success('Review added successfully!');
   };
 
@@ -76,10 +157,24 @@ export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
   };
 
-  const markHelpful = (reviewId: string) => {
-    setReviews(prev => 
-      prev.map(review => 
-        review.id === reviewId 
+  const markHelpful = async (reviewId: string) => {
+    try {
+      const review = reviews.find(r => r.id === reviewId);
+      if (!review) return;
+
+      const { error } = await supabase
+        .from('reviews')
+        .update({ helpful_count: review.helpful + 1 })
+        .eq('id', reviewId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error marking review helpful:', error);
+    }
+
+    setReviews(prev =>
+      prev.map(review =>
+        review.id === reviewId
           ? { ...review, helpful: review.helpful + 1 }
           : review
       )
