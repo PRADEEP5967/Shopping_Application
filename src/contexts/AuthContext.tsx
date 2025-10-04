@@ -75,14 +75,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
 
       if (profile) {
+        const profileData = profile as any;
         setUser({
-          id: profile.id,
-          firstName: profile.first_name,
-          lastName: profile.last_name,
-          email: profile.email,
-          address: profile.address || '',
-          gender: profile.gender || 'other',
-          role: profile.role,
+          id: profileData.id,
+          firstName: profileData.first_name,
+          lastName: profileData.last_name,
+          email: profileData.email,
+          address: profileData.address || '',
+          gender: profileData.gender || 'other',
+          role: profileData.role,
         });
       }
     } catch (error) {
@@ -197,7 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
 
         if (data.user) {
-          await supabase.from('profiles').insert({
+          const insertData: any = {
             id: data.user.id,
             first_name: userData.firstName,
             last_name: userData.lastName,
@@ -205,7 +206,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             address: userData.address,
             gender: userData.gender,
             role: 'user',
-          });
+          };
+          await supabase.from('profiles').insert(insertData);
 
           toast.success('Registration successful! Please login to continue.');
           return true;

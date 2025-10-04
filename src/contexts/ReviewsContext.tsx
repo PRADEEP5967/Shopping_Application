@@ -38,16 +38,17 @@ export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       if (error) throw error;
 
       if (data) {
-        const formattedReviews: Review[] = data.map(review => ({
+        const formattedReviews: Review[] = (data as any[]).map(review => ({
           id: review.id,
           productId: review.product_id,
           userId: review.user_id,
-          userName: `${(review.profiles as any)?.first_name} ${(review.profiles as any)?.last_name}`,
+          userName: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`,
+          userEmail: review.profiles?.email || '',
           rating: review.rating,
           title: review.title || '',
           comment: review.comment || '',
           helpful: review.helpful_count,
-          verifiedPurchase: review.verified_purchase,
+          verified: review.verified_purchase,
           createdAt: review.created_at,
           updatedAt: review.updated_at,
         }));
@@ -76,34 +77,37 @@ export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const { data: session } = await supabase.auth.getSession();
 
       if (session.session && isAuthenticated) {
+        const insertData: any = {
+          product_id: reviewData.productId,
+          user_id: reviewData.userId,
+          rating: reviewData.rating,
+          title: reviewData.title,
+          comment: reviewData.comment,
+          verified_purchase: true,
+        };
         const { data, error } = await supabase
           .from('reviews')
-          .insert({
-            product_id: reviewData.productId,
-            user_id: reviewData.userId,
-            rating: reviewData.rating,
-            title: reviewData.title,
-            comment: reviewData.comment,
-            verified_purchase: reviewData.verifiedPurchase,
-          })
+          .insert(insertData)
           .select()
           .single();
 
         if (error) throw error;
 
         if (data) {
+          const reviewResult = data as any;
           const newReview: Review = {
-            id: data.id,
-            productId: data.product_id,
-            userId: data.user_id,
+            id: reviewResult.id,
+            productId: reviewResult.product_id,
+            userId: reviewResult.user_id,
             userName: reviewData.userName,
-            rating: data.rating,
-            title: data.title || '',
-            comment: data.comment || '',
-            helpful: data.helpful_count,
-            verifiedPurchase: data.verified_purchase,
-            createdAt: data.created_at,
-            updatedAt: data.updated_at,
+            userEmail: reviewData.userEmail,
+            rating: reviewResult.rating,
+            title: reviewResult.title || '',
+            comment: reviewResult.comment || '',
+            helpful: reviewResult.helpful_count,
+            verified: reviewResult.verified_purchase,
+            createdAt: reviewResult.created_at,
+            updatedAt: reviewResult.updated_at,
           };
           setReviews(prev => [newReview, ...prev]);
           toast.success('Review added successfully!');
@@ -162,7 +166,7 @@ export const ReviewsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const review = reviews.find(r => r.id === reviewId);
       if (!review) return;
 
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('reviews')
         .update({ helpful_count: review.helpful + 1 })
         .eq('id', reviewId);

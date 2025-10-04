@@ -69,29 +69,31 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const loadedItems: CartItem[] = [];
 
         for (const item of cartItems) {
+          const itemData = item as any;
           const { data: productData } = await supabase
             .from('products')
             .select('*')
-            .eq('id', item.product_id)
+            .eq('id', itemData.product_id)
             .maybeSingle();
 
           if (productData) {
+            const prod = productData as any;
             loadedItems.push({
               product: {
-                id: productData.id,
-                name: productData.name,
-                description: productData.description || '',
-                price: productData.price,
-                category: productData.category,
-                image: productData.image || '',
-                images: (productData.images as string[]) || [],
-                rating: productData.rating,
-                stock: productData.stock,
-                brand: productData.brand || '',
-                features: (productData.features as string[]) || [],
+                id: prod.id,
+                name: prod.name,
+                description: prod.description || '',
+                price: prod.price,
+                category: prod.category,
+                images: (prod.images as string[]) || [],
+                rating: prod.rating,
+                reviewCount: 0,
+                inStock: prod.stock > 0,
+                brand: prod.brand || '',
+                features: (prod.features as string[]) || [],
               },
-              quantity: item.quantity,
-              variant: item.variant_id ? undefined : undefined,
+              quantity: itemData.quantity,
+              variant: undefined,
             });
           }
         }
@@ -126,14 +128,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!session.session) return;
 
       for (const item of items) {
+        const upsertData: any = {
+          user_id: session.session.user.id,
+          product_id: item.product.id,
+          quantity: item.quantity,
+          variant_id: item.variant?.id || null,
+        };
         await supabase
           .from('cart_items')
-          .upsert({
-            user_id: session.session.user.id,
-            product_id: item.product.id,
-            quantity: item.quantity,
-            variant_id: item.variant?.id || null,
-          }, {
+          .upsert(upsertData, {
             onConflict: 'user_id,product_id,variant_id'
           });
       }
@@ -152,14 +155,15 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: session } = await supabase.auth.getSession();
 
       if (session.session) {
+        const upsertData: any = {
+          user_id: session.session.user.id,
+          product_id: product.id,
+          quantity: quantity,
+          variant_id: variant?.id || null,
+        };
         const { error } = await supabase
           .from('cart_items')
-          .upsert({
-            user_id: session.session.user.id,
-            product_id: product.id,
-            quantity: quantity,
-            variant_id: variant?.id || null,
-          }, {
+          .upsert(upsertData, {
             onConflict: 'user_id,product_id,variant_id'
           });
 
@@ -229,7 +233,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: session } = await supabase.auth.getSession();
 
       if (session.session) {
-        await supabase
+        await (supabase as any)
           .from('cart_items')
           .update({ quantity })
           .eq('user_id', session.session.user.id)

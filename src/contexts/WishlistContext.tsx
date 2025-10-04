@@ -59,7 +59,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (error) throw error;
 
       if (wishlistItems && wishlistItems.length > 0) {
-        const productIds = wishlistItems.map(item => item.product_id);
+        const productIds = (wishlistItems as any[]).map(item => item.product_id);
         const { data: products, error: productsError } = await supabase
           .from('products')
           .select('*')
@@ -68,16 +68,16 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (productsError) throw productsError;
 
         if (products) {
-          const formattedProducts: Product[] = products.map(p => ({
+          const formattedProducts: Product[] = (products as any[]).map(p => ({
             id: p.id,
             name: p.name,
             description: p.description || '',
             price: p.price,
             category: p.category,
-            image: p.image || '',
             images: (p.images as string[]) || [],
             rating: p.rating,
-            stock: p.stock,
+            reviewCount: 0,
+            inStock: p.stock > 0,
             brand: p.brand || '',
             features: (p.features as string[]) || [],
           }));
@@ -112,12 +112,13 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const { data: session } = await supabase.auth.getSession();
 
         if (session.session && isAuthenticated) {
+          const insertData: any = {
+            user_id: session.session.user.id,
+            product_id: product.id,
+          };
           const { error } = await supabase
             .from('wishlist_items')
-            .insert({
-              user_id: session.session.user.id,
-              product_id: product.id,
-            });
+            .insert(insertData);
 
           if (error) throw error;
         }

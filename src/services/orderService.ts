@@ -83,23 +83,25 @@ export const createOrder = async (orderData: OrderData): Promise<Order | null> =
       return localOrder;
     }
 
+    const insertData: any = {
+      user_id: orderData.userId,
+      total_amount: orderData.totalAmount,
+      shipping_address: orderData.shippingAddress,
+      billing_address: orderData.billingAddress || null,
+      payment_method: orderData.paymentMethod,
+      notes: orderData.notes || null,
+    };
     const { data: order, error: orderError } = await supabase
       .from('orders')
-      .insert({
-        user_id: orderData.userId,
-        total_amount: orderData.totalAmount,
-        shipping_address: orderData.shippingAddress,
-        billing_address: orderData.billingAddress || null,
-        payment_method: orderData.paymentMethod,
-        notes: orderData.notes || null,
-      })
+      .insert(insertData)
       .select()
       .single();
 
-    if (orderError) throw orderError;
+    if (orderError || !order) throw orderError;
 
+    const orderData2 = order as any;
     const orderItems = orderData.items.map(item => ({
-      order_id: order.id,
+      order_id: orderData2.id,
       product_id: item.product.id,
       quantity: item.quantity,
       price: item.variant ? item.variant.price : item.product.price,
@@ -108,25 +110,25 @@ export const createOrder = async (orderData: OrderData): Promise<Order | null> =
 
     const { data: createdItems, error: itemsError } = await supabase
       .from('order_items')
-      .insert(orderItems)
+      .insert(orderItems as any)
       .select();
 
-    if (itemsError) throw itemsError;
+    if (itemsError || !createdItems) throw itemsError;
 
     const formattedOrder: Order = {
-      id: order.id,
-      userId: order.user_id,
-      status: order.status,
-      totalAmount: order.total_amount,
-      shippingAddress: order.shipping_address,
-      billingAddress: order.billing_address,
-      paymentMethod: order.payment_method || '',
-      paymentStatus: order.payment_status,
-      trackingNumber: order.tracking_number || undefined,
-      notes: order.notes || undefined,
-      createdAt: order.created_at,
-      updatedAt: order.updated_at,
-      items: createdItems.map(item => ({
+      id: orderData2.id,
+      userId: orderData2.user_id,
+      status: orderData2.status,
+      totalAmount: orderData2.total_amount,
+      shippingAddress: orderData2.shipping_address,
+      billingAddress: orderData2.billing_address,
+      paymentMethod: orderData2.payment_method || '',
+      paymentStatus: orderData2.payment_status,
+      trackingNumber: orderData2.tracking_number || undefined,
+      notes: orderData2.notes || undefined,
+      createdAt: orderData2.created_at,
+      updatedAt: orderData2.updated_at,
+      items: (createdItems as any[]).map(item => ({
         id: item.id,
         productId: item.product_id,
         productName: orderData.items.find(i => i.product.id === item.product_id)?.product.name || '',
@@ -193,7 +195,7 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
     if (error) throw error;
 
     const formattedOrders: Order[] = await Promise.all(
-      orders.map(async (order) => {
+      (orders as any[]).map(async (order: any) => {
         const items = await Promise.all(
           (order.order_items as any[]).map(async (item) => {
             const { data: product } = await supabase
@@ -202,10 +204,11 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
               .eq('id', item.product_id)
               .maybeSingle();
 
+            const prod = product as any;
             return {
               id: item.id,
               productId: item.product_id,
-              productName: product?.name || 'Unknown Product',
+              productName: prod?.name || 'Unknown Product',
               quantity: item.quantity,
               price: item.price,
               variantId: item.variant_id || undefined,
@@ -262,18 +265,20 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
     if (error) throw error;
     if (!order) return null;
 
+    const orderData = order as any;
     const items = await Promise.all(
-      (order.order_items as any[]).map(async (item) => {
+      (orderData.order_items as any[]).map(async (item) => {
         const { data: product } = await supabase
           .from('products')
           .select('name')
           .eq('id', item.product_id)
           .maybeSingle();
 
+        const prod = product as any;
         return {
           id: item.id,
           productId: item.product_id,
-          productName: product?.name || 'Unknown Product',
+          productName: prod?.name || 'Unknown Product',
           quantity: item.quantity,
           price: item.price,
           variantId: item.variant_id || undefined,
@@ -282,18 +287,18 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
     );
 
     return {
-      id: order.id,
-      userId: order.user_id,
-      status: order.status,
-      totalAmount: order.total_amount,
-      shippingAddress: order.shipping_address,
-      billingAddress: order.billing_address,
-      paymentMethod: order.payment_method || '',
-      paymentStatus: order.payment_status,
-      trackingNumber: order.tracking_number || undefined,
-      notes: order.notes || undefined,
-      createdAt: order.created_at,
-      updatedAt: order.updated_at,
+      id: orderData.id,
+      userId: orderData.user_id,
+      status: orderData.status,
+      totalAmount: orderData.total_amount,
+      shippingAddress: orderData.shipping_address,
+      billingAddress: orderData.billing_address,
+      paymentMethod: orderData.payment_method || '',
+      paymentStatus: orderData.payment_status,
+      trackingNumber: orderData.tracking_number || undefined,
+      notes: orderData.notes || undefined,
+      createdAt: orderData.created_at,
+      updatedAt: orderData.updated_at,
       items,
     };
   } catch (error) {
@@ -321,7 +326,7 @@ export const updateOrderStatus = async (
       return true;
     }
 
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('orders')
       .update({ status })
       .eq('id', orderId);
