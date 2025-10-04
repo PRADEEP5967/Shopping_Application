@@ -10,7 +10,7 @@ type User = {
   email: string;
   address: string;
   gender: 'male' | 'female' | 'other';
-  role: 'user' | 'admin';
+  role: 'user' | 'admin'; |
 };
 
 type AuthContextType = {
