@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, Edit, Trash2, Eye, Upload, Filter, ArrowDownAZ, ArrowUpDown, Loader2 } from 'lucide-react';
+import { Plus, Search, CreditCard as Edit, Trash2, Eye, Upload, Filter, ArrowDownAZ, ArrowUpDown, Loader as Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';

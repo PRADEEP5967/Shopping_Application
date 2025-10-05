@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProductImageUpload } from './ProductImageUpload';
-import { Plus, Loader2 } from 'lucide-react';
+import { Plus, Loader as Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const AddProductForm: React.FC = () => {
