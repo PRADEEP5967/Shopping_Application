@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Plus, Search, Edit, Trash2, Eye, Upload, Filter, ArrowDownAZ, ArrowUpDown } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, Eye, Upload, Filter, ArrowDownAZ, ArrowUpDown, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getAllProducts } from '@/data/products';
 import { Product } from '@/types';
@@ -26,6 +26,9 @@ export const ProductManagement = () => {
   const [currentCategory, setCurrentCategory] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
   const [sortField, setSortField] = useState<keyof Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const itemsPerPage = 10;
 
   // Get unique categories
   const categories = [...new Set(products.map(p => p.category))];
@@ -71,24 +74,66 @@ export const ProductManagement = () => {
     }
   };
 
-  const handleDeleteProduct = (productId: string) => {
-    setProducts(prev => prev.filter(p => p.id !== productId));
-    toast.success('Product deleted successfully');
+  const handleDeleteProduct = async (productId: string) => {
+    setIsLoading(true);
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      const productName = products.find(p => p.id === productId)?.name;
+      setProducts(prev => prev.filter(p => p.id !== productId));
+
+      toast.success('Product deleted', {
+        description: `${productName} has been removed from your catalog`
+      });
+    } catch (error) {
+      toast.error('Failed to delete product', {
+        description: 'Please try again'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (!selectedProducts.length) return;
-    
-    setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id)));
-    toast.success(`${selectedProducts.length} products deleted`);
-    setSelectedProducts([]);
+
+    setIsLoading(true);
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      setProducts(prev => prev.filter(p => !selectedProducts.includes(p.id)));
+
+      toast.success('Products deleted', {
+        description: `${selectedProducts.length} products have been removed`
+      });
+      setSelectedProducts([]);
+    } catch (error) {
+      toast.error('Failed to delete products', {
+        description: 'Please try again'
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleToggleStock = (productId: string) => {
-    setProducts(prev => prev.map(p => 
-      p.id === productId ? { ...p, inStock: !p.inStock } : p
-    ));
-    toast.success('Product stock status updated');
+  const handleToggleStock = async (productId: string) => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 300));
+
+      setProducts(prev => prev.map(p =>
+        p.id === productId ? { ...p, inStock: !p.inStock } : p
+      ));
+
+      const product = products.find(p => p.id === productId);
+      toast.success('Stock status updated', {
+        description: `${product?.name} is now ${!product?.inStock ? 'in stock' : 'out of stock'}`
+      });
+    } catch (error) {
+      toast.error('Failed to update stock status');
+    }
   };
 
   const handleSelectProduct = (productId: string, checked: boolean) => {
@@ -130,11 +175,16 @@ export const ProductManagement = () => {
             </Button>
             
             {selectedProducts.length > 0 && (
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 onClick={handleBulkDelete}
+                disabled={isLoading}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
                 Delete Selected ({selectedProducts.length})
               </Button>
             )}
@@ -236,7 +286,9 @@ export const ProductManagement = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredProducts.map((product) => (
+                filteredProducts
+                  .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                  .map((product) => (
                   <TableRow key={product.id} className={selectedProducts.includes(product.id) ? "bg-muted/30" : ""}>
                     <TableCell>
                       <Checkbox
@@ -306,31 +358,65 @@ export const ProductManagement = () => {
           </Table>
         </div>
 
-        {filteredProducts.length > 0 && (
-          <div className="flex items-center justify-between py-4">
-            <div className="text-sm text-muted-foreground">
-              Showing <strong>{filteredProducts.length}</strong> of <strong>{products.length}</strong> products
+        {filteredProducts.length > 0 && (() => {
+          const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+          const startIndex = (currentPage - 1) * itemsPerPage;
+          const endIndex = Math.min(startIndex + itemsPerPage, filteredProducts.length);
+
+          return (
+            <div className="flex items-center justify-between py-4">
+              <div className="text-sm text-muted-foreground">
+                Showing <strong>{startIndex + 1}-{endIndex}</strong> of <strong>{filteredProducts.length}</strong> products
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === 1 || isLoading}
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                >
+                  Previous
+                </Button>
+
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant="outline"
+                      size="sm"
+                      className={currentPage === pageNum ? "bg-primary text-white" : ""}
+                      onClick={() => setCurrentPage(pageNum)}
+                      disabled={isLoading}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage === totalPages || isLoading}
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                >
+                  Next
+                </Button>
+              </div>
             </div>
-            
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" disabled>
-                Previous
-              </Button>
-              <Button variant="outline" size="sm" className="bg-primary text-white">
-                1
-              </Button>
-              <Button variant="outline" size="sm">
-                2
-              </Button>
-              <Button variant="outline" size="sm">
-                3
-              </Button>
-              <Button variant="outline" size="sm">
-                Next
-              </Button>
-            </div>
-          </div>
-        )}
+          );
+        })()}
       </CardContent>
     </Card>
   );

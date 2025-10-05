@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Upload, X, Image } from 'lucide-react';
+import { Upload, X, Image, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface ProductImageUploadProps {
@@ -17,23 +17,71 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   onImagesChange
 }) => {
   const [dragOver, setDragOver] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const handleFileUpload = (files: FileList | null) => {
+  const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
 
-    Array.from(files).forEach(file => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const result = e.target?.result as string;
-          onImagesChange([...images, result]);
-          toast.success('Image uploaded successfully!');
-        };
-        reader.readAsDataURL(file);
-      } else {
-        toast.error('Please upload only image files');
+    const fileArray = Array.from(files);
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+    // Validate files
+    const invalidFiles = fileArray.filter(
+      file => !validTypes.includes(file.type) || file.size > maxSize
+    );
+
+    if (invalidFiles.length > 0) {
+      const oversized = invalidFiles.filter(f => f.size > maxSize);
+      const wrongType = invalidFiles.filter(f => !validTypes.includes(f.type));
+
+      if (oversized.length > 0) {
+        toast.error('File size too large', {
+          description: `${oversized.length} file(s) exceed 10MB limit`
+        });
       }
-    });
+      if (wrongType.length > 0) {
+        toast.error('Invalid file type', {
+          description: 'Only JPG, PNG, GIF, and WebP files are allowed'
+        });
+      }
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const validFiles = fileArray.filter(
+        file => validTypes.includes(file.type) && file.size <= maxSize
+      );
+
+      const newImages: string[] = [];
+
+      for (const file of validFiles) {
+        await new Promise<void>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const result = e.target?.result as string;
+            newImages.push(result);
+            resolve();
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      onImagesChange([...images, ...newImages]);
+
+      toast.success('Images uploaded', {
+        description: `${newImages.length} image(s) added successfully`
+      });
+    } catch (error) {
+      toast.error('Upload failed', {
+        description: 'Failed to process images. Please try again.'
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -55,7 +103,9 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   const removeImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
     onImagesChange(newImages);
-    toast.info('Image removed');
+    toast.success('Image removed', {
+      description: 'Image has been removed from the list'
+    });
   };
 
   return (
@@ -73,15 +123,23 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             dragOver
               ? 'border-primary bg-primary/5'
               : 'border-gray-300 hover:border-primary/50'
-          }`}
+          } ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          {isUploading ? (
+            <Loader2 className="h-12 w-12 mx-auto text-primary mb-4 animate-spin" />
+          ) : (
+            <Upload className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+          )}
           <div className="space-y-2">
-            <p className="text-lg font-medium">Drop images here or click to upload</p>
-            <p className="text-sm text-gray-500">Supports JPG, PNG, GIF up to 10MB</p>
+            <p className="text-lg font-medium">
+              {isUploading ? 'Uploading images...' : 'Drop images here or click to upload'}
+            </p>
+            <p className="text-sm text-gray-500">
+              {isUploading ? 'Please wait' : 'Supports JPG, PNG, GIF, WebP up to 10MB'}
+            </p>
           </div>
           <Label htmlFor="image-upload" className="cursor-pointer">
             <Input
@@ -92,8 +150,15 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
               className="hidden"
               onChange={(e) => handleFileUpload(e.target.files)}
             />
-            <Button type="button" variant="outline" className="mt-4">
-              Choose Files
+            <Button type="button" variant="outline" className="mt-4" disabled={isUploading}>
+              {isUploading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Uploading...
+                </>
+              ) : (
+                'Choose Files'
+              )}
             </Button>
           </Label>
         </div>

@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ProductImageUpload } from './ProductImageUpload';
-import { Plus } from 'lucide-react';
+import { Plus, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const AddProductForm: React.FC = () => {
@@ -19,11 +19,54 @@ export const AddProductForm: React.FC = () => {
   const [images, setImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const validateForm = () => {
+    if (!name.trim()) {
+      toast.error('Product name is required');
+      return false;
+    }
+    if (name.trim().length < 3) {
+      toast.error('Product name must be at least 3 characters');
+      return false;
+    }
+    if (!description.trim()) {
+      toast.error('Product description is required');
+      return false;
+    }
+    if (description.trim().length < 10) {
+      toast.error('Description must be at least 10 characters');
+      return false;
+    }
+    if (!price || isNaN(parseFloat(price))) {
+      toast.error('Valid price is required');
+      return false;
+    }
+    if (parseFloat(price) <= 0) {
+      toast.error('Price must be greater than 0');
+      return false;
+    }
+    if (parseFloat(price) > 999999) {
+      toast.error('Price cannot exceed $999,999');
+      return false;
+    }
+    if (!category) {
+      toast.error('Please select a category');
+      return false;
+    }
+    if (images.length === 0) {
+      toast.error('At least one product image is required');
+      return false;
+    }
+    if (brand && brand.trim().length > 0 && brand.trim().length < 2) {
+      toast.error('Brand name must be at least 2 characters');
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!name || !description || !price || !category || images.length === 0) {
-      toast.error('Please fill all required fields and add at least one image');
+
+    if (!validateForm()) {
       return;
     }
 
@@ -44,10 +87,15 @@ export const AddProductForm: React.FC = () => {
     };
 
     // Simulate API call
-    setTimeout(() => {
+    try {
+      // In a real app, this would be an API call to Supabase
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
       console.log('New product created:', newProduct);
-      toast.success('Product created successfully!');
-      
+      toast.success('Product created successfully!', {
+        description: `${name} has been added to your catalog`
+      });
+
       // Reset form
       setName('');
       setDescription('');
@@ -55,8 +103,14 @@ export const AddProductForm: React.FC = () => {
       setCategory('');
       setBrand('');
       setImages([]);
+    } catch (error) {
+      toast.error('Failed to create product', {
+        description: 'Please try again or contact support'
+      });
+      console.error('Error creating product:', error);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -87,6 +141,8 @@ export const AddProductForm: React.FC = () => {
                 id="price"
                 type="number"
                 step="0.01"
+                min="0.01"
+                max="999999"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
                 placeholder="0.00"
@@ -138,7 +194,17 @@ export const AddProductForm: React.FC = () => {
           <ProductImageUpload images={images} onImagesChange={setImages} />
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? 'Creating Product...' : 'Create Product'}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating Product...
+              </>
+            ) : (
+              <>
+                <Plus className="mr-2 h-4 w-4" />
+                Create Product
+              </>
+            )}
           </Button>
         </form>
       </CardContent>
