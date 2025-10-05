@@ -19,6 +19,9 @@ import CategoryInsights from '@/components/category/CategoryInsights';
 import { useCategoryProducts } from '@/hooks/useCategoryProducts';
 import { useProductFilters } from '@/hooks/useProductFilters';
 import { unslugify } from '@/utils/categoryUtils';
+import { useApiCategoryProducts } from '@/hooks/useApiProducts';
+import { Badge } from '@/components/ui/badge';
+import { Globe } from 'lucide-react';
 
 const CategoryProductsPage = () => {
   const { categoryName: categorySlug } = useParams<{ categoryName: string }>();
@@ -36,9 +39,17 @@ const CategoryProductsPage = () => {
   });
 
   const { categoryProducts, brands, realCategoryName, matchedCategory } = useCategoryProducts(categoryName);
+  
+  // Fetch API products for this category
+  const { products: apiProducts, isLoading: apiLoading } = useApiCategoryProducts(realCategoryName);
+  
+  // Combine local and API products
+  const allProducts = useMemo(() => {
+    return [...categoryProducts, ...apiProducts];
+  }, [categoryProducts, apiProducts]);
 
   const filteredProducts = useProductFilters({
-    products: categoryProducts,
+    products: allProducts,
     priceRange,
     selectedBrands,
     minRating,
@@ -81,10 +92,10 @@ const CategoryProductsPage = () => {
   }, [selectedBrands, priceRange, minRating, quickFilters]);
 
   const averageRating = useMemo(() => {
-    if (categoryProducts.length === 0) return 0;
-    const sum = categoryProducts.reduce((acc, product) => acc + product.rating, 0);
-    return sum / categoryProducts.length;
-  }, [categoryProducts]);
+    if (allProducts.length === 0) return 0;
+    const sum = allProducts.reduce((acc, product) => acc + product.rating, 0);
+    return sum / allProducts.length;
+  }, [allProducts]);
 
   // If realCategoryName doesn't actually exist, show not found
   if (!matchedCategory) {
@@ -101,10 +112,20 @@ const CategoryProductsPage = () => {
         {/* Category Insights */}
         <CategoryInsights 
           categoryName={realCategoryName}
-          productCount={categoryProducts.length}
+          productCount={allProducts.length}
           averageRating={averageRating}
           trendy={['Electronics', 'Gaming', 'Smart Home'].includes(realCategoryName)}
         />
+        
+        {/* API Products Badge */}
+        {apiProducts.length > 0 && (
+          <div className="mb-6 flex items-center gap-2 justify-center">
+            <Badge variant="secondary" className="flex items-center gap-2">
+              <Globe className="h-3 w-3" />
+              Including {apiProducts.length} products from live market APIs
+            </Badge>
+          </div>
+        )}
         
         {/* Category Features Section */}
         <CategoryFeatures categoryName={realCategoryName} />
@@ -136,7 +157,7 @@ const CategoryProductsPage = () => {
           <div className="flex-1">
             <ProductsHeader
               filteredProductsCount={filteredProducts.length}
-              totalProductsCount={categoryProducts.length}
+              totalProductsCount={allProducts.length}
               viewMode={viewMode}
               setViewMode={setViewMode}
               sortOption={sortOption}

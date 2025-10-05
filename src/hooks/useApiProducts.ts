@@ -126,3 +126,23 @@ export const useApiCategories = () => {
 
   return { categories, isLoading, error };
 };
+
+export const useApiCategoryProducts = (category: string) => {
+  const {
+    data: products = [],
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
+    queryKey: ['api-category-products', category],
+    queryFn: async () => {
+      if (!category) return [];
+      const apiProducts = await apiService.getProductsByCategory(category);
+      return apiProducts.map(convertApiProductToProduct);
+    },
+    enabled: !!category,
+    staleTime: 5 * 60 * 1000
+  });
+
+  return { products, isLoading, error, refetch };
+};

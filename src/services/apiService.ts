@@ -180,6 +180,51 @@ export class ECommerceAPIService {
     }
   }
 
+  // Category mapping for better API product categorization
+  private categoryMapping: { [key: string]: string[] } = {
+    'Electronics': ['electronics', 'smartphones', 'laptops'],
+    'Clothing': ['mens-clothing', 'womens-clothing', 'tops', 'womens-dresses'],
+    'Accessories': ['mens-watches', 'womens-watches', 'womens-bags', 'womens-jewellery', 'sunglasses'],
+    'Jewelry': ['jewelery', 'womens-jewellery'],
+    'Gaming': ['gaming-accessories'],
+    'Furniture': ['furniture', 'home-decoration'],
+    'Smart Home': ['smartphones', 'tablets'],
+    'Photography': ['laptops']
+  };
+
+  // Get products by category from all APIs
+  async getProductsByCategory(category: string): Promise<ApiProduct[]> {
+    try {
+      const apiCategories = this.categoryMapping[category] || [];
+      const results: ApiProduct[] = [];
+
+      // Try FakeStore API
+      for (const apiCat of apiCategories) {
+        if (['electronics', 'jewelery', 'mens-clothing', 'womens-clothing'].includes(apiCat)) {
+          const products = await this.getFakeStoreProductsByCategory(apiCat.replace('mens-', "men's ").replace('womens-', "women's "));
+          results.push(...products);
+        }
+      }
+
+      // Try DummyJSON API with category search
+      for (const apiCat of apiCategories) {
+        const searchResults = await this.searchDummyJsonProducts(apiCat);
+        results.push(...searchResults);
+      }
+
+      // Add food products for Food category
+      if (category === 'Food & Beverages') {
+        const foodProducts = await this.getOpenFoodProducts();
+        results.push(...foodProducts);
+      }
+
+      return results;
+    } catch (error) {
+      console.error(`Error fetching products for category ${category}:`, error);
+      return [];
+    }
+  }
+
   // Combined method to get products from all sources
   async getAllProducts(): Promise<ApiProduct[]> {
     try {
