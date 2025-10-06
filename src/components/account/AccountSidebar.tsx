@@ -20,7 +20,7 @@ interface AccountSidebarProps {
   user: {
     firstName: string;
     lastName: string;
-    role: 'user' | 'admin';
+    roles: string[];
   };
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -36,7 +36,7 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ user, activeTab, setAct
               <User className="h-10 w-10 text-white" />
             </div>
             <h2 className="text-xl font-semibold">{user.firstName} {user.lastName}</h2>
-            <Badge className="mt-2">{user.role === 'admin' ? 'Administrator' : 'Customer'}</Badge>
+            <Badge className="mt-2">{user.roles.includes('admin') ? 'Administrator' : 'Customer'}</Badge>
           </div>
           
           <nav className="space-y-1">
@@ -104,7 +104,7 @@ const AccountSidebar: React.FC<AccountSidebarProps> = ({ user, activeTab, setAct
               Security
             </button>
             
-            {user.role === 'admin' && (
+            {user.roles.includes('admin') && (
               <Link to="/admin" className="w-full flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-md text-left hover:from-blue-700 hover:to-blue-800">
                 <ShieldCheck className="h-4 w-4 mr-3" />
                 Admin Dashboard

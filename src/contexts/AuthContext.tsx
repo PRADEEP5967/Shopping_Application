@@ -1,7 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { Session, User as SupabaseUser } from '@supabase/supabase-js';
 
 type User = {
   id: string;
@@ -10,11 +10,12 @@ type User = {
   email: string;
   address: string;
   gender: 'male' | 'female' | 'other';
-  role: 'user' | 'admin';
+  roles: string[];
 };
 
 type AuthContextType = {
   user: User | null;
+  session: Session | null;
   login: (email: string, password: string) => Promise<boolean>;
   register: (userData: RegisterData) => Promise<boolean>;
   logout: () => void;
@@ -35,29 +36,27 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        loadUserProfile(session.user.id);
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setSession(newSession);
+      if (newSession?.user) {
+        // Defer profile loading to prevent deadlocks
+        setTimeout(() => {
+          loadUserProfile(newSession.user.id);
+        }, 0);
       } else {
-        const savedUser = localStorage.getItem('user');
-        if (savedUser) {
-          try {
-            setUser(JSON.parse(savedUser));
-          } catch (error) {
-            console.error('Failed to parse user from localStorage', error);
-            localStorage.removeItem('user');
-          }
-        }
+        setUser(null);
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        loadUserProfile(session.user.id);
-      } else {
-        setUser(null);
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      setSession(existingSession);
+      if (existingSession?.user) {
+        loadUserProfile(existingSession.user.id);
       }
     });
 
@@ -66,39 +65,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loadUserProfile = async (userId: string) => {
     try {
-      const { data: profile, error } = await supabase
+      // Fetch profile
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      // Fetch user roles
+      const { data: rolesData, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+
+      if (rolesError) throw rolesError;
 
       if (profile) {
-        const profileData = profile as any;
+        const validGender = ['male', 'female', 'other'].includes(profile.gender) 
+          ? profile.gender as 'male' | 'female' | 'other'
+          : 'other';
+          
         setUser({
-          id: profileData.id,
-          firstName: profileData.first_name,
-          lastName: profileData.last_name,
-          email: profileData.email,
-          address: profileData.address || '',
-          gender: profileData.gender || 'other',
-          role: profileData.role,
+          id: profile.id,
+          firstName: profile.first_name || '',
+          lastName: profile.last_name || '',
+          email: profile.email,
+          address: profile.address || '',
+          gender: validGender,
+          roles: rolesData?.map(r => r.role) || ['user'],
         });
       }
     } catch (error) {
       console.error('Error loading user profile:', error);
+      setUser(null);
     }
   };
-
-  // Save user to localStorage whenever it changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
@@ -124,122 +127,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       return false;
     } catch (error) {
-      const registeredUsersJson = localStorage.getItem('registeredUsers');
-      let registeredUsers = [];
-
-      if (registeredUsersJson) {
-        try {
-          registeredUsers = JSON.parse(registeredUsersJson);
-        } catch (error) {
-          console.error('Failed to parse registered users', error);
-        }
-      }
-
-      if (email === 'admin@nextcommerce.com' && password === 'admin2024!') {
-        const mockUser: User = {
-          id: 'admin-001',
-          firstName: 'Admin',
-          lastName: 'User',
-          email,
-          address: 'NextCommerce HQ, 123 Business Street',
-          gender: 'other',
-          role: 'admin'
-        };
-        setUser(mockUser);
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        toast.success(`Welcome back, Admin!`);
-        return true;
-      }
-
-      const foundUser = registeredUsers.find((u: RegisterData) => u.email === email);
-
-      if (foundUser && password.length >= 6) {
-        const userObj: User = {
-          id: Math.random().toString(36).substr(2, 9),
-          firstName: foundUser.firstName,
-          lastName: foundUser.lastName,
-          email: foundUser.email,
-          address: foundUser.address,
-          gender: foundUser.gender,
-          role: 'user'
-        };
-        setUser(userObj);
-        localStorage.setItem('user', JSON.stringify(userObj));
-        toast.success(`Welcome back, ${foundUser.firstName}!`);
-        return true;
-      } else {
-        toast.error(foundUser ? 'Invalid password' : 'Account not found. Please register first.');
-        return false;
-      }
+      console.error('Login error:', error);
+      toast.error('An unexpected error occurred. Please try again.');
+      return false;
     }
   };
 
   const register = async (userData: RegisterData): Promise<boolean> => {
-    if (userData.email && userData.password.length >= 6 && userData.firstName && userData.lastName) {
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email: userData.email,
-          password: userData.password,
-          options: {
-            data: {
-              first_name: userData.firstName,
-              last_name: userData.lastName,
-            },
-          },
-        });
+    if (!userData.email || !userData.password || userData.password.length < 6 || !userData.firstName || !userData.lastName) {
+      toast.error('Please fill all required fields. Password must be at least 6 characters.');
+      return false;
+    }
 
-        if (error) {
-          if (error.message.includes('already registered')) {
-            toast.error('Email already registered. Please login instead.');
-          } else {
-            toast.error('Registration failed. Please try again.');
-          }
-          return false;
-        }
-
-        if (data.user) {
-          const insertData: any = {
-            id: data.user.id,
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
             first_name: userData.firstName,
             last_name: userData.lastName,
-            email: userData.email,
             address: userData.address,
             gender: userData.gender,
-            role: 'user',
-          };
-          await supabase.from('profiles').insert(insertData);
+          },
+        },
+      });
 
-          toast.success('Registration successful! Please login to continue.');
-          return true;
-        }
-
-        return false;
-      } catch (error) {
-        const registeredUsersJson = localStorage.getItem('registeredUsers');
-        let registeredUsers = [];
-
-        if (registeredUsersJson) {
-          try {
-            registeredUsers = JSON.parse(registeredUsersJson);
-          } catch (error) {
-            console.error('Failed to parse registered users', error);
-          }
-        }
-
-        const emailExists = registeredUsers.some((user: RegisterData) => user.email === userData.email);
-        if (emailExists) {
+      if (error) {
+        if (error.message.includes('already registered')) {
           toast.error('Email already registered. Please login instead.');
-          return false;
+        } else {
+          toast.error(error.message || 'Registration failed. Please try again.');
         }
+        return false;
+      }
 
-        registeredUsers.push(userData);
-        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-
-        toast.success('Registration successful! Please login to continue.');
+      if (data.user) {
+        toast.success('Registration successful! You can now login.');
         return true;
       }
-    } else {
-      toast.error('Please fill all required fields. Password must be at least 6 characters.');
+
+      return false;
+    } catch (error) {
+      console.error('Registration error:', error);
+      toast.error('An unexpected error occurred. Please try again.');
       return false;
     }
   };
@@ -247,23 +181,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     try {
       await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      toast.info('Successfully logged out');
     } catch (error) {
       console.error('Error during logout:', error);
+      toast.error('Logout failed. Please try again.');
     }
-    setUser(null);
-    localStorage.removeItem('user');
-    toast.info('Successfully logged out');
   };
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        session,
         login,
         register,
         logout,
-        isAuthenticated: !!user,
-        isAdmin: !!user && user.role === 'admin',
+        isAuthenticated: !!session && !!user,
+        isAdmin: !!user && user.roles.includes('admin'),
       }}
     >
       {children}
