@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/types';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 type WishlistContextType = {
@@ -22,8 +21,6 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadWishlist();
-    } else {
       const savedWishlist = localStorage.getItem('wishlist');
       if (savedWishlist) {
         try {
@@ -35,68 +32,6 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, [isAuthenticated]);
 
-  const loadWishlist = async () => {
-    try {
-      const { data: session } = await supabase.auth.getSession();
-
-      if (!session.session) {
-        const savedWishlist = localStorage.getItem('wishlist');
-        if (savedWishlist) {
-          try {
-            setItems(JSON.parse(savedWishlist));
-          } catch (error) {
-            console.error('Failed to parse wishlist from localStorage', error);
-          }
-        }
-        return;
-      }
-
-      const { data: wishlistItems, error } = await supabase
-        .from('wishlist_items')
-        .select('product_id')
-        .eq('user_id', session.session.user.id);
-
-      if (error) throw error;
-
-      if (wishlistItems && wishlistItems.length > 0) {
-        const productIds = (wishlistItems as any[]).map(item => item.product_id);
-        const { data: products, error: productsError } = await supabase
-          .from('products')
-          .select('*')
-          .in('id', productIds);
-
-        if (productsError) throw productsError;
-
-        if (products) {
-          const formattedProducts: Product[] = (products as any[]).map(p => ({
-            id: p.id,
-            name: p.name,
-            description: p.description || '',
-            price: p.price,
-            category: p.category,
-            images: (p.images as string[]) || [],
-            rating: p.rating,
-            reviewCount: 0,
-            inStock: p.stock > 0,
-            brand: p.brand || '',
-            features: (p.features as string[]) || [],
-          }));
-          setItems(formattedProducts);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading wishlist:', error);
-      const savedWishlist = localStorage.getItem('wishlist');
-      if (savedWishlist) {
-        try {
-          setItems(JSON.parse(savedWishlist));
-        } catch (error) {
-          console.error('Failed to parse wishlist from localStorage', error);
-        }
-      }
-    }
-  };
-
   // Save wishlist to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('wishlist', JSON.stringify(items));
@@ -106,47 +41,18 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return items.some(item => item.id === productId);
   };
 
-  const addItem = async (product: Product) => {
+  const addItem = (product: Product) => {
     if (!isInWishlist(product.id)) {
-      try {
-        const { data: session } = await supabase.auth.getSession();
-
-        if (session.session && isAuthenticated) {
-          const insertData: any = {
-            user_id: session.session.user.id,
-            product_id: product.id,
-          };
-          const { error } = await supabase
-            .from('wishlist_items')
-            .insert(insertData);
-
-          if (error) throw error;
-        }
-      } catch (error) {
-        console.error('Error adding to wishlist:', error);
-      }
-
-      setItems(prevItems => [...prevItems, product]);
-      localStorage.setItem('wishlist', JSON.stringify([...items, product]));
+      setItems(prevItems => {
+        const updatedItems = [...prevItems, product];
+        localStorage.setItem('wishlist', JSON.stringify(updatedItems));
+        return updatedItems;
+      });
       toast.success(`Added ${product.name} to wishlist`);
     }
   };
 
-  const removeItem = async (productId: string) => {
-    try {
-      const { data: session } = await supabase.auth.getSession();
-
-      if (session.session && isAuthenticated) {
-        await supabase
-          .from('wishlist_items')
-          .delete()
-          .eq('user_id', session.session.user.id)
-          .eq('product_id', productId);
-      }
-    } catch (error) {
-      console.error('Error removing from wishlist:', error);
-    }
-
+  const removeItem = (productId: string) => {
     setItems(prevItems => {
       const updatedItems = prevItems.filter(item => item.id !== productId);
       localStorage.setItem('wishlist', JSON.stringify(updatedItems));
@@ -163,20 +69,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const clearWishlist = async () => {
-    try {
-      const { data: session } = await supabase.auth.getSession();
-
-      if (session.session && isAuthenticated) {
-        await supabase
-          .from('wishlist_items')
-          .delete()
-          .eq('user_id', session.session.user.id);
-      }
-    } catch (error) {
-      console.error('Error clearing wishlist:', error);
-    }
-
+  const clearWishlist = () => {
     setItems([]);
     localStorage.setItem('wishlist', '[]');
     toast.info('Wishlist cleared');
