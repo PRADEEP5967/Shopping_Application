@@ -12,43 +12,18 @@ type ThemeContextType = {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('system');
-  const [isDark, setIsDark] = useState(false);
+  const [theme] = useState<Theme>('dark'); // Always dark theme
+  const [isDark] = useState(true);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
+    // Force dark theme
+    const root = window.document.documentElement;
+    root.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
   }, []);
 
-  useEffect(() => {
-    const applyTheme = () => {
-      const root = window.document.documentElement;
-      
-      if (theme === 'system') {
-        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setIsDark(systemDark);
-        root.classList.toggle('dark', systemDark);
-      } else {
-        const dark = theme === 'dark';
-        setIsDark(dark);
-        root.classList.toggle('dark', dark);
-      }
-    };
-
-    applyTheme();
-    localStorage.setItem('theme', theme);
-
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      mediaQuery.addEventListener('change', applyTheme);
-      return () => mediaQuery.removeEventListener('change', applyTheme);
-    }
-  }, [theme]);
-
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
+    <ThemeContext.Provider value={{ theme, setTheme: () => {}, isDark }}>
       {children}
     </ThemeContext.Provider>
   );
