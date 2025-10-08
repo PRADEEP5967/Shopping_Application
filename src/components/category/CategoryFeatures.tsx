@@ -45,10 +45,10 @@ const CategoryFeatures: React.FC<CategoryFeaturesProps> = ({ categoryName }) => 
 
   return (
     <div className="mb-8">
-      <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl p-6">
+      <div className="glass-effect rounded-2xl p-6 border border-primary/20">
         <div className="text-center mb-6">
-          <Badge className="mb-2">{categoryName} Features</Badge>
-          <h2 className="text-xl font-semibold text-gray-900">
+          <Badge className="mb-2 bg-primary/20 border-primary/30">{categoryName} Features</Badge>
+          <h2 className="text-xl font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Why Choose Our {categoryName} Collection?
           </h2>
         </div>
@@ -59,15 +59,15 @@ const CategoryFeatures: React.FC<CategoryFeaturesProps> = ({ categoryName }) => 
             return (
               <div 
                 key={index}
-                className="text-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                className="text-center p-4 card-modern hover-lift hover-glow"
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-full mb-3">
+                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/20 rounded-full mb-3 shadow-glow">
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-medium text-gray-900 mb-1 text-sm">
+                <h3 className="font-medium text-foreground mb-1 text-sm">
                   {feature.title}
                 </h3>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs text-muted-foreground">
                   {feature.description}
                 </p>
               </div>
