@@ -1,17 +1,19 @@
-
 import React from 'react';
 import Navbar from './navbar/Navbar';
 import FlipkartCategoryBar from './navbar/FlipkartCategoryBar';
 
 const Header = () => {
   return (
-    <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+    <header 
+      className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg"
+      role="banner"
+    >
       <Navbar />
       {/* Hide category bar on mobile and small tablets for better UX */}
-      <div className="hidden lg:block">
+      <nav className="hidden lg:block" aria-label="Category navigation">
         <FlipkartCategoryBar />
-      </div>
-    </div>
+      </nav>
+    </header>
   );
 };
 

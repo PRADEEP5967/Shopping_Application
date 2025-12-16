@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '@/contexts/CartContext';
@@ -9,6 +8,7 @@ import CartFlyout from '@/components/CartFlyout';
 import CartItemCard from '@/components/cart/CartItemCard';
 import CartSummary from '@/components/cart/CartSummary';
 import EmptyCart from '@/components/cart/EmptyCart';
+import SEOHead from '@/components/seo/SEOHead';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ShoppingBag } from 'lucide-react';
 
@@ -18,17 +18,18 @@ const Cart = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
+        <SEOHead title="Shopping Cart" description="View and manage your shopping cart." />
         <Header />
         <CartFlyout />
         
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <main className="flex-grow container mx-auto px-4 py-8" role="main">
           <div className="max-w-4xl mx-auto text-center py-16">
-            <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-              <ShoppingBag className="h-8 w-8 text-gray-400" />
+            <div className="bg-muted w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShoppingBag className="h-8 w-8 text-muted-foreground" aria-hidden="true" />
             </div>
-            <h1 className="text-2xl font-semibold mb-4">Please Log In</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-2xl font-semibold mb-4 text-foreground">Please Log In</h1>
+            <p className="text-muted-foreground mb-6">
               You need to be logged in to view your cart.
             </p>
             <Link to="/login">
@@ -43,22 +44,26 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead 
+        title={`Shopping Cart (${totalItems} items)`} 
+        description={`You have ${totalItems} items in your cart.`}
+      />
       <Header />
       <CartFlyout />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8" role="main">
         <div className="max-w-6xl mx-auto">
           {/* Page Header */}
           <div className="flex items-center gap-4 mb-8">
             <Link to="/products">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Back to products">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold">Shopping Cart</h1>
-              <p className="text-gray-600">
+              <h1 className="text-3xl font-bold text-foreground">Shopping Cart</h1>
+              <p className="text-muted-foreground">
                 {totalItems} {totalItems === 1 ? 'item' : 'items'} in your cart
               </p>
             </div>

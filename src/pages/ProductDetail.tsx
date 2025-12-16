@@ -11,6 +11,8 @@ import ProductVariantSelector from '@/components/product/ProductVariantSelector'
 import AIRecommendations from '@/components/AIRecommendations';
 import ProductFeatures from '@/components/product/ProductFeatures';
 import ProductSubscription from '@/components/ProductSubscription';
+import SEOHead, { generateProductSchema } from '@/components/seo/SEOHead';
+import { ProductDetailSkeleton } from '@/components/ui/product-skeleton';
 import { getAllProducts, getProductById } from '@/data/products';
 import { Product, ProductVariant } from '@/types';
 import { useCart } from '@/contexts/CartContext';
@@ -67,13 +69,14 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
+        <SEOHead title="Product Not Found" description="The product you are looking for does not exist." />
         <Header />
         <CartFlyout />
-        <main className="flex-grow container mx-auto px-4 py-8">
+        <main className="flex-grow container mx-auto px-4 py-8" role="main">
           <div className="text-center">
-            <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
-            <p className="text-gray-600">Sorry, the product you are looking for does not exist.</p>
+            <h1 className="text-3xl font-bold mb-4 text-foreground">Product Not Found</h1>
+            <p className="text-muted-foreground">Sorry, the product you are looking for does not exist.</p>
           </div>
         </main>
         <Footer />
@@ -82,16 +85,33 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead 
+        title={product.name}
+        description={product.description}
+        image={product.images?.[0]}
+        type="product"
+        price={product.price}
+        availability={product.inStock ? 'in stock' : 'out of stock'}
+        structuredData={generateProductSchema({
+          name: product.name,
+          description: product.description,
+          image: product.images?.[0] || '',
+          price: product.price,
+          brand: product.brand,
+          rating: product.rating,
+          inStock: product.inStock
+        })}
+      />
       <Header />
       <CartFlyout />
 
-      <main className="flex-grow">
-        <div className="container mx-auto px-4 py-8">
+      <main className="flex-grow" role="main">
+        <article className="container mx-auto px-4 py-8" itemScope itemType="https://schema.org/Product">
           <div className="md:flex md:items-center md:justify-between mb-6">
             <div className="md:w-2/3">
-              <h1 className="text-2xl font-bold text-gray-800">{product.name}</h1>
-              <p className="text-gray-600">{product.description}</p>
+              <h1 className="text-2xl font-bold text-foreground" itemProp="name">{product.name}</h1>
+              <p className="text-muted-foreground" itemProp="description">{product.description}</p>
             </div>
           </div>
 
@@ -148,7 +168,7 @@ const ProductDetail = () => {
         {/* AI Recommendations */}
         <AIRecommendations currentProduct={product} />
 
-        </div>
+        </article>
       </main>
 
       <Footer />

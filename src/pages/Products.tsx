@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -6,6 +5,8 @@ import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import EnhancedProductGrid from '@/components/product/EnhancedProductGrid';
 import AdvancedProductFilters from '@/components/product/AdvancedProductFilters';
+import SEOHead from '@/components/seo/SEOHead';
+import { ProductGridSkeleton } from '@/components/ui/product-skeleton';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useApiProducts, useApiCategories } from '@/hooks/useApiProducts';
 import { Product } from '@/types';
@@ -176,14 +177,13 @@ const Products = () => {
   // Show loading state
   if (productsLoading) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
+        <SEOHead title="Products" description="Browse our collection of products from real e-commerce APIs." />
         <Header />
         <CartFlyout />
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto" />
-            <p className="text-gray-600">Loading products from APIs...</p>
-          </div>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          <h1 className="text-2xl md:text-3xl font-bold mb-6 text-foreground">Loading Products...</h1>
+          <ProductGridSkeleton count={8} />
         </main>
         <Footer />
       </div>
@@ -193,12 +193,13 @@ const Products = () => {
   // Show error state
   if (productsError) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col bg-background">
+        <SEOHead title="Products - Error" description="Error loading products." />
         <Header />
         <CartFlyout />
         <main className="flex-grow flex items-center justify-center">
           <div className="text-center space-y-4">
-            <p className="text-red-600">Error loading products. Please try again.</p>
+            <p className="text-destructive">Error loading products. Please try again.</p>
             <Button onClick={() => refetch()}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Retry
@@ -211,19 +212,24 @@ const Products = () => {
   }
   
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead 
+        title="Products - Browse All Categories" 
+        description={`Browse ${filteredProducts.length} products from real e-commerce APIs. Filter by category, price, and more.`}
+        keywords="products, shopping, electronics, fashion, deals"
+      />
       <Header />
       <CartFlyout />
       
-      <main className="flex-grow container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8" role="main">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold">Live API Products</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground">Live API Products</h1>
+            <p className="text-muted-foreground mt-1">
               Showing {filteredProducts.length} products from real e-commerce APIs
               {activeFiltersCount > 0 && ` with ${activeFiltersCount} filters applied`}
             </p>
-            <div className="flex items-center gap-2 mt-2">
+            <div className="flex items-center gap-2 mt-2" role="list" aria-label="Data sources">
               <Badge variant="secondary">FakeStore API</Badge>
               <Badge variant="secondary">DummyJSON API</Badge>
               <Badge variant="secondary">Open Food Facts</Badge>

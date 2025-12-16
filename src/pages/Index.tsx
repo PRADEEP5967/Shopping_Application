@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -26,6 +25,7 @@ import { PersonalizedRecommendationsSection } from '@/components/sections/Person
 import { TrustSignalsSection } from '@/components/sections/TrustSignalsSection';
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import ModernCategoryNav from '@/components/ModernCategoryNav';
+import SEOHead, { generateOrganizationSchema } from '@/components/seo/SEOHead';
 
 // Refactored: section components below
 import HeroBlissSection from './HomeSections/HeroBlissSection';
@@ -37,7 +37,13 @@ const Index = () => {
   const categories = getProductCategories();
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-blue-50/30 via-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen flex flex-col bg-background">
+      <SEOHead 
+        title="Pradeep Sahani Mart - Your Ultimate Shopping Destination"
+        description="Discover amazing products at unbeatable prices. Shop electronics, fashion, home goods and more with fast shipping and secure checkout."
+        keywords="ecommerce, online shopping, electronics, fashion, deals, discounts"
+        structuredData={generateOrganizationSchema()}
+      />
       <Header />
       <CartFlyout />
 
@@ -84,13 +90,13 @@ const Index = () => {
       <TrustSignalsSection />
 
       {/* Testimonials and Trust—slider and visuals */}
-      <section className="bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-900 py-20 animate-fade-in">
+      <section className="bg-background py-20 animate-fade-in" aria-labelledby="testimonials-heading">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3 bg-gradient-to-r from-blue-700 via-purple-600 to-teal-400 bg-clip-text text-transparent">
+            <h2 id="testimonials-heading" className="text-3xl font-bold mb-3 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
               Trusted by Shoppers Everywhere
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto">
               Join thousands who've found better, faster, friendlier shopping here.
             </p>
           </div>
@@ -111,13 +117,13 @@ const Index = () => {
       <NewsletterSection />
 
       {/* Modern Category Section After Bottom Content */}
-      <section className="py-16 bg-gradient-to-r from-slate-50 to-blue-50">
+      <section className="py-16 bg-card/50" aria-labelledby="explore-categories-heading">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 id="explore-categories-heading" className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Explore Our Categories
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Discover amazing products across all our carefully curated categories
             </p>
           </div>
@@ -126,13 +132,13 @@ const Index = () => {
       </section>
 
       {/* Modern Image Gallery Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-background" aria-labelledby="gallery-heading">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">
+            <h2 id="gallery-heading" className="text-4xl font-bold mb-4 text-foreground">
               Experience Modern Shopping
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               High-quality products, stunning designs, and exceptional customer service
             </p>
           </div>
