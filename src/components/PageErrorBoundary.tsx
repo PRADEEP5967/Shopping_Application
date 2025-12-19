@@ -1,19 +1,22 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  pageName?: string;
 }
 
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
-class ErrorBoundary extends Component<Props, State> {
+class PageErrorBoundary extends Component<Props, State> {
   public state: State = {
     hasError: false
   };
@@ -23,11 +26,16 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error('PageErrorBoundary caught an error:', error, errorInfo);
+    this.setState({ errorInfo });
   }
 
   private handleRetry = () => {
-    this.setState({ hasError: false, error: undefined });
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  };
+
+  private handleGoBack = () => {
+    window.history.back();
   };
 
   public render() {
@@ -37,7 +45,7 @@ class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <div className="min-h-[60vh] flex items-center justify-center p-4">
           <Card className="max-w-lg w-full bg-card border-border shadow-xl">
             <CardHeader className="text-center pb-2">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -47,7 +55,10 @@ class ErrorBoundary extends Component<Props, State> {
                 Something went wrong
               </CardTitle>
               <CardDescription className="text-muted-foreground">
-                We're sorry, but something unexpected happened. Please try refreshing the page.
+                {this.props.pageName 
+                  ? `We encountered an error loading ${this.props.pageName}.`
+                  : "We encountered an unexpected error on this page."
+                }
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -72,22 +83,24 @@ class ErrorBoundary extends Component<Props, State> {
                 </Button>
                 <Button 
                   variant="outline" 
-                  onClick={() => window.location.reload()}
+                  onClick={this.handleGoBack}
                   className="flex-1 border-border text-foreground hover:bg-muted"
                 >
-                  Refresh page
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Go back
                 </Button>
               </div>
               
               <div className="pt-2 border-t border-border">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => window.location.href = '/'}
-                  className="w-full text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Return to home
-                </Button>
+                <Link to="/">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-muted-foreground hover:text-foreground"
+                  >
+                    <Home className="w-4 h-4 mr-2" />
+                    Return to home
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
@@ -99,4 +112,4 @@ class ErrorBoundary extends Component<Props, State> {
   }
 }
 
-export default ErrorBoundary;
+export default PageErrorBoundary;
