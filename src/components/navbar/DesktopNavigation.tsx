@@ -130,66 +130,66 @@ const DesktopNavigation: React.FC = () => {
 };
 
 const ShopDropdownContent: React.FC = () => (
-  <div className="w-96 p-6 bg-white rounded-xl shadow-xl border">
-    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+  <div className="w-96 p-6 bg-card rounded-xl shadow-xl border border-border">
+    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-foreground">
       <ShoppingBag className="h-5 w-5 text-primary" />
       Shop Now
     </h3>
     <div className="space-y-3">
       <Link
         to="/products"
-        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
       >
         <div>
-          <div className="font-medium text-gray-900 group-hover:text-primary">All Products</div>
-          <div className="text-sm text-gray-500">Browse our complete collection</div>
+          <div className="font-medium text-foreground group-hover:text-primary">All Products</div>
+          <div className="text-sm text-muted-foreground">Browse our complete collection</div>
         </div>
-        <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-primary transition-colors" />
+        <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
       </Link>
       
       <Link
         to="/api-showcase"
-        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group border border-blue-100"
+        className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group border border-primary/20"
       >
         <div className="flex items-center gap-3">
-          <div className="bg-blue-100 p-2 rounded-lg">
-            <Sparkles className="h-4 w-4 text-blue-600" />
+          <div className="bg-primary/10 p-2 rounded-lg">
+            <Sparkles className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <div className="font-medium text-gray-900 group-hover:text-primary">Live API Products</div>
-            <div className="text-sm text-gray-500">Real data from multiple APIs</div>
+            <div className="font-medium text-foreground group-hover:text-primary">Live API Products</div>
+            <div className="text-sm text-muted-foreground">Real data from multiple APIs</div>
           </div>
         </div>
-        <Badge variant="secondary" className="bg-blue-100 text-blue-700">Live</Badge>
+        <Badge variant="secondary" className="bg-primary/10 text-primary">Live</Badge>
       </Link>
       
       <Link
         to="/new-arrivals"
-        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
       >
         <div className="flex items-center gap-3">
-          <div className="bg-green-100 p-2 rounded-lg">
-            <Sparkles className="h-4 w-4 text-green-600" />
+          <div className="bg-success/10 p-2 rounded-lg">
+            <Sparkles className="h-4 w-4 text-success" />
           </div>
           <div>
-            <div className="font-medium text-gray-900 group-hover:text-primary">New Arrivals</div>
-            <div className="text-sm text-gray-500">Latest products just added</div>
+            <div className="font-medium text-foreground group-hover:text-primary">New Arrivals</div>
+            <div className="text-sm text-muted-foreground">Latest products just added</div>
           </div>
         </div>
-        <Badge variant="secondary" className="bg-green-100 text-green-700">New</Badge>
+        <Badge variant="secondary" className="bg-success/10 text-success">New</Badge>
       </Link>
 
       <Link
         to="/products?featured=true"
-        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+        className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
       >
         <div className="flex items-center gap-3">
-          <div className="bg-orange-100 p-2 rounded-lg">
-            <Star className="h-4 w-4 text-orange-600" />
+          <div className="bg-warning/10 p-2 rounded-lg">
+            <Star className="h-4 w-4 text-warning" />
           </div>
           <div>
-            <div className="font-medium text-gray-900 group-hover:text-primary">Featured</div>
-            <div className="text-sm text-gray-500">Staff picks and bestsellers</div>
+            <div className="font-medium text-foreground group-hover:text-primary">Featured</div>
+            <div className="text-sm text-muted-foreground">Staff picks and bestsellers</div>
           </div>
         </div>
       </Link>
@@ -210,8 +210,8 @@ const CategoriesDropdownContent: React.FC = () => {
   });
 
   return (
-    <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
-      <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+    <div className="w-80 p-6 bg-card rounded-xl shadow-xl border border-border">
+      <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-foreground">
         <Grid3X3 className="h-5 w-5 text-primary" />
         Browse Categories
       </h3>
@@ -222,19 +222,19 @@ const CategoriesDropdownContent: React.FC = () => {
             <Link
               key={category.name}
               to={category.link}
-              className="flex items-center gap-2 p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+              className="flex items-center gap-2 p-3 rounded-lg hover:bg-muted transition-colors group"
             >
-              <div className="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition-colors">
-                <Icon className="w-4 h-4 text-blue-600" />
+              <div className="bg-primary/10 rounded-lg p-2 group-hover:bg-primary/20 transition-colors">
+                <Icon className="w-4 h-4 text-primary" />
               </div>
-              <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
+              <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground">
                 {category.name}
               </span>
             </Link>
           );
         })}
       </div>
-      <div className="mt-4 pt-4 border-t">
+      <div className="mt-4 pt-4 border-t border-border">
         <Link
           to="/categories"
           className="flex items-center justify-center gap-2 text-primary hover:text-primary/80 font-medium text-sm transition-colors"
@@ -248,8 +248,8 @@ const CategoriesDropdownContent: React.FC = () => {
 };
 
 const DealsDropdownContent: React.FC = () => (
-  <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
-    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+  <div className="w-80 p-6 bg-card rounded-xl shadow-xl border border-border">
+    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-foreground">
       <Gift className="h-5 w-5 text-primary" />
       Special Deals
       <Badge variant="destructive" className="animate-pulse">Live</Badge>
@@ -257,27 +257,27 @@ const DealsDropdownContent: React.FC = () => (
     <div className="space-y-3">
       <Link
         to="/deals-discounts"
-        className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-50 transition-colors group border border-red-100"
+        className="flex items-center gap-3 p-3 rounded-lg hover:bg-destructive/10 transition-colors group border border-destructive/20"
       >
-        <div className="bg-red-100 p-2 rounded-lg">
-          <Tag className="h-4 w-4 text-red-600" />
+        <div className="bg-destructive/10 p-2 rounded-lg">
+          <Tag className="h-4 w-4 text-destructive" />
         </div>
         <div>
-          <div className="font-medium text-gray-900 group-hover:text-red-600">Flash Sale</div>
-          <div className="text-sm text-gray-500">Up to 70% off - Limited time</div>
+          <div className="font-medium text-foreground group-hover:text-destructive">Flash Sale</div>
+          <div className="text-sm text-muted-foreground">Up to 70% off - Limited time</div>
         </div>
       </Link>
       
       <Link
         to="/offers"
-        className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-50 transition-colors group"
+        className="flex items-center gap-3 p-3 rounded-lg hover:bg-primary/10 transition-colors group"
       >
-        <div className="bg-blue-100 p-2 rounded-lg">
-          <TrendingUp className="h-4 w-4 text-blue-600" />
+        <div className="bg-primary/10 p-2 rounded-lg">
+          <TrendingUp className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <div className="font-medium text-gray-900 group-hover:text-blue-600">Personal Offers</div>
-          <div className="text-sm text-gray-500">Deals curated for you</div>
+          <div className="font-medium text-foreground group-hover:text-primary">Personal Offers</div>
+          <div className="text-sm text-muted-foreground">Deals curated for you</div>
         </div>
       </Link>
     </div>
@@ -285,8 +285,8 @@ const DealsDropdownContent: React.FC = () => (
 );
 
 const BlogDropdownContent: React.FC = () => (
-  <div className="w-80 p-6 bg-white rounded-xl shadow-xl border">
-    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
+  <div className="w-80 p-6 bg-card rounded-xl shadow-xl border border-border">
+    <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-foreground">
       <BookOpen className="h-5 w-5 text-primary" />
       Content & Guides
     </h3>
@@ -300,10 +300,10 @@ const BlogDropdownContent: React.FC = () => (
         <Link
           key={item.name}
           to={item.href}
-          className="block p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+          className="block p-3 rounded-lg hover:bg-muted transition-colors group"
         >
-          <div className="font-medium text-gray-900 group-hover:text-primary">{item.name}</div>
-          <div className="text-sm text-gray-500">{item.desc}</div>
+          <div className="font-medium text-foreground group-hover:text-primary">{item.name}</div>
+          <div className="text-sm text-muted-foreground">{item.desc}</div>
         </Link>
       ))}
     </div>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
@@ -14,7 +13,7 @@ const MobileMenuButton: React.FC<MobileMenuButtonProps> = ({ isMenuOpen, toggleM
       variant="ghost"
       size="sm"
       onClick={toggleMenu}
-      className="xl:hidden p-2 sm:p-2.5 touch-target min-h-[44px] min-w-[44px]"
+      className="xl:hidden p-2 sm:p-2.5 min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] hover:bg-muted text-foreground"
       aria-label={isMenuOpen ? "Close menu" : "Open menu"}
       aria-expanded={isMenuOpen}
     >

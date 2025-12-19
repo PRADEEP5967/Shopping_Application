@@ -1,5 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { PageWrapper } from '@/components/PageWrapper';
 
 // Core Pages
 import Index from '@/pages/Index';
@@ -79,80 +80,81 @@ const MainRoutes = () => {
   return (
     <Routes>
       {/* Core Routes */}
-      <Route path="/" element={<Index />} />
-      <Route path="/products" element={<Products />} />
-      <Route path="/product/:productId" element={<ProductDetail />} />
+      <Route path="/" element={<PageWrapper pageName="Home"><Index /></PageWrapper>} />
+      <Route path="/products" element={<PageWrapper pageName="Products"><Products /></PageWrapper>} />
+      <Route path="/product/:productId" element={<PageWrapper pageName="Product Details"><ProductDetail /></PageWrapper>} />
       
       {/* E-commerce Flow */}
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/wishlist" element={<WishlistPage />} />
-      <Route path="/checkout" element={<Checkout />} />
-      <Route path="/order-confirmation" element={<OrderConfirmation />} />
-      <Route path="/orders" element={<Orders />} />
-      <Route path="/order-tracking" element={<OrderTracking />} />
-      <Route path="/order-tracking/:orderId" element={<OrderTracking />} />
-      <Route path="/order-detail/:orderId" element={<OrderDetail />} />
-      <Route path="/order-history" element={<OrderHistory />} />
+      <Route path="/cart" element={<PageWrapper pageName="Shopping Cart"><Cart /></PageWrapper>} />
+      <Route path="/wishlist" element={<PageWrapper pageName="Wishlist"><WishlistPage /></PageWrapper>} />
+      <Route path="/checkout" element={<PageWrapper pageName="Checkout"><Checkout /></PageWrapper>} />
+      <Route path="/order-confirmation" element={<PageWrapper pageName="Order Confirmation"><OrderConfirmation /></PageWrapper>} />
+      <Route path="/orders" element={<PageWrapper pageName="Orders"><Orders /></PageWrapper>} />
+      <Route path="/order-tracking" element={<PageWrapper pageName="Order Tracking"><OrderTracking /></PageWrapper>} />
+      <Route path="/order-tracking/:orderId" element={<PageWrapper pageName="Order Tracking"><OrderTracking /></PageWrapper>} />
+      <Route path="/order-detail/:orderId" element={<PageWrapper pageName="Order Details"><OrderDetail /></PageWrapper>} />
+      <Route path="/order-history" element={<PageWrapper pageName="Order History"><OrderHistory /></PageWrapper>} />
       
       {/* Categories */}
-      <Route path="/categories" element={<CategoriesPage />} />
-      <Route path="/category/:categoryName" element={<CategoryProductsPage />} />
-      <Route path="/category/clothing" element={<ClothingPage />} />
-      <Route path="/category/electronics" element={<ElectronicsPage />} />
-      <Route path="/category/accessories" element={<AccessoriesPage />} />
-      <Route path="/category/baby" element={<BabyPage />} />
-      <Route path="/category/heart" element={<HeartPage />} />
-      <Route path="/category/tv" element={<TvPage />} />
-      <Route path="/category/sofa" element={<SofaPage />} />
-      <Route path="/category/dumbbell" element={<DumbbellPage />} />
-      <Route path="/category/smart-home" element={<SmartHomePage />} />
-      <Route path="/category/gaming" element={<GamingPage />} />
-      <Route path="/category/photography" element={<PhotographyPage />} />
+      <Route path="/categories" element={<PageWrapper pageName="Categories"><CategoriesPage /></PageWrapper>} />
+      <Route path="/category/:categoryName" element={<PageWrapper pageName="Category"><CategoryProductsPage /></PageWrapper>} />
+      <Route path="/category/clothing" element={<PageWrapper pageName="Clothing"><ClothingPage /></PageWrapper>} />
+      <Route path="/category/electronics" element={<PageWrapper pageName="Electronics"><ElectronicsPage /></PageWrapper>} />
+      <Route path="/category/accessories" element={<PageWrapper pageName="Accessories"><AccessoriesPage /></PageWrapper>} />
+      <Route path="/category/baby" element={<PageWrapper pageName="Baby Products"><BabyPage /></PageWrapper>} />
+      <Route path="/category/heart" element={<PageWrapper pageName="Health"><HeartPage /></PageWrapper>} />
+      <Route path="/category/tv" element={<PageWrapper pageName="TV & Entertainment"><TvPage /></PageWrapper>} />
+      <Route path="/category/sofa" element={<PageWrapper pageName="Furniture"><SofaPage /></PageWrapper>} />
+      <Route path="/category/dumbbell" element={<PageWrapper pageName="Fitness"><DumbbellPage /></PageWrapper>} />
+      <Route path="/category/smart-home" element={<PageWrapper pageName="Smart Home"><SmartHomePage /></PageWrapper>} />
+      <Route path="/category/gaming" element={<PageWrapper pageName="Gaming"><GamingPage /></PageWrapper>} />
+      <Route path="/category/photography" element={<PageWrapper pageName="Photography"><PhotographyPage /></PageWrapper>} />
       
       {/* Search & Discovery */}
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/visual-search" element={<VisualSearchPage />} />
-      <Route path="/product-comparison" element={<ProductComparison />} />
+      <Route path="/search" element={<PageWrapper pageName="Search"><SearchPage /></PageWrapper>} />
+      <Route path="/visual-search" element={<PageWrapper pageName="Visual Search"><VisualSearchPage /></PageWrapper>} />
+      <Route path="/product-comparison" element={<PageWrapper pageName="Product Comparison"><ProductComparison /></PageWrapper>} />
       
       {/* Content & Blog */}
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path="/buying-guides" element={<BuyingGuides />} />
-      <Route path="/buying-guides/:category" element={<BuyingGuides />} />
+      <Route path="/blog" element={<PageWrapper pageName="Blog"><Blog /></PageWrapper>} />
+      <Route path="/blog/:slug" element={<PageWrapper pageName="Blog Post"><BlogPost /></PageWrapper>} />
+      <Route path="/buying-guides" element={<PageWrapper pageName="Buying Guides"><BuyingGuides /></PageWrapper>} />
+      <Route path="/buying-guides/:category" element={<PageWrapper pageName="Buying Guides"><BuyingGuides /></PageWrapper>} />
       
       {/* Deals & Offers */}
-      <Route path="/deals" element={<DealsDiscounts />} />
-      <Route path="/special-offers" element={<SpecialOffers />} />
-      <Route path="/new-arrivals" element={<NewArrivals />} />
-      <Route path="/offers" element={<PersonalizedOffersPage />} />
+      <Route path="/deals" element={<PageWrapper pageName="Deals"><DealsDiscounts /></PageWrapper>} />
+      <Route path="/deals-discounts" element={<PageWrapper pageName="Deals & Discounts"><DealsDiscounts /></PageWrapper>} />
+      <Route path="/special-offers" element={<PageWrapper pageName="Special Offers"><SpecialOffers /></PageWrapper>} />
+      <Route path="/new-arrivals" element={<PageWrapper pageName="New Arrivals"><NewArrivals /></PageWrapper>} />
+      <Route path="/offers" element={<PageWrapper pageName="Personalized Offers"><PersonalizedOffersPage /></PageWrapper>} />
       
       {/* Auth & Account */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/my-account" element={<MyAccount />} />
+      <Route path="/login" element={<PageWrapper pageName="Login"><Login /></PageWrapper>} />
+      <Route path="/register" element={<PageWrapper pageName="Register"><Register /></PageWrapper>} />
+      <Route path="/my-account" element={<PageWrapper pageName="My Account"><MyAccount /></PageWrapper>} />
       
       {/* Business Pages */}
-      <Route path="/about" element={<About />} />
-      <Route path="/services" element={<Services />} />
-      <Route path="/team" element={<Team />} />
-      <Route path="/careers" element={<Careers />} />
-      <Route path="/portfolio" element={<Portfolio />} />
-      <Route path="/small-business" element={<SmallBusinessPage />} />
+      <Route path="/about" element={<PageWrapper pageName="About Us"><About /></PageWrapper>} />
+      <Route path="/services" element={<PageWrapper pageName="Services"><Services /></PageWrapper>} />
+      <Route path="/team" element={<PageWrapper pageName="Our Team"><Team /></PageWrapper>} />
+      <Route path="/careers" element={<PageWrapper pageName="Careers"><Careers /></PageWrapper>} />
+      <Route path="/portfolio" element={<PageWrapper pageName="Portfolio"><Portfolio /></PageWrapper>} />
+      <Route path="/small-business" element={<PageWrapper pageName="Small Business"><SmallBusinessPage /></PageWrapper>} />
       
       {/* Information & Policies */}
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/faq" element={<FAQ />} />
-      <Route path="/terms" element={<TermsOfService />} />
-      <Route path="/return-policy" element={<ReturnPolicy />} />
-      <Route path="/shopping-policy" element={<ShoppingPolicy />} />
-      <Route path="/returns" element={<ReturnsExchanges />} />
+      <Route path="/contact" element={<PageWrapper pageName="Contact Us"><Contact /></PageWrapper>} />
+      <Route path="/faq" element={<PageWrapper pageName="FAQ"><FAQ /></PageWrapper>} />
+      <Route path="/terms" element={<PageWrapper pageName="Terms of Service"><TermsOfService /></PageWrapper>} />
+      <Route path="/return-policy" element={<PageWrapper pageName="Return Policy"><ReturnPolicy /></PageWrapper>} />
+      <Route path="/shopping-policy" element={<PageWrapper pageName="Shopping Policy"><ShoppingPolicy /></PageWrapper>} />
+      <Route path="/returns" element={<PageWrapper pageName="Returns & Exchanges"><ReturnsExchanges /></PageWrapper>} />
       
       {/* Feature Pages */}
-      <Route path="/efficiency" element={<Efficiency />} />
-      <Route path="/performance" element={<Performance />} />
-      <Route path="/quality" element={<Quality />} />
-      <Route path="/subscriptions" element={<SubscriptionsPage />} />
-      <Route path="/api-showcase" element={<ApiShowcase />} />
+      <Route path="/efficiency" element={<PageWrapper pageName="Efficiency"><Efficiency /></PageWrapper>} />
+      <Route path="/performance" element={<PageWrapper pageName="Performance"><Performance /></PageWrapper>} />
+      <Route path="/quality" element={<PageWrapper pageName="Quality"><Quality /></PageWrapper>} />
+      <Route path="/subscriptions" element={<PageWrapper pageName="Subscriptions"><SubscriptionsPage /></PageWrapper>} />
+      <Route path="/api-showcase" element={<PageWrapper pageName="API Showcase"><ApiShowcase /></PageWrapper>} />
     </Routes>
   );
 };

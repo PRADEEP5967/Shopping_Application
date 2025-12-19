@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -14,7 +13,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
-import { Search, ShoppingCart, Heart, User, LogOut, Settings, Shield } from 'lucide-react';
+import { Search, ShoppingCart, Heart, User, LogOut, Settings, Shield, Package } from 'lucide-react';
 
 interface NavbarActionsProps {
   toggleSearch: () => void;
@@ -27,85 +26,123 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
   const { items: wishlistItems } = useWishlist();
 
   return (
-    <div className="flex items-center space-x-1 sm:space-x-2">
-      {/* Search Button - Desktop and Tablet */}
+    <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2">
+      {/* Search Button - Hidden on very small screens, shown from sm up */}
       <Button 
         variant="ghost" 
         size="sm" 
         onClick={toggleSearch}
-        className="hidden sm:flex p-2 sm:p-2.5"
+        className="hidden sm:flex p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]"
         title="Search"
+        aria-label="Open search"
       >
-        <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Search className="h-4 w-4 lg:h-5 lg:w-5" />
       </Button>
 
-      {/* Wishlist - responsive sizing */}
-      <Link to="/wishlist">
-        <Button variant="ghost" size="sm" className="relative p-2 sm:p-2.5" title="Wishlist">
-          <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
+      {/* Wishlist - Responsive sizing */}
+      <Link to="/wishlist" className="hidden xs:block sm:block">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="relative p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]" 
+          title="Wishlist"
+          aria-label={`Wishlist with ${wishlistItems.length} items`}
+        >
+          <Heart className="h-4 w-4 lg:h-5 lg:w-5" />
           {wishlistItems.length > 0 && (
-            <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 p-0 text-xs flex items-center justify-center">
-              {wishlistItems.length}
+            <Badge 
+              variant="destructive" 
+              className="absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[10px] lg:text-xs flex items-center justify-center"
+            >
+              {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
             </Badge>
           )}
         </Button>
       </Link>
 
-      {/* Cart - responsive sizing */}
+      {/* Cart - Always visible */}
       <Link to="/checkout">
-        <Button variant="ghost" size="sm" className="relative p-2 sm:p-2.5" title="Shopping Cart">
-          <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="relative p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]" 
+          title="Shopping Cart"
+          aria-label={`Shopping cart with ${totalItems} items`}
+        >
+          <ShoppingCart className="h-4 w-4 lg:h-5 lg:w-5" />
           {totalItems > 0 && (
-            <Badge variant="destructive" className="absolute -top-1 -right-1 h-4 w-4 sm:h-5 sm:w-5 p-0 text-xs flex items-center justify-center">
-              {totalItems}
+            <Badge 
+              variant="destructive" 
+              className="absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[10px] lg:text-xs flex items-center justify-center"
+            >
+              {totalItems > 9 ? '9+' : totalItems}
             </Badge>
           )}
         </Button>
       </Link>
 
-      {/* User Menu - responsive */}
+      {/* User Menu - Responsive */}
       {isAuthenticated ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-1 sm:space-x-2 p-1 sm:p-2">
-              <Avatar className="h-6 w-6 sm:h-7 sm:w-7">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center gap-1 lg:gap-2 p-1 lg:p-2 hover:bg-muted min-h-[40px]"
+              aria-label="User menu"
+            >
+              <Avatar className="h-7 w-7 lg:h-8 lg:w-8 border-2 border-primary/20">
                 <AvatarImage 
                   src="https://avatars.githubusercontent.com/u/pradeepsahani" 
-                  alt="Pradeep Sahani" 
+                  alt="User avatar" 
                 />
-                <AvatarFallback className="bg-primary text-white text-xs sm:text-sm">PS</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs lg:text-sm font-semibold">
+                  {user?.firstName?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
+                </AvatarFallback>
               </Avatar>
-              <span className="hidden lg:inline text-sm">{user?.firstName}</span>
+              <span className="hidden xl:inline text-sm text-foreground font-medium">{user?.firstName}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuContent align="end" className="w-56 bg-card border-border">
             <div className="px-3 py-2">
-              <p className="text-sm font-medium">Welcome back!</p>
-              <p className="text-xs text-muted-foreground">{user?.email}</p>
+              <p className="text-sm font-semibold text-foreground">Welcome back!</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
             </div>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator className="bg-border" />
             <DropdownMenuItem asChild>
-              <Link to="/my-account" className="cursor-pointer">
+              <Link to="/my-account" className="cursor-pointer text-foreground hover:text-primary">
                 <User className="mr-2 h-4 w-4" />
                 <span>My Account</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link to="/orders" className="cursor-pointer">
-                <ShoppingCart className="mr-2 h-4 w-4" />
+              <Link to="/orders" className="cursor-pointer text-foreground hover:text-primary">
+                <Package className="mr-2 h-4 w-4" />
                 <span>My Orders</span>
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/wishlist" className="cursor-pointer text-foreground hover:text-primary">
+                <Heart className="mr-2 h-4 w-4" />
+                <span>Wishlist</span>
+              </Link>
+            </DropdownMenuItem>
             {isAdmin && (
-              <DropdownMenuItem asChild>
-                <Link to="/admin" className="cursor-pointer">
-                  <Shield className="mr-2 h-4 w-4" />
-                  <span>Admin Panel</span>
-                </Link>
-              </DropdownMenuItem>
+              <>
+                <DropdownMenuSeparator className="bg-border" />
+                <DropdownMenuItem asChild>
+                  <Link to="/admin" className="cursor-pointer text-foreground hover:text-primary">
+                    <Shield className="mr-2 h-4 w-4" />
+                    <span>Admin Panel</span>
+                  </Link>
+                </DropdownMenuItem>
+              </>
             )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+            <DropdownMenuSeparator className="bg-border" />
+            <DropdownMenuItem 
+              onClick={handleLogout} 
+              className="cursor-pointer text-destructive hover:text-destructive focus:text-destructive"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Logout</span>
             </DropdownMenuItem>
@@ -113,9 +150,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
         </DropdownMenu>
       ) : (
         <Link to="/login">
-          <Button variant="outline" size="sm" className="text-xs sm:text-sm p-2 sm:p-2.5">
-            <User className="h-4 w-4 sm:mr-2" />
-            <span className="hidden sm:inline">Login</span>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="text-xs lg:text-sm p-2 lg:px-3 lg:py-2 border-border text-foreground hover:bg-muted min-h-[40px]"
+          >
+            <User className="h-4 w-4 lg:mr-2" />
+            <span className="hidden lg:inline">Login</span>
           </Button>
         </Link>
       )}
