@@ -31,6 +31,8 @@ import DumbbellPage from '@/pages/DumbbellPage';
 import SmartHomePage from '@/pages/SmartHomePage';
 import GamingPage from '@/pages/GamingPage';
 import PhotographyPage from '@/pages/PhotographyPage';
+import WearablesPage from '@/pages/WearablesPage';
+import ComputersPage from '@/pages/ComputersPage';
 
 // Search & Discovery
 import SearchPage from '@/pages/SearchPage';
@@ -109,6 +111,8 @@ const MainRoutes = () => {
       <Route path="/category/smart-home" element={<PageWrapper pageName="Smart Home"><SmartHomePage /></PageWrapper>} />
       <Route path="/category/gaming" element={<PageWrapper pageName="Gaming"><GamingPage /></PageWrapper>} />
       <Route path="/category/photography" element={<PageWrapper pageName="Photography"><PhotographyPage /></PageWrapper>} />
+      <Route path="/category/wearables" element={<PageWrapper pageName="Wearables"><WearablesPage /></PageWrapper>} />
+      <Route path="/category/computers" element={<PageWrapper pageName="Computers"><ComputersPage /></PageWrapper>} />
       
       {/* Search & Discovery */}
       <Route path="/search" element={<PageWrapper pageName="Search"><SearchPage /></PageWrapper>} />
