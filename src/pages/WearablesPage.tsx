@@ -1,19 +1,33 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import ModernProductGrid from "@/components/ModernProductGrid";
+import ProductCarousel from '@/components/product/ProductCarousel';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Watch, Heart, Activity, Sparkles, Battery, Wifi } from 'lucide-react';
+import { ArrowRight, Watch, Heart, Activity, Sparkles, Battery, Wifi, TrendingUp, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const WearablesPage = () => {
   const allProducts = getAllProducts();
   const wearablesProducts = allProducts.filter(product => product.category === 'Wearables');
-
+  
+  // Get featured/bestseller products
+  const featuredProducts = useMemo(() => {
+    return wearablesProducts.filter(p => p.rating && p.rating >= 4.5).slice(0, 10);
+  }, [wearablesProducts]);
+  
+  const bestsellers = useMemo(() => {
+    return [...wearablesProducts].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0)).slice(0, 10);
+  }, [wearablesProducts]);
+  
+  // Related categories products
+  const relatedProducts = useMemo(() => {
+    return allProducts.filter(p => ['Electronics', 'Smart Home'].includes(p.category)).slice(0, 10);
+  }, [allProducts]);
   const features = [
     {
       icon: Heart,
@@ -143,6 +157,48 @@ const WearablesPage = () => {
             </div>
           </div>
         </section>
+
+        {/* Featured Products Carousel */}
+        {featuredProducts.length > 0 && (
+          <ProductCarousel
+            products={featuredProducts}
+            title="Top Rated Wearables"
+            subtitle="Our highest-rated smartwatches and fitness trackers"
+            icon={<Star className="w-6 h-6 text-pink-500" />}
+            badge="Featured"
+            badgeVariant="featured"
+            viewAllLink="/category/wearables"
+            gradient="from-pink-950/10 to-purple-950/10"
+          />
+        )}
+
+        {/* Bestsellers Carousel */}
+        {bestsellers.length > 0 && (
+          <ProductCarousel
+            products={bestsellers}
+            title="Bestselling Wearables"
+            subtitle="Most popular picks from our customers"
+            icon={<TrendingUp className="w-6 h-6 text-rose-500" />}
+            badge="Bestseller"
+            badgeVariant="bestseller"
+            viewAllLink="/category/wearables"
+            gradient="from-rose-950/10 to-pink-950/10"
+          />
+        )}
+
+        {/* Related Products Carousel */}
+        {relatedProducts.length > 0 && (
+          <ProductCarousel
+            products={relatedProducts}
+            title="You May Also Like"
+            subtitle="Related products from Electronics & Smart Home"
+            icon={<Sparkles className="w-6 h-6 text-purple-500" />}
+            badge="Trending"
+            badgeVariant="trending"
+            viewAllLink="/products"
+            gradient="from-purple-950/10 to-violet-950/10"
+          />
+        )}
 
         {/* Products Section */}
         <section className="py-16 bg-background">

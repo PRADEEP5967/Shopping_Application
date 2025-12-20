@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import ModernProductGrid from "@/components/ModernProductGrid";
+import ProductCarousel from '@/components/product/ProductCarousel';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Zap, Cpu, Smartphone } from 'lucide-react';
+import { ArrowRight, Zap, Cpu, Smartphone, TrendingUp, Star } from 'lucide-react';
 import BestFeaturesElectronics from "@/components/category/BestFeaturesElectronics";
 
 const ElectronicsPage = () => {
   const allProducts = getAllProducts();
   const electronicsProducts = allProducts.filter(product => product.category === 'Electronics');
+  
+  // Get featured/bestseller products
+  const featuredProducts = useMemo(() => {
+    return electronicsProducts.filter(p => p.rating && p.rating >= 4.5).slice(0, 10);
+  }, [electronicsProducts]);
+  
+  const bestsellers = useMemo(() => {
+    return [...electronicsProducts].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0)).slice(0, 10);
+  }, [electronicsProducts]);
+  
+  // Related categories products  
+  const relatedProducts = useMemo(() => {
+    return allProducts.filter(p => ['Computers', 'Smart Home', 'Gaming'].includes(p.category)).slice(0, 10);
+  }, [allProducts]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -111,6 +126,48 @@ const ElectronicsPage = () => {
             </div>
           </div>
         </section>
+
+        {/* Featured Products Carousel */}
+        {featuredProducts.length > 0 && (
+          <ProductCarousel
+            products={featuredProducts}
+            title="Top Rated Electronics"
+            subtitle="Our highest-rated tech products"
+            icon={<Star className="w-6 h-6 text-cyan-500" />}
+            badge="Featured"
+            badgeVariant="featured"
+            viewAllLink="/category/electronics"
+            gradient="from-cyan-950/10 to-blue-950/10"
+          />
+        )}
+
+        {/* Bestsellers Carousel */}
+        {bestsellers.length > 0 && (
+          <ProductCarousel
+            products={bestsellers}
+            title="Bestselling Electronics"
+            subtitle="Most popular picks from our customers"
+            icon={<TrendingUp className="w-6 h-6 text-indigo-500" />}
+            badge="Bestseller"
+            badgeVariant="bestseller"
+            viewAllLink="/category/electronics"
+            gradient="from-indigo-950/10 to-purple-950/10"
+          />
+        )}
+
+        {/* Related Products Carousel */}
+        {relatedProducts.length > 0 && (
+          <ProductCarousel
+            products={relatedProducts}
+            title="You May Also Like"
+            subtitle="Related products from Computers, Smart Home & Gaming"
+            icon={<Zap className="w-6 h-6 text-blue-500" />}
+            badge="Trending"
+            badgeVariant="trending"
+            viewAllLink="/products"
+            gradient="from-blue-950/10 to-cyan-950/10"
+          />
+        )}
 
         {/* Products Section */}
         <section className="py-16 bg-gray-50">

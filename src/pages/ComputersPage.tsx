@@ -1,18 +1,33 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
 import ModernProductGrid from "@/components/ModernProductGrid";
+import ProductCarousel from '@/components/product/ProductCarousel';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Monitor, Cpu, HardDrive, Zap, Laptop, Server } from 'lucide-react';
+import { ArrowRight, Monitor, Cpu, HardDrive, Zap, Laptop, Server, TrendingUp, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const ComputersPage = () => {
   const allProducts = getAllProducts();
   const computersProducts = allProducts.filter(product => product.category === 'Computers');
+  
+  // Get featured/bestseller products
+  const featuredProducts = useMemo(() => {
+    return computersProducts.filter(p => p.rating && p.rating >= 4.5).slice(0, 10);
+  }, [computersProducts]);
+  
+  const bestsellers = useMemo(() => {
+    return [...computersProducts].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0)).slice(0, 10);
+  }, [computersProducts]);
+  
+  // Related categories products
+  const relatedProducts = useMemo(() => {
+    return allProducts.filter(p => ['Electronics', 'Gaming', 'Accessories'].includes(p.category)).slice(0, 10);
+  }, [allProducts]);
 
   const features = [
     {
@@ -172,6 +187,48 @@ const ComputersPage = () => {
             </div>
           </div>
         </section>
+
+        {/* Featured Products Carousel */}
+        {featuredProducts.length > 0 && (
+          <ProductCarousel
+            products={featuredProducts}
+            title="Top Rated Computers"
+            subtitle="Our highest-rated laptops and desktops"
+            icon={<Star className="w-6 h-6 text-orange-500" />}
+            badge="Featured"
+            badgeVariant="featured"
+            viewAllLink="/category/computers"
+            gradient="from-orange-950/10 to-red-950/10"
+          />
+        )}
+
+        {/* Bestsellers Carousel */}
+        {bestsellers.length > 0 && (
+          <ProductCarousel
+            products={bestsellers}
+            title="Bestselling Computers"
+            subtitle="Most popular picks from our customers"
+            icon={<TrendingUp className="w-6 h-6 text-amber-500" />}
+            badge="Bestseller"
+            badgeVariant="bestseller"
+            viewAllLink="/category/computers"
+            gradient="from-amber-950/10 to-orange-950/10"
+          />
+        )}
+
+        {/* Related Products Carousel */}
+        {relatedProducts.length > 0 && (
+          <ProductCarousel
+            products={relatedProducts}
+            title="You May Also Like"
+            subtitle="Related products from Electronics, Gaming & Accessories"
+            icon={<Zap className="w-6 h-6 text-red-500" />}
+            badge="Trending"
+            badgeVariant="trending"
+            viewAllLink="/products"
+            gradient="from-red-950/10 to-rose-950/10"
+          />
+        )}
 
         {/* Products Section */}
         <section className="py-16 bg-background">
