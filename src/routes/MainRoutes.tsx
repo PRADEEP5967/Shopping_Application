@@ -33,6 +33,11 @@ import GamingPage from '@/pages/GamingPage';
 import PhotographyPage from '@/pages/PhotographyPage';
 import WearablesPage from '@/pages/WearablesPage';
 import ComputersPage from '@/pages/ComputersPage';
+import ShoesPage from '@/pages/ShoesPage';
+import FurniturePage from '@/pages/FurniturePage';
+import FitnessPage from '@/pages/FitnessPage';
+import AudioPage from '@/pages/AudioPage';
+import HealthPage from '@/pages/HealthPage';
 
 // Search & Discovery
 import SearchPage from '@/pages/SearchPage';
