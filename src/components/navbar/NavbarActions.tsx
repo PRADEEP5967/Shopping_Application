@@ -32,7 +32,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
         variant="ghost" 
         size="sm" 
         onClick={toggleSearch}
-        className="hidden sm:flex p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]"
+        className="hidden sm:flex p-1.5 sm:p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[36px] min-w-[36px] sm:min-h-[40px] sm:min-w-[40px]"
         title="Search"
         aria-label="Open search"
       >
@@ -40,11 +40,11 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
       </Button>
 
       {/* Wishlist - Responsive sizing */}
-      <Link to="/wishlist" className="hidden xs:block sm:block">
+      <Link to="/wishlist" className="hidden sm:block">
         <Button 
           variant="ghost" 
           size="sm" 
-          className="relative p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]" 
+          className="relative p-1.5 sm:p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[36px] min-w-[36px] sm:min-h-[40px] sm:min-w-[40px]" 
           title="Wishlist"
           aria-label={`Wishlist with ${wishlistItems.length} items`}
         >
@@ -52,7 +52,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
           {wishlistItems.length > 0 && (
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[10px] lg:text-xs flex items-center justify-center"
+              className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[9px] sm:text-[10px] lg:text-xs flex items-center justify-center"
             >
               {wishlistItems.length > 9 ? '9+' : wishlistItems.length}
             </Badge>
@@ -65,7 +65,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
         <Button 
           variant="ghost" 
           size="sm" 
-          className="relative p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[40px] min-w-[40px]" 
+          className="relative p-1.5 sm:p-2 lg:p-2.5 hover:bg-muted text-foreground min-h-[36px] min-w-[36px] sm:min-h-[40px] sm:min-w-[40px]" 
           title="Shopping Cart"
           aria-label={`Shopping cart with ${totalItems} items`}
         >
@@ -73,7 +73,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
           {totalItems > 0 && (
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[10px] lg:text-xs flex items-center justify-center"
+              className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 h-4 w-4 lg:h-5 lg:w-5 p-0 text-[9px] sm:text-[10px] lg:text-xs flex items-center justify-center"
             >
               {totalItems > 9 ? '9+' : totalItems}
             </Badge>
@@ -88,15 +88,15 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
             <Button 
               variant="ghost" 
               size="sm" 
-              className="flex items-center gap-1 lg:gap-2 p-1 lg:p-2 hover:bg-muted min-h-[40px]"
+              className="flex items-center gap-1 lg:gap-2 p-1 sm:p-1.5 lg:p-2 hover:bg-muted min-h-[36px] sm:min-h-[40px]"
               aria-label="User menu"
             >
-              <Avatar className="h-7 w-7 lg:h-8 lg:w-8 border-2 border-primary/20">
+              <Avatar className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 border-2 border-primary/20">
                 <AvatarImage 
                   src="https://avatars.githubusercontent.com/u/pradeepsahani" 
                   alt="User avatar" 
                 />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xs lg:text-sm font-semibold">
+                <AvatarFallback className="bg-primary text-primary-foreground text-[10px] sm:text-xs lg:text-sm font-semibold">
                   {user?.firstName?.[0] || user?.email?.[0]?.toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
@@ -153,7 +153,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ toggleSearch, handleLogou
           <Button 
             variant="outline" 
             size="sm" 
-            className="text-xs lg:text-sm p-2 lg:px-3 lg:py-2 border-border text-foreground hover:bg-muted min-h-[40px]"
+            className="text-xs lg:text-sm p-1.5 sm:p-2 lg:px-3 lg:py-2 border-border text-foreground hover:bg-muted min-h-[36px] sm:min-h-[40px]"
           >
             <User className="h-4 w-4 lg:mr-2" />
             <span className="hidden lg:inline">Login</span>
