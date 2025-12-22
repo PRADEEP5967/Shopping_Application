@@ -118,6 +118,11 @@ const MainRoutes = () => {
       <Route path="/category/photography" element={<PageWrapper pageName="Photography"><PhotographyPage /></PageWrapper>} />
       <Route path="/category/wearables" element={<PageWrapper pageName="Wearables"><WearablesPage /></PageWrapper>} />
       <Route path="/category/computers" element={<PageWrapper pageName="Computers"><ComputersPage /></PageWrapper>} />
+      <Route path="/category/shoes" element={<PageWrapper pageName="Shoes"><ShoesPage /></PageWrapper>} />
+      <Route path="/category/furniture" element={<PageWrapper pageName="Furniture"><FurniturePage /></PageWrapper>} />
+      <Route path="/category/fitness" element={<PageWrapper pageName="Fitness"><FitnessPage /></PageWrapper>} />
+      <Route path="/category/audio" element={<PageWrapper pageName="Audio"><AudioPage /></PageWrapper>} />
+      <Route path="/category/health" element={<PageWrapper pageName="Health"><HealthPage /></PageWrapper>} />
       
       {/* Search & Discovery */}
       <Route path="/search" element={<PageWrapper pageName="Search"><SearchPage /></PageWrapper>} />

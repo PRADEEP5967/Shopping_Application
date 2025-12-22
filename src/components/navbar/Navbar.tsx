@@ -35,20 +35,20 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-md border-b border-border/50 shadow-lg">
-      <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-18">
+      <div className="container mx-auto px-2 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-18 gap-2">
           {/* Logo Section */}
-          <div className="flex-shrink-0 z-50">
+          <div className="flex-shrink-0 min-w-0 z-50">
             <NavbarLogo />
           </div>
           
           {/* Desktop Navigation - hidden on mobile/tablet */}
-          <nav className="hidden xl:flex flex-1 justify-center" aria-label="Main navigation">
+          <nav className="hidden xl:flex flex-1 justify-center px-4" aria-label="Main navigation">
             <DesktopNavigation />
           </nav>
           
           {/* Actions Section */}
-          <div className="flex items-center gap-1 sm:gap-2 lg:gap-3">
+          <div className="flex items-center gap-0.5 sm:gap-1.5 lg:gap-2 flex-shrink-0">
             <NavbarActions 
               toggleSearch={toggleSearch} 
               handleLogout={handleLogout} 
