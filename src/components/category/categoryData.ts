@@ -9,6 +9,13 @@ import {
   Gamepad,
   Package,
   ShoppingBag,
+  Headphones,
+  Heart,
+  Dumbbell,
+  Baby,
+  Tv,
+  Footprints,
+  Shirt,
 } from 'lucide-react';
 
 export const categoryDetails: Record<string, any> = {
@@ -66,6 +73,56 @@ export const categoryDetails: Record<string, any> = {
     badge: 'New',
     color: 'from-yellow-500 to-orange-400',
     description: 'Fashion & tech accessories'
+  },
+  'Audio': {
+    icon: Headphones,
+    image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80',
+    badge: 'Hot',
+    color: 'from-indigo-500 to-purple-500',
+    trending: true,
+    description: 'Premium audio equipment'
+  },
+  'Health': {
+    icon: Heart,
+    image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&w=400&q=80',
+    badge: 'New',
+    color: 'from-red-500 to-pink-500',
+    description: 'Wellness & health devices'
+  },
+  'Fitness': {
+    icon: Dumbbell,
+    image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=400&q=80',
+    color: 'from-emerald-500 to-teal-500',
+    trending: true,
+    description: 'Workout & fitness gear'
+  },
+  'Baby': {
+    icon: Baby,
+    image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?auto=format&fit=crop&w=400&q=80',
+    badge: 'Sale',
+    color: 'from-sky-400 to-blue-500',
+    description: 'Baby care essentials'
+  },
+  'TV': {
+    icon: Tv,
+    image: 'https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=400&q=80',
+    badge: 'Hot',
+    color: 'from-slate-600 to-gray-800',
+    trending: true,
+    description: 'Smart TVs & displays'
+  },
+  'Shoes': {
+    icon: Footprints,
+    image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80',
+    badge: 'New',
+    color: 'from-orange-500 to-amber-500',
+    description: 'Footwear collection'
+  },
+  'Clothing': {
+    icon: Shirt,
+    image: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=400&q=80',
+    color: 'from-fuchsia-500 to-pink-500',
+    description: 'Fashion & apparel'
   },
   'default': {
     icon: Package,
