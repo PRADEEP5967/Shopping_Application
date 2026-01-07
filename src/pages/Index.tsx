@@ -25,6 +25,7 @@ import { PersonalizedRecommendationsSection } from '@/components/sections/Person
 import { TrustSignalsSection } from '@/components/sections/TrustSignalsSection';
 import { getFeaturedProducts, getProductCategories } from '@/data/products';
 import ModernCategoryNav from '@/components/ModernCategoryNav';
+import NewArrivalsSection from '@/components/sections/NewArrivalsSection';
 import SEOHead, { generateOrganizationSchema } from '@/components/seo/SEOHead';
 
 // Refactored: section components below
@@ -77,6 +78,9 @@ const Index = () => {
 
       {/* Animated Counters Section */}
       <AnimatedCountersSection />
+
+      {/* New Arrivals Section */}
+      <NewArrivalsSection />
 
       {/* Product Highlights: combo of Featured & New Arrivals */}
       <section id="featured-products">
