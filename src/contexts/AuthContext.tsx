@@ -35,6 +35,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // Ensure default admin user exists
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const adminExists = users.some((u: any) => u.email === 'admin@admin.com');
+    if (!adminExists) {
+      users.push({
+        id: 'admin-default',
+        email: 'admin@admin.com',
+        password: 'admin123',
+        firstName: 'Admin',
+        lastName: 'User',
+        address: '',
+        gender: 'other',
+        roles: ['admin', 'user'],
+      });
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
     // Load user from localStorage on mount
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
