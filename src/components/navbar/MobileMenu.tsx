@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { X, Home, ShoppingBag, User, Heart, Search, Gift, Grid3X3, BookOpen, Tag, Sparkles } from 'lucide-react';
+import { X, Home, ShoppingBag, User, Heart, Search, Gift, Grid3X3, BookOpen, Tag, Sparkles, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -20,7 +20,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   setIsMenuOpen,
   handleLogout
 }) => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, isAdmin } = useAuth();
   const { items: cartItems } = useCart();
   const { items: wishlistItems } = useWishlist();
 
@@ -232,6 +232,16 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
                     <ShoppingBag className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                     <span className="font-medium text-sm">My Orders</span>
                   </Link>
+                  {isAdmin && (
+                    <Link
+                      to="/admin"
+                      onClick={closeMenu}
+                      className="flex items-center gap-3 px-3 py-3 bg-gradient-to-r from-primary/10 to-primary/5 text-primary hover:from-primary/20 hover:to-primary/10 rounded-lg transition-colors group"
+                    >
+                      <Shield className="h-5 w-5" />
+                      <span className="font-medium text-sm">Admin Panel</span>
+                    </Link>
+                  )}
                   <Button
                     variant="outline"
                     onClick={() => {
