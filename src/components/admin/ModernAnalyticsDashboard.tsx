@@ -1,49 +1,43 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Progress } from '@/components/ui/progress';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, RadialBarChart, RadialBar, Legend,
-  ComposedChart
+  AreaChart, Area, PieChart, Pie, Cell, ComposedChart
 } from 'recharts';
 import {
-  TrendingUp, TrendingDown, DollarSign, ShoppingCart, Users, Eye, Package,
+  TrendingUp, TrendingDown, DollarSign, ShoppingCart, Users, Package,
   ArrowUpRight, ArrowDownRight, Download, RefreshCw, Calendar, Target,
-  Zap, Activity, Globe, Clock, Award, BarChart3, PieChartIcon, LineChartIcon,
-  Filter, Share2, Maximize2
+  Zap, Activity, Globe, Clock, Award, Settings2, RotateCcw, Eye, EyeOff,
+  GripVertical, Sparkles
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// Modern color palette
-const COLORS = {
-  primary: 'hsl(var(--primary))',
-  success: '#10b981',
-  warning: '#f59e0b',
-  danger: '#ef4444',
-  info: '#3b82f6',
-  purple: '#8b5cf6',
-  pink: '#ec4899',
-  cyan: '#06b6d4',
-  gradient: ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b']
-};
-
-const chartColors = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#ec4899', '#3b82f6'];
-
-// Animation variants
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
-};
-
-const numberVariants = {
-  hidden: { opacity: 0, scale: 0.5 },
-  visible: { opacity: 1, scale: 1 }
-};
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import DraggableWidget from './DraggableWidget';
+import { useDashboardLayout, WidgetConfig } from '@/hooks/useDashboardLayout';
+import { cn } from '@/lib/utils';
 
 // Sample data
 const revenueData = [
@@ -97,6 +91,13 @@ const performanceGoals = [
   { label: 'Conversion Rate', current: 3.8, target: 5, color: '#f59e0b' },
 ];
 
+const geographicData = [
+  { region: 'North America', sales: 45200, percentage: 38, flag: '🇺🇸' },
+  { region: 'Europe', sales: 32100, percentage: 27, flag: '🇪🇺' },
+  { region: 'Asia Pacific', sales: 28400, percentage: 24, flag: '🌏' },
+  { region: 'Rest of World', sales: 13100, percentage: 11, flag: '🌍' },
+];
+
 interface MetricCardProps {
   title: string;
   value: string;
@@ -110,26 +111,26 @@ interface MetricCardProps {
 
 const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLabel, icon, trend, delay = 0, gradient }) => (
   <motion.div
-    variants={cardVariants}
-    initial="hidden"
-    animate="visible"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5, delay }}
+    className="h-full"
   >
-    <Card className="relative overflow-hidden group hover:shadow-2xl transition-all duration-500 border-0">
+    <Card className="relative overflow-hidden group hover:shadow-2xl transition-all duration-500 border-0 h-full">
       <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 group-hover:opacity-10 transition-opacity`} />
       <div className="absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full bg-gradient-to-br from-white/10 to-transparent" />
       <CardContent className="p-6 relative">
         <div className="flex items-start justify-between">
           <div className="space-y-3">
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <motion.div
-              variants={numberVariants}
-              initial="hidden"
-              animate="visible"
+            <motion.h3 
+              className="text-3xl font-bold tracking-tight"
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: delay + 0.2 }}
             >
-              <h3 className="text-3xl font-bold tracking-tight">{value}</h3>
-            </motion.div>
+              {value}
+            </motion.h3>
             <div className={`flex items-center gap-1 text-sm ${trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
               {trend === 'up' ? <ArrowUpRight className="h-4 w-4" /> : <ArrowDownRight className="h-4 w-4" />}
               <span className="font-semibold">{Math.abs(change)}%</span>
@@ -140,19 +141,6 @@ const MetricCard: React.FC<MetricCardProps> = ({ title, value, change, changeLab
             {icon}
           </div>
         </div>
-        <motion.div 
-          className="mt-4 h-1 bg-muted rounded-full overflow-hidden"
-          initial={{ width: 0 }}
-          animate={{ width: '100%' }}
-          transition={{ duration: 1, delay: delay + 0.3 }}
-        >
-          <motion.div 
-            className={`h-full bg-gradient-to-r ${gradient} rounded-full`}
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min(Math.abs(change) * 5, 100)}%` }}
-            transition={{ duration: 1.5, delay: delay + 0.5 }}
-          />
-        </motion.div>
       </CardContent>
     </Card>
   </motion.div>
@@ -162,8 +150,32 @@ const ModernAnalyticsDashboard: React.FC = () => {
   const [timeRange, setTimeRange] = useState('7d');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [liveVisitors, setLiveVisitors] = useState(1247);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
-  // Simulate live visitor count
+  const {
+    widgets,
+    isEditMode,
+    setIsEditMode,
+    reorderWidgets,
+    toggleWidgetVisibility,
+    toggleWidgetExpanded,
+    resetLayout,
+    getVisibleWidgets,
+  } = useDashboardLayout();
+
+  const visibleWidgets = useMemo(() => getVisibleWidgets(), [getVisibleWidgets]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLiveVisitors(prev => prev + Math.floor(Math.random() * 10) - 4);
@@ -174,6 +186,19 @@ const ModernAnalyticsDashboard: React.FC = () => {
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => setIsRefreshing(false), 1500);
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setActiveId(null);
+
+    if (over && active.id !== over.id) {
+      reorderWidgets(active.id as string, over.id as string);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -203,131 +228,66 @@ const ModernAnalyticsDashboard: React.FC = () => {
     return null;
   };
 
-  return (
-    <div className="space-y-6 p-1">
-      {/* Header */}
-      <motion.div 
-        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-cyan-500 bg-clip-text text-transparent">
-            Analytics Dashboard
-          </h1>
-          <p className="text-muted-foreground mt-1">Real-time insights and performance metrics</p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{liveVisitors.toLocaleString()} live</span>
-          </div>
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-36 bg-background/50 backdrop-blur-sm">
-              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="24h">Last 24 hours</SelectItem>
-              <SelectItem value="7d">Last 7 days</SelectItem>
-              <SelectItem value="30d">Last 30 days</SelectItem>
-              <SelectItem value="90d">Last 90 days</SelectItem>
-              <SelectItem value="1y">Last year</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={handleRefresh}
-            className="bg-background/50 backdrop-blur-sm"
-          >
-            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          </Button>
-          <Button variant="outline" className="bg-background/50 backdrop-blur-sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-        </div>
-      </motion.div>
+  // Widget components
+  const renderWidget = (widget: WidgetConfig) => {
+    switch (widget.type) {
+      case 'metrics':
+        return (
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <MetricCard
+                title="Total Revenue"
+                value="$67,890"
+                change={12.5}
+                changeLabel="vs last period"
+                icon={<DollarSign className="h-6 w-6" />}
+                trend="up"
+                delay={0}
+                gradient="from-violet-500 to-purple-600"
+              />
+              <MetricCard
+                title="Total Orders"
+                value="1,234"
+                change={8.2}
+                changeLabel="vs last period"
+                icon={<ShoppingCart className="h-6 w-6" />}
+                trend="up"
+                delay={0.1}
+                gradient="from-cyan-500 to-blue-600"
+              />
+              <MetricCard
+                title="New Customers"
+                value="456"
+                change={-3.1}
+                changeLabel="vs last period"
+                icon={<Users className="h-6 w-6" />}
+                trend="down"
+                delay={0.2}
+                gradient="from-emerald-500 to-teal-600"
+              />
+              <MetricCard
+                title="Conversion Rate"
+                value="3.8%"
+                change={15.3}
+                changeLabel="vs last period"
+                icon={<Target className="h-6 w-6" />}
+                trend="up"
+                delay={0.3}
+                gradient="from-amber-500 to-orange-600"
+              />
+            </div>
+          </CardContent>
+        );
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          title="Total Revenue"
-          value="$67,890"
-          change={12.5}
-          changeLabel="vs last period"
-          icon={<DollarSign className="h-6 w-6" />}
-          trend="up"
-          delay={0}
-          gradient="from-violet-500 to-purple-600"
-        />
-        <MetricCard
-          title="Total Orders"
-          value="1,234"
-          change={8.2}
-          changeLabel="vs last period"
-          icon={<ShoppingCart className="h-6 w-6" />}
-          trend="up"
-          delay={0.1}
-          gradient="from-cyan-500 to-blue-600"
-        />
-        <MetricCard
-          title="New Customers"
-          value="456"
-          change={-3.1}
-          changeLabel="vs last period"
-          icon={<Users className="h-6 w-6" />}
-          trend="down"
-          delay={0.2}
-          gradient="from-emerald-500 to-teal-600"
-        />
-        <MetricCard
-          title="Conversion Rate"
-          value="3.8%"
-          change={15.3}
-          changeLabel="vs last period"
-          icon={<Target className="h-6 w-6" />}
-          trend="up"
-          delay={0.3}
-          gradient="from-amber-500 to-orange-600"
-        />
-      </div>
-
-      {/* Main Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Revenue Chart */}
-        <motion.div 
-          className="lg:col-span-2"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
+      case 'revenue-chart':
+        return (
+          <>
             <CardHeader className="pb-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <LineChartIcon className="h-5 w-5 text-primary" />
-                    Revenue & Orders Trend
-                  </CardTitle>
-                  <CardDescription>Monthly performance overview</CardDescription>
-                </div>
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-violet-500" />
-                    <span className="text-muted-foreground">Revenue</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-cyan-500" />
-                    <span className="text-muted-foreground">Orders</span>
-                  </div>
-                </div>
-              </div>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Revenue & Orders Trend
+              </CardTitle>
+              <CardDescription>Monthly performance overview</CardDescription>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={320}>
@@ -337,34 +297,26 @@ const ModernAnalyticsDashboard: React.FC = () => {
                       <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
                       <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
                     </linearGradient>
-                    <linearGradient id="ordersGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
-                    </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
-                  <XAxis dataKey="date" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis yAxisId="left" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis yAxisId="right" orientation="right" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <XAxis dataKey="date" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <YAxis yAxisId="left" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area yAxisId="left" type="monotone" dataKey="revenue" fill="url(#revenueGradient)" stroke="#8b5cf6" strokeWidth={3} name="Revenue ($)" />
                   <Line yAxisId="right" type="monotone" dataKey="orders" stroke="#06b6d4" strokeWidth={3} dot={{ fill: '#06b6d4', strokeWidth: 2 }} name="Orders" />
                 </ComposedChart>
               </ResponsiveContainer>
             </CardContent>
-          </Card>
-        </motion.div>
+          </>
+        );
 
-        {/* Category Distribution */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20 h-full">
+      case 'category-pie':
+        return (
+          <>
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2">
-                <PieChartIcon className="h-5 w-5 text-primary" />
+                <Activity className="h-5 w-5 text-primary" />
                 Sales by Category
               </CardTitle>
               <CardDescription>Revenue distribution</CardDescription>
@@ -382,43 +334,30 @@ const ModernAnalyticsDashboard: React.FC = () => {
                     dataKey="value"
                   >
                     {categoryData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} className="drop-shadow-lg" />
+                      <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
               <div className="mt-4 space-y-2">
-                {categoryData.map((category, index) => (
-                  <motion.div 
-                    key={category.name} 
-                    className="flex items-center justify-between"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 + index * 0.1 }}
-                  >
+                {categoryData.map((category) => (
+                  <div key={category.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: category.color }} />
                       <span className="text-sm">{category.name}</span>
                     </div>
                     <span className="text-sm font-semibold">{category.value}%</span>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          </>
+        );
 
-      {/* Performance Goals & Hourly Traffic */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Performance Goals */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
+      case 'performance-goals':
+        return (
+          <>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Target className="h-5 w-5 text-primary" />
@@ -427,15 +366,10 @@ const ModernAnalyticsDashboard: React.FC = () => {
               <CardDescription>Track your targets in real-time</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {performanceGoals.map((goal, index) => {
+              {performanceGoals.map((goal) => {
                 const percentage = (goal.current / goal.target) * 100;
                 return (
-                  <motion.div 
-                    key={goal.label}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 + index * 0.1 }}
-                  >
+                  <div key={goal.label}>
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium">{goal.label}</span>
                       <span className="text-sm text-muted-foreground">
@@ -448,7 +382,7 @@ const ModernAnalyticsDashboard: React.FC = () => {
                         style={{ backgroundColor: goal.color }}
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.min(percentage, 100)}%` }}
-                        transition={{ duration: 1.5, delay: 0.8 + index * 0.1 }}
+                        transition={{ duration: 1.5 }}
                       />
                     </div>
                     <div className="flex items-center justify-between mt-1">
@@ -461,20 +395,16 @@ const ModernAnalyticsDashboard: React.FC = () => {
                         </span>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 );
               })}
             </CardContent>
-          </Card>
-        </motion.div>
+          </>
+        );
 
-        {/* Hourly Traffic */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
+      case 'hourly-traffic':
+        return (
+          <>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5 text-primary" />
@@ -496,27 +426,20 @@ const ModernAnalyticsDashboard: React.FC = () => {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" className="stroke-muted/30" />
-                  <XAxis dataKey="hour" className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
-                  <YAxis className="text-xs" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <XAxis dataKey="hour" tick={{ fill: 'hsl(var(--muted-foreground))' }} />
+                  <YAxis tick={{ fill: 'hsl(var(--muted-foreground))' }} />
                   <Tooltip content={<CustomTooltip />} />
                   <Area type="monotone" dataKey="visitors" fill="url(#visitorsGradient)" stroke="#8b5cf6" strokeWidth={2} name="Visitors" />
                   <Area type="monotone" dataKey="sales" fill="url(#salesGradient)" stroke="#10b981" strokeWidth={2} name="Sales" />
                 </AreaChart>
               </ResponsiveContainer>
             </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          </>
+        );
 
-      {/* Top Products & Recent Transactions */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Products */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
+      case 'top-products':
+        return (
+          <>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -531,14 +454,10 @@ const ModernAnalyticsDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {topProducts.map((product, index) => (
-                  <motion.div
+                {topProducts.map((product) => (
+                  <div
                     key={product.name}
                     className="flex items-center gap-4 p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer group"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.9 + index * 0.1 }}
-                    whileHover={{ scale: 1.02 }}
                   >
                     <div className="text-3xl">{product.image}</div>
                     <div className="flex-1 min-w-0">
@@ -552,20 +471,16 @@ const ModernAnalyticsDashboard: React.FC = () => {
                         {Math.abs(product.growth)}%
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </motion.div>
+          </>
+        );
 
-        {/* Recent Transactions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.9 }}
-        >
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
+      case 'recent-transactions':
+        return (
+          <>
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -580,13 +495,10 @@ const ModernAnalyticsDashboard: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {recentTransactions.map((transaction, index) => (
-                  <motion.div
+                {recentTransactions.map((transaction) => (
+                  <div
                     key={transaction.id}
                     className="flex items-center justify-between p-3 rounded-xl bg-muted/30 hover:bg-muted/50 transition-colors"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1 + index * 0.1 }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
@@ -605,76 +517,265 @@ const ModernAnalyticsDashboard: React.FC = () => {
                         {transaction.status}
                       </Badge>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </>
+        );
+
+      case 'geographic':
+        return (
+          <>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="h-5 w-5 text-primary" />
+                Geographic Performance
+              </CardTitle>
+              <CardDescription>Sales distribution by region</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {geographicData.map((region, index) => (
+                  <motion.div
+                    key={region.region}
+                    className="p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all hover:shadow-lg cursor-pointer"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ y: -5 }}
+                  >
+                    <div className="text-3xl mb-2">{region.flag}</div>
+                    <h4 className="font-medium text-sm">{region.region}</h4>
+                    <p className="text-2xl font-bold mt-1">${(region.sales / 1000).toFixed(1)}K</p>
+                    <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
+                      <motion.div
+                        className="h-full bg-gradient-to-r from-primary to-cyan-500 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${region.percentage}%` }}
+                        transition={{ duration: 1, delay: index * 0.1 }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">{region.percentage}% of total</p>
                   </motion.div>
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          </>
+        );
 
-      {/* Geographic Distribution */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
+      default:
+        return null;
+    }
+  };
+
+  // Get widget class based on type
+  const getWidgetClass = (widget: WidgetConfig) => {
+    if (widget.expanded) return 'col-span-full';
+    switch (widget.type) {
+      case 'metrics':
+        return 'col-span-full';
+      case 'revenue-chart':
+        return 'lg:col-span-2';
+      case 'category-pie':
+        return 'lg:col-span-1';
+      case 'geographic':
+        return 'col-span-full';
+      default:
+        return 'lg:col-span-1';
+    }
+  };
+
+  return (
+    <div className="space-y-6 p-1">
+      {/* Header */}
+      <motion.div 
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 1 }}
+        transition={{ duration: 0.5 }}
       >
-        <Card className="border-0 shadow-xl bg-gradient-to-br from-background to-muted/20">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="h-5 w-5 text-primary" />
-                  Geographic Performance
-                </CardTitle>
-                <CardDescription>Sales distribution by region</CardDescription>
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Maximize2 className="h-4 w-4 mr-2" />
-                  Expand
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { region: 'North America', sales: 45200, percentage: 38, flag: '🇺🇸' },
-                { region: 'Europe', sales: 32100, percentage: 27, flag: '🇪🇺' },
-                { region: 'Asia Pacific', sales: 28400, percentage: 24, flag: '🌏' },
-                { region: 'Rest of World', sales: 13100, percentage: 11, flag: '🌍' },
-              ].map((region, index) => (
-                <motion.div
-                  key={region.region}
-                  className="p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all hover:shadow-lg cursor-pointer"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 1.1 + index * 0.1 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <div className="text-3xl mb-2">{region.flag}</div>
-                  <h4 className="font-medium text-sm">{region.region}</h4>
-                  <p className="text-2xl font-bold mt-1">${(region.sales / 1000).toFixed(1)}K</p>
-                  <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full bg-gradient-to-r from-primary to-cyan-500 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${region.percentage}%` }}
-                      transition={{ duration: 1, delay: 1.2 + index * 0.1 }}
-                    />
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            Analytics Dashboard
+          </h1>
+          <p className="text-muted-foreground mt-1">Real-time insights and performance metrics</p>
+        </div>
+        <div className="flex items-center gap-3 flex-wrap">
+          {/* Live visitors indicator */}
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-400">{liveVisitors.toLocaleString()} live</span>
+          </div>
+
+          {/* Time range selector */}
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-36 bg-background/50 backdrop-blur-sm">
+              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="24h">Last 24 hours</SelectItem>
+              <SelectItem value="7d">Last 7 days</SelectItem>
+              <SelectItem value="30d">Last 30 days</SelectItem>
+              <SelectItem value="90d">Last 90 days</SelectItem>
+              <SelectItem value="1y">Last year</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Refresh button */}
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={handleRefresh}
+            className="bg-background/50 backdrop-blur-sm"
+          >
+            <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+          </Button>
+
+          {/* Export button */}
+          <Button variant="outline" className="bg-background/50 backdrop-blur-sm">
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
+
+          {/* Customize button */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button 
+                variant={isEditMode ? "default" : "outline"} 
+                className={cn(
+                  "bg-background/50 backdrop-blur-sm",
+                  isEditMode && "bg-gradient-to-r from-primary to-cyan-500 text-white"
+                )}
+              >
+                <Settings2 className="h-4 w-4 mr-2" />
+                Customize
+              </Button>
+            </SheetTrigger>
+            <SheetContent className="w-[400px] sm:w-[540px]">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  Customize Dashboard
+                </SheetTitle>
+                <SheetDescription>
+                  Drag widgets to reorder, toggle visibility, and personalize your dashboard
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-6 space-y-6">
+                {/* Edit mode toggle */}
+                <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
+                  <div className="flex items-center gap-3">
+                    <GripVertical className="h-5 w-5 text-muted-foreground" />
+                    <div>
+                      <Label htmlFor="edit-mode" className="font-medium">Drag & Drop Mode</Label>
+                      <p className="text-sm text-muted-foreground">Enable to rearrange widgets</p>
+                    </div>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">{region.percentage}% of total</p>
-                </motion.div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                  <Switch
+                    id="edit-mode"
+                    checked={isEditMode}
+                    onCheckedChange={setIsEditMode}
+                  />
+                </div>
+
+                {/* Widget visibility toggles */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">Widgets</h4>
+                  {widgets.map((widget) => (
+                    <div 
+                      key={widget.id}
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {widget.visible ? (
+                          <Eye className="h-4 w-4 text-emerald-500" />
+                        ) : (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        )}
+                        <span className="font-medium">{widget.title}</span>
+                      </div>
+                      <Switch
+                        checked={widget.visible}
+                        onCheckedChange={() => toggleWidgetVisibility(widget.id)}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                {/* Reset button */}
+                <Button 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={resetLayout}
+                >
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Reset to Default Layout
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </motion.div>
+
+      {/* Edit mode indicator */}
+      <AnimatePresence>
+        {isEditMode && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-primary/10 via-cyan-500/10 to-primary/10 border border-primary/20"
+          >
+            <GripVertical className="h-5 w-5 text-primary" />
+            <p className="text-sm font-medium">
+              <span className="text-primary">Drag mode active:</span> Grab the handle on any widget to rearrange. Click "Customize" to exit.
+            </p>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setIsEditMode(false)}
+              className="ml-auto"
+            >
+              Done
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Draggable Widgets Grid */}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={visibleWidgets.map(w => w.id)}
+          strategy={rectSortingStrategy}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {visibleWidgets.map((widget) => (
+              <DraggableWidget
+                key={widget.id}
+                id={widget.id}
+                title={widget.title}
+                isEditMode={isEditMode}
+                isExpanded={widget.expanded}
+                onToggleExpand={() => toggleWidgetExpanded(widget.id)}
+                onRemove={() => toggleWidgetVisibility(widget.id)}
+                className={getWidgetClass(widget)}
+              >
+                {renderWidget(widget)}
+              </DraggableWidget>
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
     </div>
   );
 };
