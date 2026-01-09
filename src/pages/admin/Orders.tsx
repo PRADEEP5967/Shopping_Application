@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { OrderManagement } from '@/components/admin/OrderManagement';
+import { ModernOrderManagement } from '@/components/admin/ModernOrderManagement';
 
 const Orders = () => {
-  return <OrderManagement />;
+  return <ModernOrderManagement />;
 };
 
 export default Orders;

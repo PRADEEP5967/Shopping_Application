@@ -1,12 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AdminStats } from '@/components/admin/AdminStats';
-import { ProductManagement } from '@/components/admin/ProductManagement';
-import { OrderManagement } from '@/components/admin/OrderManagement';
+import { ModernAdminStats } from '@/components/admin/ModernAdminStats';
+import { ModernProductManagement } from '@/components/admin/ModernProductManagement';
+import { ModernOrderManagement } from '@/components/admin/ModernOrderManagement';
 import { UserManagement } from '@/components/admin/UserManagement';
-import { InventoryManagement } from '@/components/admin/InventoryManagement';
+import { ModernInventoryManagement } from '@/components/admin/ModernInventoryManagement';
 import { AnalyticsDashboard } from '@/components/admin/AnalyticsDashboard';
 import { SettingsPanel } from '@/components/admin/SettingsPanel';
 import { ModernAdminFeatures } from '@/components/admin/ModernAdminFeatures';
@@ -20,7 +19,7 @@ const AdminDashboard = () => {
       title="Admin Dashboard" 
       subtitle="Manage your e-commerce platform with modern tools and insights"
     >
-      <AdminStats />
+      <ModernAdminStats />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-4 sm:mb-6">
         <Link to="/admin" className="block">

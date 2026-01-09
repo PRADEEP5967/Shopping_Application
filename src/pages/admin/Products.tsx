@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { ProductManagement } from '@/components/admin/ProductManagement';
+import { ModernProductManagement } from '@/components/admin/ModernProductManagement';
 
 const Products = () => {
-  return <ProductManagement />;
+  return <ModernProductManagement />;
 };
 
 export default Products;
