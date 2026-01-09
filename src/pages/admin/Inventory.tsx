@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { InventoryManagement } from '@/components/admin/InventoryManagement';
+import { ModernInventoryManagement } from '@/components/admin/ModernInventoryManagement';
 
 const Inventory = () => {
-  return <InventoryManagement />;
+  return <ModernInventoryManagement />;
 };
 
 export default Inventory;
