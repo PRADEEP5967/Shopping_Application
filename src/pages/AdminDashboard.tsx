@@ -192,11 +192,11 @@ const AdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="products" className="mt-4 sm:mt-6">
-          <ProductManagement />
+          <ModernProductManagement />
         </TabsContent>
 
         <TabsContent value="orders" className="mt-4 sm:mt-6">
-          <OrderManagement />
+          <ModernOrderManagement />
         </TabsContent>
 
         <TabsContent value="users" className="mt-4 sm:mt-6">
@@ -204,7 +204,7 @@ const AdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="inventory" className="mt-4 sm:mt-6">
-          <InventoryManagement />
+          <ModernInventoryManagement />
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-4 sm:mt-6">
