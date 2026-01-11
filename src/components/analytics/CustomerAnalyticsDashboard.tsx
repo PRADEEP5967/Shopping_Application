@@ -270,10 +270,105 @@ const CustomerAnalyticsDashboard: React.FC = () => {
               <CardTitle>Customer Journey Flow</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-gray-500">
-                <Eye className="w-12 h-12 mx-auto mb-4" />
-                <p>Advanced behavior flow visualization would be implemented here</p>
-                <p className="text-sm">Track user paths from entry to conversion</p>
+              <div className="space-y-6">
+                {/* Journey Stages */}
+                <div className="flex items-center justify-between gap-2 overflow-x-auto pb-4">
+                  {[
+                    { stage: 'Landing', users: 10000, rate: 100, color: '#8884d8' },
+                    { stage: 'Browse', users: 7500, rate: 75, color: '#82ca9d' },
+                    { stage: 'Product View', users: 4500, rate: 45, color: '#ffc658' },
+                    { stage: 'Add to Cart', users: 2000, rate: 20, color: '#ff7300' },
+                    { stage: 'Checkout', users: 1200, rate: 12, color: '#a855f7' },
+                    { stage: 'Purchase', users: 800, rate: 8, color: '#22c55e' }
+                  ].map((item, index, arr) => (
+                    <div key={item.stage} className="flex items-center">
+                      <div className="flex flex-col items-center min-w-[100px]">
+                        <div 
+                          className="w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                          style={{ backgroundColor: item.color }}
+                        >
+                          {item.rate}%
+                        </div>
+                        <p className="mt-2 font-medium text-sm">{item.stage}</p>
+                        <p className="text-xs text-muted-foreground">{item.users.toLocaleString()}</p>
+                      </div>
+                      {index < arr.length - 1 && (
+                        <div className="flex items-center mx-2">
+                          <div className="w-8 h-0.5 bg-muted-foreground/30"></div>
+                          <div className="text-xs text-muted-foreground mx-1">
+                            {Math.round((arr[index + 1].users / item.users) * 100)}%
+                          </div>
+                          <div className="w-8 h-0.5 bg-muted-foreground/30"></div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Drop-off Analysis */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Card className="bg-red-500/5 border-red-500/20">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Highest Drop-off</p>
+                          <p className="font-bold">Browse → Product View</p>
+                        </div>
+                        <Badge variant="destructive">-40%</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-yellow-500/5 border-yellow-500/20">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Cart Abandonment</p>
+                          <p className="font-bold">Add to Cart → Checkout</p>
+                        </div>
+                        <Badge className="bg-yellow-500">-40%</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-green-500/5 border-green-500/20">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-muted-foreground">Best Conversion</p>
+                          <p className="font-bold">Checkout → Purchase</p>
+                        </div>
+                        <Badge className="bg-green-500">67%</Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* User Paths */}
+                <div>
+                  <h4 className="font-medium mb-3">Common User Paths</h4>
+                  <div className="space-y-2">
+                    {[
+                      { path: 'Home → Electronics → Product → Cart → Purchase', users: 2340, conversion: 8.5 },
+                      { path: 'Search → Product → Cart → Purchase', users: 1890, conversion: 12.3 },
+                      { path: 'Deals → Product → Wishlist', users: 1456, conversion: 2.1 },
+                      { path: 'Category → Product → Exit', users: 980, conversion: 0 }
+                    ].map((item, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 rounded-lg border bg-card">
+                        <div className="flex items-center gap-3">
+                          <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-medium">
+                            {index + 1}
+                          </span>
+                          <span className="text-sm">{item.path}</span>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="text-sm text-muted-foreground">{item.users.toLocaleString()} users</span>
+                          <Badge variant={item.conversion > 5 ? 'default' : 'secondary'}>
+                            {item.conversion}% conv.
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
