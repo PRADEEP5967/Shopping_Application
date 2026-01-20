@@ -4,10 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Eye, Download, Filter, Loader as Loader2, ShoppingBag, Clock, CheckCircle, XCircle, Truck, Package, Sparkles } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search, Eye, Download, Filter, Loader as Loader2, ShoppingBag, Clock, CheckCircle, XCircle, Truck, Package, Sparkles, Edit, MoreHorizontal } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAllOrders } from '@/data/products';
 import { motion, AnimatePresence } from 'framer-motion';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 
 const statusConfig: Record<string, { icon: React.ElementType; gradient: string; bgGradient: string }> = {
   delivered: { icon: CheckCircle, gradient: 'from-emerald-500 to-green-600', bgGradient: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' },
@@ -26,12 +31,34 @@ const tableRowVariants = {
   })
 };
 
+interface Order {
+  id: string;
+  status: string;
+  shippingAddress: {
+    fullName: string;
+    city: string;
+    state: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+  };
+  totalAmount: number;
+  items: any[];
+  createdAt: string;
+  trackingNumber?: string;
+  notes?: string;
+}
+
 export const ModernOrderManagement = () => {
-  const [orders] = useState(getAllOrders());
+  const [orders, setOrders] = useState<Order[]>(getAllOrders());
   const [searchTerm, setSearchTerm] = useState('');
   const [isExporting, setIsExporting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({ status: '', trackingNumber: '', notes: '' });
   const itemsPerPage = 10;
 
   const filteredOrders = orders.filter(order =>
@@ -48,6 +75,82 @@ export const ModernOrderManagement = () => {
     delivered: orders.filter(o => o.status === 'delivered').length,
   };
 
+  const handleViewOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditOrder = (order: Order) => {
+    setSelectedOrder(order);
+    setEditFormData({
+      status: order.status,
+      trackingNumber: order.trackingNumber || '',
+      notes: order.notes || ''
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateOrder = () => {
+    if (!selectedOrder) return;
+    
+    setOrders(prev => prev.map(o => 
+      o.id === selectedOrder.id 
+        ? { ...o, status: editFormData.status, trackingNumber: editFormData.trackingNumber, notes: editFormData.notes }
+        : o
+    ));
+    
+    toast.success('Order updated', { description: `Order ${selectedOrder.id} has been updated` });
+    setIsEditDialogOpen(false);
+    setSelectedOrder(null);
+  };
+
+  const handleStatusChange = (orderId: string, newStatus: string) => {
+    setOrders(prev => prev.map(o => 
+      o.id === orderId ? { ...o, status: newStatus } : o
+    ));
+    toast.success('Status updated', { description: `Order ${orderId} is now ${newStatus}` });
+  };
+
+  const handleCancelOrder = (orderId: string) => {
+    setOrders(prev => prev.map(o => 
+      o.id === orderId ? { ...o, status: 'cancelled' } : o
+    ));
+    toast.success('Order cancelled', { description: `Order ${orderId} has been cancelled` });
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const csvContent = [
+        ['Order ID', 'Customer', 'Status', 'Total', 'Date', 'City', 'State'].join(','),
+        ...filteredOrders.map(order => [
+          order.id,
+          order.shippingAddress.fullName,
+          order.status,
+          `$${order.totalAmount.toFixed(2)}`,
+          new Date(order.createdAt).toLocaleDateString(),
+          order.shippingAddress.city,
+          order.shippingAddress.state
+        ].join(','))
+      ].join('\n');
+      
+      const blob = new Blob([csvContent], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `orders-export-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      
+      toast.success('Orders exported', { description: `${filteredOrders.length} orders exported to CSV` });
+    } catch (error) {
+      toast.error('Export failed');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -58,11 +161,11 @@ export const ModernOrderManagement = () => {
       {/* Order Stats Cards */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {[
-          { label: 'Total Orders', value: orderStats.total, gradient: 'from-violet-500 to-purple-600', bg: 'from-violet-50 to-purple-50' },
-          { label: 'Pending', value: orderStats.pending, gradient: 'from-gray-400 to-gray-500', bg: 'from-gray-50 to-slate-50' },
-          { label: 'Processing', value: orderStats.processing, gradient: 'from-amber-500 to-orange-600', bg: 'from-amber-50 to-orange-50' },
-          { label: 'Shipped', value: orderStats.shipped, gradient: 'from-blue-500 to-indigo-600', bg: 'from-blue-50 to-indigo-50' },
-          { label: 'Delivered', value: orderStats.delivered, gradient: 'from-emerald-500 to-green-600', bg: 'from-emerald-50 to-green-50' },
+          { label: 'Total Orders', value: orderStats.total, gradient: 'from-violet-500 to-purple-600', bg: 'from-violet-50 to-purple-50', status: null },
+          { label: 'Pending', value: orderStats.pending, gradient: 'from-gray-400 to-gray-500', bg: 'from-gray-50 to-slate-50', status: 'pending' },
+          { label: 'Processing', value: orderStats.processing, gradient: 'from-amber-500 to-orange-600', bg: 'from-amber-50 to-orange-50', status: 'processing' },
+          { label: 'Shipped', value: orderStats.shipped, gradient: 'from-blue-500 to-indigo-600', bg: 'from-blue-50 to-indigo-50', status: 'shipped' },
+          { label: 'Delivered', value: orderStats.delivered, gradient: 'from-emerald-500 to-green-600', bg: 'from-emerald-50 to-green-50', status: 'delivered' },
         ].map((stat, index) => (
           <motion.div
             key={stat.label}
@@ -71,9 +174,9 @@ export const ModernOrderManagement = () => {
             transition={{ delay: index * 0.1 }}
             whileHover={{ scale: 1.02, y: -2 }}
             className="cursor-pointer"
-            onClick={() => setStatusFilter(stat.label === 'Total Orders' ? null : stat.label.toLowerCase())}
+            onClick={() => setStatusFilter(stat.status)}
           >
-            <Card className={`border-0 shadow-lg bg-gradient-to-br ${stat.bg} dark:from-gray-900 dark:to-gray-950 overflow-hidden relative group`}>
+            <Card className={`border-0 shadow-lg bg-gradient-to-br ${stat.bg} dark:from-gray-900 dark:to-gray-950 overflow-hidden relative group ${statusFilter === stat.status ? 'ring-2 ring-primary' : ''}`}>
               <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-10 transition-opacity`} />
               <CardContent className="p-4">
                 <p className="text-xs font-medium text-muted-foreground">{stat.label}</p>
@@ -112,24 +215,27 @@ export const ModernOrderManagement = () => {
             </div>
             
             <div className="flex gap-2">
-              <Button variant="outline" className="border-blue-200 dark:border-blue-800">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
-              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="border-blue-200 dark:border-blue-800">
+                    <Filter className="h-4 w-4 mr-2" />
+                    {statusFilter ? statusFilter.charAt(0).toUpperCase() + statusFilter.slice(1) : 'All Status'}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setStatusFilter(null)}>All Status</DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => setStatusFilter('pending')}>Pending</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setStatusFilter('processing')}>Processing</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setStatusFilter('shipped')}>Shipped</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setStatusFilter('delivered')}>Delivered</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setStatusFilter('cancelled')}>Cancelled</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 shadow-lg shadow-blue-500/25"
-                  onClick={async () => {
-                    setIsExporting(true);
-                    try {
-                      await new Promise(resolve => setTimeout(resolve, 1500));
-                      toast.success('Orders exported', { description: `${filteredOrders.length} orders exported to CSV` });
-                    } catch (error) {
-                      toast.error('Export failed');
-                    } finally {
-                      setIsExporting(false);
-                    }
-                  }}
+                  onClick={handleExport}
                   disabled={isExporting}
                 >
                   {isExporting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
@@ -211,12 +317,24 @@ export const ModernOrderManagement = () => {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <motion.div whileHover={{ scale: 1.05 }}>
-                              <Badge className={`${config.bgGradient} flex items-center gap-1 w-fit`}>
-                                <StatusIcon className="h-3 w-3" />
-                                {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                              </Badge>
-                            </motion.div>
+                            <Select 
+                              value={order.status} 
+                              onValueChange={(value) => handleStatusChange(order.id, value)}
+                            >
+                              <SelectTrigger className="w-32 h-8 border-0 bg-transparent">
+                                <Badge className={`${config.bgGradient} flex items-center gap-1 w-fit`}>
+                                  <StatusIcon className="h-3 w-3" />
+                                  {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                                </Badge>
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pending">Pending</SelectItem>
+                                <SelectItem value="processing">Processing</SelectItem>
+                                <SelectItem value="shipped">Shipped</SelectItem>
+                                <SelectItem value="delivered">Delivered</SelectItem>
+                                <SelectItem value="cancelled">Cancelled</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell>
                             <span className="font-bold text-emerald-600 dark:text-emerald-400">
@@ -229,11 +347,29 @@ export const ModernOrderManagement = () => {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 hover:bg-blue-100 hover:text-blue-600">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                            </motion.div>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleViewOrder(order)}>
+                                  <Eye className="h-4 w-4 mr-2" /> View Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEditOrder(order)}>
+                                  <Edit className="h-4 w-4 mr-2" /> Edit Order
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                  onClick={() => handleCancelOrder(order.id)}
+                                  className="text-rose-600"
+                                  disabled={order.status === 'cancelled' || order.status === 'delivered'}
+                                >
+                                  <XCircle className="h-4 w-4 mr-2" /> Cancel Order
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
                           </TableCell>
                         </motion.tr>
                       );
@@ -290,6 +426,125 @@ export const ModernOrderManagement = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* View Order Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <ShoppingBag className="h-5 w-5" />
+              Order Details - {selectedOrder?.id}
+            </DialogTitle>
+            <DialogDescription>Complete order information</DialogDescription>
+          </DialogHeader>
+          {selectedOrder && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Customer</p>
+                  <p className="font-medium">{selectedOrder.shippingAddress.fullName}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Order Date</p>
+                  <p className="font-medium">{new Date(selectedOrder.createdAt).toLocaleString()}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Status</p>
+                  <Badge className={statusConfig[selectedOrder.status]?.bgGradient}>
+                    {selectedOrder.status.charAt(0).toUpperCase() + selectedOrder.status.slice(1)}
+                  </Badge>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Total Amount</p>
+                  <p className="font-bold text-lg text-emerald-600">${selectedOrder.totalAmount.toFixed(2)}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Shipping Address</p>
+                <div className="p-3 bg-muted/50 rounded-lg">
+                  <p>{selectedOrder.shippingAddress.fullName}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium">Order Items ({selectedOrder.items.length})</p>
+                <div className="border rounded-lg divide-y">
+                  {selectedOrder.items.map((item: any, idx: number) => (
+                    <div key={idx} className="p-3 flex items-center justify-between">
+                      <span>{item.name || `Product ${idx + 1}`}</span>
+                      <span className="font-medium">x{item.quantity || 1}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {selectedOrder.trackingNumber && (
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">Tracking Number</p>
+                  <p className="font-mono">{selectedOrder.trackingNumber}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Order Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              Edit Order - {selectedOrder?.id}
+            </DialogTitle>
+            <DialogDescription>Update order status and details</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Status</Label>
+              <Select value={editFormData.status} onValueChange={(value) => setEditFormData(prev => ({ ...prev, status: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="shipped">Shipped</SelectItem>
+                  <SelectItem value="delivered">Delivered</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Tracking Number</Label>
+              <Input 
+                value={editFormData.trackingNumber}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, trackingNumber: e.target.value }))}
+                placeholder="Enter tracking number"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Notes</Label>
+              <Textarea 
+                value={editFormData.notes}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, notes: e.target.value }))}
+                placeholder="Add order notes..."
+                rows={3}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleUpdateOrder} className="bg-gradient-to-r from-blue-500 to-indigo-600">
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 };

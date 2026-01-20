@@ -4,11 +4,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Search, Package, AlertTriangle, Plus, Minus, TrendingUp, TrendingDown, BarChart3, Boxes, Sparkles, RefreshCw } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Search, Package, AlertTriangle, Plus, Minus, TrendingUp, TrendingDown, BarChart3, Boxes, Sparkles, RefreshCw, Edit, Save } from 'lucide-react';
 import { getAllProducts } from '@/data/products';
 import BulkOperations from '@/components/admin/BulkOperations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Progress } from '@/components/ui/progress';
+import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -23,14 +26,35 @@ const cardVariants = {
   visible: { opacity: 1, y: 0 }
 };
 
+interface ProductWithStock {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  images: string[];
+  inStock: boolean;
+  stockLevel: number;
+  lowStockThreshold: number;
+}
+
 export const ModernInventoryManagement = () => {
-  const [products, setProducts] = useState(getAllProducts());
+  const initialProducts = getAllProducts().map(p => ({
+    ...p,
+    stockLevel: p.inStock ? Math.floor(Math.random() * 100) + 1 : 0,
+    lowStockThreshold: 20
+  }));
+  
+  const [products, setProducts] = useState<ProductWithStock[]>(initialProducts);
   const [searchTerm, setSearchTerm] = useState('');
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductWithStock | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({ stockLevel: 0, lowStockThreshold: 20 });
 
-  const getStockStatus = (inStock: boolean) => {
-    if (!inStock) return { label: 'Out of Stock', variant: 'destructive' as const, color: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300' };
-    return { label: 'In Stock', variant: 'default' as const, color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' };
+  const getStockStatus = (product: ProductWithStock) => {
+    if (product.stockLevel === 0) return { label: 'Out of Stock', color: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300' };
+    if (product.stockLevel <= product.lowStockThreshold) return { label: 'Low Stock', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300' };
+    return { label: 'In Stock', color: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300' };
   };
 
   const filteredProducts = products.filter(product =>
@@ -39,18 +63,58 @@ export const ModernInventoryManagement = () => {
 
   const inventoryStats = {
     total: products.length,
-    inStock: products.filter(p => p.inStock).length,
-    outOfStock: products.filter(p => !p.inStock).length,
-    lowStock: 5,
+    inStock: products.filter(p => p.stockLevel > p.lowStockThreshold).length,
+    lowStock: products.filter(p => p.stockLevel > 0 && p.stockLevel <= p.lowStockThreshold).length,
+    outOfStock: products.filter(p => p.stockLevel === 0).length,
   };
 
-  const stockPercentage = (inventoryStats.inStock / inventoryStats.total) * 100;
+  const stockPercentage = ((inventoryStats.inStock + inventoryStats.lowStock) / inventoryStats.total) * 100;
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
-    setProducts(getAllProducts());
+    toast.success('Inventory refreshed', { description: 'Stock levels have been updated' });
     setIsRefreshing(false);
+  };
+
+  const handleAdjustStock = (productId: string, adjustment: number) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === productId) {
+        const newStockLevel = Math.max(0, p.stockLevel + adjustment);
+        toast.success('Stock updated', { description: `${p.name} stock ${adjustment > 0 ? 'increased' : 'decreased'} by ${Math.abs(adjustment)}` });
+        return { ...p, stockLevel: newStockLevel, inStock: newStockLevel > 0 };
+      }
+      return p;
+    }));
+  };
+
+  const handleEditStock = (product: ProductWithStock) => {
+    setSelectedProduct(product);
+    setEditFormData({ stockLevel: product.stockLevel, lowStockThreshold: product.lowStockThreshold });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSaveStock = () => {
+    if (!selectedProduct) return;
+    
+    setProducts(prev => prev.map(p => 
+      p.id === selectedProduct.id 
+        ? { ...p, stockLevel: editFormData.stockLevel, lowStockThreshold: editFormData.lowStockThreshold, inStock: editFormData.stockLevel > 0 }
+        : p
+    ));
+    
+    toast.success('Stock updated', { description: `${selectedProduct.name} stock has been updated` });
+    setIsEditDialogOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleRestockAll = () => {
+    setProducts(prev => prev.map(p => ({
+      ...p,
+      stockLevel: p.stockLevel < p.lowStockThreshold ? p.lowStockThreshold + 30 : p.stockLevel,
+      inStock: true
+    })));
+    toast.success('Restock complete', { description: 'All low stock items have been restocked' });
   };
 
   return (
@@ -82,6 +146,15 @@ export const ModernInventoryManagement = () => {
             tagColor: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300'
           },
           { 
+            title: 'Low Stock', 
+            value: inventoryStats.lowStock, 
+            icon: AlertTriangle, 
+            gradient: 'from-amber-500 to-orange-600',
+            bgGradient: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
+            tag: 'Warning',
+            tagColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300'
+          },
+          { 
             title: 'Out of Stock', 
             value: inventoryStats.outOfStock, 
             icon: TrendingDown, 
@@ -89,15 +162,6 @@ export const ModernInventoryManagement = () => {
             bgGradient: 'from-rose-50 to-red-50 dark:from-rose-950/30 dark:to-red-950/30',
             tag: 'Needs Restock',
             tagColor: 'bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300'
-          },
-          { 
-            title: 'Low Stock Alert', 
-            value: inventoryStats.lowStock, 
-            icon: AlertTriangle, 
-            gradient: 'from-amber-500 to-orange-600',
-            bgGradient: 'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-            tag: 'Warning',
-            tagColor: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300'
           },
         ].map((stat, index) => {
           const Icon = stat.icon;
@@ -149,27 +213,33 @@ export const ModernInventoryManagement = () => {
                   <p className="text-sm text-muted-foreground">Current inventory status</p>
                 </div>
               </div>
-              <Badge className={stockPercentage > 80 ? 'bg-emerald-100 text-emerald-700' : stockPercentage > 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}>
-                {stockPercentage.toFixed(0)}% Healthy
-              </Badge>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={handleRestockAll} className="border-amber-200 text-amber-700 hover:bg-amber-50">
+                  <Package className="h-4 w-4 mr-2" />
+                  Restock Low Items
+                </Button>
+                <Badge className={stockPercentage > 80 ? 'bg-emerald-100 text-emerald-700' : stockPercentage > 50 ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700'}>
+                  {stockPercentage.toFixed(0)}% Healthy
+                </Badge>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span>In Stock Items</span>
-                <span className="font-semibold">{inventoryStats.inStock} / {inventoryStats.total}</span>
+                <span>Stocked Items</span>
+                <span className="font-semibold">{inventoryStats.inStock + inventoryStats.lowStock} / {inventoryStats.total}</span>
               </div>
               <Progress value={stockPercentage} className="h-3 bg-gray-200 dark:bg-gray-800" />
               <div className="flex gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500" /> In Stock
+                  <div className="w-2 h-2 rounded-full bg-emerald-500" /> In Stock ({inventoryStats.inStock})
                 </span>
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-amber-500" /> Low Stock
+                  <div className="w-2 h-2 rounded-full bg-amber-500" /> Low Stock ({inventoryStats.lowStock})
                 </span>
                 <span className="flex items-center gap-1">
-                  <div className="w-2 h-2 rounded-full bg-rose-500" /> Out of Stock
+                  <div className="w-2 h-2 rounded-full bg-rose-500" /> Out of Stock ({inventoryStats.outOfStock})
                 </span>
               </div>
             </div>
@@ -250,9 +320,8 @@ export const ModernInventoryManagement = () => {
                 <TableBody>
                   <AnimatePresence mode="popLayout">
                     {filteredProducts.map((product, index) => {
-                      const stockStatus = getStockStatus(product.inStock);
-                      const stockLevel = product.inStock ? Math.floor(Math.random() * 100) + 1 : 0;
-                      const stockColor = stockLevel > 50 ? 'text-emerald-600' : stockLevel > 20 ? 'text-amber-600' : 'text-rose-600';
+                      const stockStatus = getStockStatus(product);
+                      const stockColor = product.stockLevel > product.lowStockThreshold ? 'text-emerald-600' : product.stockLevel > 0 ? 'text-amber-600' : 'text-rose-600';
                       
                       return (
                         <motion.tr
@@ -298,25 +367,46 @@ export const ModernInventoryManagement = () => {
                             <div className="flex items-center gap-2">
                               <div className="w-16">
                                 <Progress 
-                                  value={stockLevel} 
+                                  value={Math.min((product.stockLevel / (product.lowStockThreshold * 3)) * 100, 100)} 
                                   className="h-2"
                                 />
                               </div>
                               <span className={`font-semibold ${stockColor}`}>
-                                {stockLevel} units
+                                {product.stockLevel} units
                               </span>
                             </div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-1">
                               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                <Button variant="outline" size="sm" className="h-8 w-8 p-0 border-rose-200 hover:bg-rose-50 hover:text-rose-600">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0 border-rose-200 hover:bg-rose-50 hover:text-rose-600"
+                                  onClick={() => handleAdjustStock(product.id, -1)}
+                                  disabled={product.stockLevel === 0}
+                                >
                                   <Minus className="h-3 w-3" />
                                 </Button>
                               </motion.div>
                               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                                <Button variant="outline" size="sm" className="h-8 w-8 p-0 border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0 border-emerald-200 hover:bg-emerald-50 hover:text-emerald-600"
+                                  onClick={() => handleAdjustStock(product.id, 1)}
+                                >
                                   <Plus className="h-3 w-3" />
+                                </Button>
+                              </motion.div>
+                              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0 border-blue-200 hover:bg-blue-50 hover:text-blue-600"
+                                  onClick={() => handleEditStock(product)}
+                                >
+                                  <Edit className="h-3 w-3" />
                                 </Button>
                               </motion.div>
                             </div>
@@ -331,6 +421,47 @@ export const ModernInventoryManagement = () => {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Edit Stock Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Edit className="h-5 w-5" />
+              Edit Stock - {selectedProduct?.name}
+            </DialogTitle>
+            <DialogDescription>Update stock level and threshold</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Stock Level</Label>
+              <Input 
+                type="number"
+                min="0"
+                value={editFormData.stockLevel}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, stockLevel: parseInt(e.target.value) || 0 }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Low Stock Threshold</Label>
+              <Input 
+                type="number"
+                min="1"
+                value={editFormData.lowStockThreshold}
+                onChange={(e) => setEditFormData(prev => ({ ...prev, lowStockThreshold: parseInt(e.target.value) || 1 }))}
+              />
+              <p className="text-xs text-muted-foreground">Alert when stock falls below this number</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSaveStock} className="bg-gradient-to-r from-cyan-500 to-blue-600">
+              <Save className="h-4 w-4 mr-2" />
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 };
