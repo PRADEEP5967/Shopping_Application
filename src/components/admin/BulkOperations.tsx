@@ -71,19 +71,23 @@ const BulkOperations: React.FC = () => {
   };
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+      <CardHeader className="bg-gradient-to-r from-violet-50/50 to-purple-50/50 dark:from-violet-950/20 dark:to-purple-950/20">
         <CardTitle className="flex items-center gap-2">
-          <Package className="w-5 h-5" />
-          Bulk Product Operations
+          <div className="p-2 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg">
+            <Package className="w-5 h-5 text-white" />
+          </div>
+          <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+            Bulk Product Operations
+          </span>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 p-6">
         {/* Bulk Actions Panel */}
-        <div className="p-4 bg-gray-50 rounded-lg space-y-4">
-          <div className="flex items-center gap-4">
+        <div className="p-4 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-950/20 dark:to-purple-950/20 rounded-xl space-y-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Select value={bulkAction} onValueChange={setBulkAction}>
-              <SelectTrigger className="w-48">
+              <SelectTrigger className="w-48 border-violet-200 dark:border-violet-800">
                 <SelectValue placeholder="Select action" />
               </SelectTrigger>
               <SelectContent>
@@ -96,36 +100,53 @@ const BulkOperations: React.FC = () => {
             </Select>
 
             {bulkAction === 'updatePrice' && (
-              <Input
-                type="number"
-                placeholder="New price"
-                value={bulkPrice}
-                onChange={(e) => setBulkPrice(e.target.value)}
-                className="w-32"
-              />
+              <div className="flex items-center gap-2">
+                <DollarSign className="h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="number"
+                  placeholder="New price"
+                  value={bulkPrice}
+                  onChange={(e) => setBulkPrice(e.target.value)}
+                  className="w-32 border-violet-200 dark:border-violet-800"
+                />
+              </div>
             )}
 
             {bulkAction === 'updateCategory' && (
-              <Input
-                placeholder="New category"
-                value={bulkCategory}
-                onChange={(e) => setBulkCategory(e.target.value)}
-                className="w-48"
-              />
+              <div className="flex items-center gap-2">
+                <Tag className="h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="New category"
+                  value={bulkCategory}
+                  onChange={(e) => setBulkCategory(e.target.value)}
+                  className="w-48 border-violet-200 dark:border-violet-800"
+                />
+              </div>
             )}
 
             <Button 
               onClick={executeBulkAction}
               disabled={selectedProducts.length === 0 || !bulkAction}
+              className={`bg-gradient-to-r ${bulkAction === 'delete' ? 'from-rose-500 to-red-600' : 'from-violet-500 to-purple-600'} hover:opacity-90 shadow-lg`}
             >
               Apply to {selectedProducts.length} products
             </Button>
           </div>
 
           {selectedProducts.length > 0 && (
-            <Badge variant="secondary">
-              {selectedProducts.length} products selected
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge className="bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300">
+                {selectedProducts.length} products selected
+              </Badge>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setSelectedProducts([])}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Clear selection
+              </Button>
+            </div>
           )}
         </div>
 
