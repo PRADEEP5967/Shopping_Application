@@ -75,6 +75,9 @@ import TermsOfService from '@/pages/TermsOfService';
 import ReturnPolicy from '@/pages/ReturnPolicy';
 import ShoppingPolicy from '@/pages/ShoppingPolicy';
 import ReturnsExchanges from '@/pages/ReturnsExchanges';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import ShippingPolicy from '@/pages/ShippingPolicy';
+import Sitemap from '@/pages/Sitemap';
 
 // Feature Pages
 import Efficiency from '@/pages/Efficiency';
@@ -159,9 +162,14 @@ const MainRoutes = () => {
       <Route path="/contact" element={<PageWrapper pageName="Contact Us"><Contact /></PageWrapper>} />
       <Route path="/faq" element={<PageWrapper pageName="FAQ"><FAQ /></PageWrapper>} />
       <Route path="/terms" element={<PageWrapper pageName="Terms of Service"><TermsOfService /></PageWrapper>} />
+      <Route path="/terms-of-service" element={<PageWrapper pageName="Terms of Service"><TermsOfService /></PageWrapper>} />
       <Route path="/return-policy" element={<PageWrapper pageName="Return Policy"><ReturnPolicy /></PageWrapper>} />
       <Route path="/shopping-policy" element={<PageWrapper pageName="Shopping Policy"><ShoppingPolicy /></PageWrapper>} />
+      <Route path="/shipping-policy" element={<PageWrapper pageName="Shipping Policy"><ShippingPolicy /></PageWrapper>} />
       <Route path="/returns" element={<PageWrapper pageName="Returns & Exchanges"><ReturnsExchanges /></PageWrapper>} />
+      <Route path="/privacy-policy" element={<PageWrapper pageName="Privacy Policy"><PrivacyPolicy /></PageWrapper>} />
+      <Route path="/sitemap" element={<PageWrapper pageName="Sitemap"><Sitemap /></PageWrapper>} />
+      <Route path="/account" element={<PageWrapper pageName="My Account"><MyAccount /></PageWrapper>} />
       
       {/* Feature Pages */}
       <Route path="/efficiency" element={<PageWrapper pageName="Efficiency"><Efficiency /></PageWrapper>} />
