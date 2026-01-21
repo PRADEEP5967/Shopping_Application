@@ -16,6 +16,7 @@ import AdminSettings from '@/pages/admin/Settings';
 import AdminNotifications from '@/pages/admin/Notifications';
 import AdminHelp from '@/pages/admin/Help';
 import AdminPages from '@/pages/admin/Pages';
+import AdminOrderHistory from '@/pages/admin/OrderHistory';
 import ABTestingManager from '@/components/analytics/ABTestingManager';
 import CustomerAnalytics from '@/pages/admin/CustomerAnalytics';
 
@@ -103,6 +104,11 @@ export const AdminRoutes = (
     <Route path="/admin/activity" element={
       <AdminDashboardLayout title="Activity Log">
         <AdminActivity />
+      </AdminDashboardLayout>
+    } />
+    <Route path="/admin/order-history" element={
+      <AdminDashboardLayout title="Order History">
+        <AdminOrderHistory />
       </AdminDashboardLayout>
     } />
     
