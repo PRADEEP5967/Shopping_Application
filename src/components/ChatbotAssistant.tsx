@@ -1,321 +1,147 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo, memo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Send, X, User, Bot, ShoppingCart, Package, HelpCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'bot';
-  timestamp: Date;
-  suggestions?: string[];
-}
-
-// Move quickActions outside the component to avoid recreation on every render
-const quickActions = [
-  { icon: ShoppingCart, label: 'Find Products', action: 'find-products' },
-  { icon: Package, label: 'Track Order', action: 'track-order' },
-  { icon: HelpCircle, label: 'Get Help', action: 'get-help' }
-];
-
-// Memoized bot response generator
-const generateBotResponse = (userMessage: string): Message => {
-  const lowerMessage = userMessage.toLowerCase();
-
-  let response = {
-    id: Date.now().toString(),
-    text: '',
-    sender: 'bot' as const,
-    timestamp: new Date(),
-    suggestions: [] as string[]
-  };
-
-  if (lowerMessage.includes('find') || lowerMessage.includes('product') || lowerMessage.includes('search')) {
-    response.text = 'I can help you find the perfect product! What are you looking for today? You can search by category, brand, or specific features.';
-    response.suggestions = ['Electronics', 'Clothing', 'Shoes', 'Accessories'];
-  } else if (lowerMessage.includes('order') || lowerMessage.includes('track')) {
-    response.text = 'To track your order, please provide your order number. You can find it in your confirmation email or account dashboard.';
-    response.suggestions = ['Check order status', 'View order history', 'Cancel order'];
-  } else if (lowerMessage.includes('return') || lowerMessage.includes('refund')) {
-    response.text = 'Our return policy allows returns within 30 days of purchase. Items must be in original condition. Would you like to start a return?';
-    response.suggestions = ['Start return', 'Return policy', 'Refund status'];
-  } else if (lowerMessage.includes('size') || lowerMessage.includes('fit')) {
-    response.text = 'I can help you find the right size! Check our size guide or tell me what product you\'re interested in for specific sizing information.';
-    response.suggestions = ['Size guide', 'Fit recommendations', 'Exchange policy'];
-  } else if (lowerMessage.includes('payment') || lowerMessage.includes('card')) {
-    response.text = 'We accept all major credit cards, PayPal, and digital wallets. All payments are secured with SSL encryption. Need help with payment?';
-    response.suggestions = ['Payment methods', 'Billing issues', 'Security info'];
-  } else if (lowerMessage.includes('shipping') || lowerMessage.includes('delivery')) {
-    response.text = 'We offer free shipping on orders over $50. Standard delivery takes 3-5 business days, express delivery 1-2 days. What would you like to know?';
-    response.suggestions = ['Shipping rates', 'Delivery time', 'Express shipping'];
-  } else {
-    response.text = 'I\'m here to help! You can ask me about products, orders, returns, sizing, or any other questions about shopping with us.';
-    response.suggestions = ['Browse products', 'Check order', 'Customer support', 'FAQ'];
-  }
-
-  return response;
-};
-
-// Memoized message item for fast list rendering
-const ChatMessage = memo(({ message, onSuggestionClick }: {
-  message: Message;
-  onSuggestionClick: (suggestion: string) => void;
-}) => {
-  return (
-    <div
-      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-    >
-      <div className={`max-w-[80%] ${message.sender === 'user' ? 'order-1' : 'order-2'}`}>
-        <div
-          className={`p-3 rounded-lg ${message.sender === 'user'
-            ? 'bg-blue-500 text-white'
-            : 'bg-gray-100 text-gray-900'
-            }`}
-        >
-          <p className="text-sm">{message.text}</p>
-        </div>
-
-        {message.suggestions && message.suggestions.length > 0 && (
-          <div className="mt-2 space-y-1">
-            {message.suggestions.map((suggestion, index) => (
-              <button
-                key={`${message.id}-suggestion-${index}`}
-                onClick={() => onSuggestionClick(suggestion)}
-                className="block w-full text-left text-xs bg-white border border-gray-200 rounded px-2 py-1 hover:bg-gray-50 transition-colors"
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className={`flex items-end ${message.sender === 'user' ? 'order-2 ml-2' : 'order-1 mr-2'}`}>
-        {message.sender === 'user' ? (
-          <User className="h-6 w-6 text-gray-400" />
-        ) : (
-          <Bot className="h-6 w-6 text-blue-500" />
-        )}
-      </div>
-    </div>
-  );
-});
-ChatMessage.displayName = 'ChatMessage';
+import ChatHeader from './chat/ChatHeader';
+import ChatMessage from './chat/ChatMessage';
+import ChatInput from './chat/ChatInput';
+import ChatQuickActions from './chat/ChatQuickActions';
+import ChatTypingIndicator from './chat/ChatTypingIndicator';
+import { useChatbot } from '@/hooks/useChatbot';
 
 const ChatbotAssistant: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      text: 'Hi! I\'m your shopping assistant. How can I help you today?',
-      sender: 'bot',
-      timestamp: new Date(),
-      suggestions: ['Find products', 'Track my order', 'Return policy', 'Size guide']
-    }
-  ]);
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  const {
+    messages,
+    isTyping,
+    isSoundEnabled,
+    sendMessage,
+    handleQuickAction,
+    clearMessages,
+    toggleSound
+  } = useChatbot();
 
-  // Memoize scrollToBottom for effect
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, []);
-
+  // Scroll to bottom on new messages
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
-
-  // NEW: Batch message send, support multiple queries separated by newline or ";"
-  const handleSendMessage = useCallback(async () => {
-    if (!inputValue.trim()) return;
-
-    // Allow both newlines and semicolons as separators
-    const queries = inputValue
-      .split(/\n|;/)
-      .map(q => q.trim())
-      .filter(q => !!q);
-
-    if (queries.length === 0) return;
-
-    setIsTyping(true);
-    setInputValue('');
-
-    // Prepare user messages
-    const timeBase = Date.now();
-    const userMessages = queries.map((q, idx) => ({
-      id: (timeBase + idx * 2).toString(),
-      text: q,
-      sender: 'user' as const,
-      timestamp: new Date()
-    }));
-
-    // Prepare bot responses in advance (simulate async)
-    const botMessages = queries.map((q, idx) => {
-      // Add +1 offset to avoid duplicate IDs
-      const botMsg = generateBotResponse(q);
-      return {
-        ...botMsg,
-        id: (timeBase + idx * 2 + 1).toString(),
-        timestamp: new Date()
-      };
-    });
-
-    // Batch update messages for performance
-    setMessages(prev => [...prev, ...userMessages, ...botMessages]);
-    setIsTyping(false);
-  }, [inputValue]);
-
-  // Update suggestion click for batch support and performance
-  const handleSuggestionClick = useCallback((suggestion: string) => {
-    setInputValue(suggestion);
-    setTimeout(() => {
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        text: suggestion,
-        sender: 'user',
-        timestamp: new Date()
-      };
-      const botResponse = generateBotResponse(suggestion);
-      botResponse.id = (Date.now() + 1).toString();
-      botResponse.timestamp = new Date();
-      setMessages(prev => [...prev, userMessage, botResponse]);
-      setIsTyping(false);
-      setInputValue('');
-    }, 0);
-  }, []);
-
-  const handleQuickAction = useCallback((action: string) => {
-    let message = '';
-    switch (action) {
-      case 'find-products':
-        message = 'I want to find products';
-        break;
-      case 'track-order':
-        message = 'I need to track my order';
-        break;
-      case 'get-help':
-        message = 'I need help';
-        break;
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    handleSuggestionClick(message);
-  }, [handleSuggestionClick]);
+  }, [messages, isTyping]);
 
-  // Memoize the rendered messages
+  // Track unread messages when chat is closed
+  useEffect(() => {
+    if (!isOpen && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.sender === 'bot') {
+        setUnreadCount(prev => prev + 1);
+      }
+    }
+  }, [messages, isOpen]);
+
+  // Reset unread count when opening chat
+  useEffect(() => {
+    if (isOpen) {
+      setUnreadCount(0);
+    }
+  }, [isOpen]);
+
+  const handleSuggestionClick = (suggestion: string) => {
+    sendMessage(suggestion);
+  };
+
   const renderedMessages = useMemo(() => (
-    messages.map((message) => (
+    messages.map((message, index) => (
       <ChatMessage
         key={message.id}
         message={message}
         onSuggestionClick={handleSuggestionClick}
+        isLatest={index === messages.length - 1 && message.sender === 'bot'}
       />
     ))
-  ), [messages, handleSuggestionClick]);
+  ), [messages]);
 
   return (
     <>
-      {/* Chat Toggle Button */}
+      {/* Floating Chat Button */}
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-lg z-40 sm:bottom-6 sm:right-6"
+        className={cn(
+          "fixed bottom-6 right-6 rounded-full w-14 h-14 z-40",
+          "bg-gradient-to-br from-primary to-accent shadow-lg",
+          "hover:shadow-xl hover:scale-105 transition-all duration-300",
+          "group"
+        )}
         size="icon"
         aria-label="Open Chat Assistant"
       >
-        <MessageCircle className="h-6 w-6" />
+        <MessageCircle className="h-6 w-6 text-white group-hover:scale-110 transition-transform" />
+        {unreadCount > 0 && (
+          <Badge 
+            className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-destructive text-destructive-foreground text-xs animate-bounce"
+          >
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </Badge>
+        )}
       </Button>
 
       {/* Chat Window */}
       {isOpen && (
-        <Card
-          className="
-            fixed bottom-0 left-0 right-0 mx-auto
-            w-full max-w-full h-[75dvh] rounded-t-lg z-50 flex flex-col shadow-xl
-            animate-fade-in
-            sm:bottom-6 sm:left-auto sm:right-6 sm:mx-0 sm:w-[400px] sm:max-w-[95vw] sm:h-[500px] sm:rounded-lg
-          "
-        >
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-blue-500" />
-                <CardTitle className="text-lg">Shopping Assistant</CardTitle>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsOpen(false)}
-                className="h-8 w-8"
-                aria-label="Close Chat Assistant"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="flex gap-2 flex-wrap">
-              {quickActions.map((action) => (
-                <Button
-                  key={action.action}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleQuickAction(action.action)}
-                  className="text-xs"
-                >
-                  <action.icon className="h-3 w-3 mr-1" />
-                  {action.label}
-                </Button>
-              ))}
-            </div>
-          </CardHeader>
+        <>
+          {/* Backdrop for mobile */}
+          <div 
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 sm:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+          
+          <Card
+            className={cn(
+              "fixed z-50 flex flex-col overflow-hidden",
+              "shadow-2xl border border-border/50",
+              // Mobile: full screen from bottom
+              "bottom-0 left-0 right-0 h-[85dvh] rounded-t-2xl",
+              // Desktop: positioned bottom-right
+              "sm:bottom-6 sm:right-6 sm:left-auto sm:h-[600px] sm:w-[400px] sm:rounded-2xl",
+              // Animation
+              "animate-in slide-in-from-bottom-4 duration-300"
+            )}
+          >
+            {/* Header */}
+            <ChatHeader
+              onClose={() => setIsOpen(false)}
+              onClear={clearMessages}
+              isSoundEnabled={isSoundEnabled}
+              onToggleSound={toggleSound}
+            />
 
-          <CardContent className="flex-1 flex flex-col p-0">
+            {/* Quick Actions */}
+            <div className="p-3 border-b border-border bg-muted/30">
+              <ChatQuickActions onAction={handleQuickAction} />
+            </div>
+
             {/* Messages */}
-            <div
-              className="
-                flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 scrollbar-thin scrollbar-thumb-gray-300
-                bg-background
-              "
+            <div 
+              className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background to-muted/20"
               style={{ minHeight: 0 }}
             >
               {renderedMessages}
-              {isTyping && (
-                <div className="flex justify-start">
-                  <div className="flex items-center space-x-2">
-                    <Bot className="h-6 w-6 text-blue-500" />
-                    <div className="bg-gray-100 rounded-lg p-3">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {isTyping && <ChatTypingIndicator />}
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="border-t p-2 sm:p-4 bg-card">
-              <div className="flex gap-2">
-                <Input
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleSendMessage();
-                    }
-                  }}
-                  placeholder="Type your message... (multiple queries? Separate by newline or ; )"
-                  className="flex-1 text-base sm:text-sm"
-                />
-                <Button onClick={handleSendMessage} size="icon" aria-label="Send message">
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <ChatInput 
+              onSend={sendMessage}
+              disabled={isTyping}
+              placeholder="Type your message..."
+            />
+          </Card>
+        </>
       )}
     </>
   );
