@@ -38,6 +38,20 @@ import FurniturePage from '@/pages/FurniturePage';
 import FitnessPage from '@/pages/FitnessPage';
 import AudioPage from '@/pages/AudioPage';
 import HealthPage from '@/pages/HealthPage';
+import AutomotivePage from '@/pages/AutomotivePage';
+import BooksPage from '@/pages/BooksPage';
+import GiftsPage from '@/pages/GiftsPage';
+import KitchenPage from '@/pages/KitchenPage';
+import JewelryPage from '@/pages/JewelryPage';
+import ArtPage from '@/pages/ArtPage';
+import OfficePage from '@/pages/OfficePage';
+import TravelPage from '@/pages/TravelPage';
+import PetsPage from '@/pages/PetsPage';
+import BeautyPage from '@/pages/BeautyPage';
+import EyewearPage from '@/pages/EyewearPage';
+import SportsPage from '@/pages/SportsPage';
+import MusicalPage from '@/pages/MusicalPage';
+import ToolsPage from '@/pages/ToolsPage';
 
 // Search & Discovery
 import SearchPage from '@/pages/SearchPage';
@@ -126,6 +140,20 @@ const MainRoutes = () => {
       <Route path="/category/fitness" element={<PageWrapper pageName="Fitness"><FitnessPage /></PageWrapper>} />
       <Route path="/category/audio" element={<PageWrapper pageName="Audio"><AudioPage /></PageWrapper>} />
       <Route path="/category/health" element={<PageWrapper pageName="Health"><HealthPage /></PageWrapper>} />
+      <Route path="/category/automotive" element={<PageWrapper pageName="Automotive"><AutomotivePage /></PageWrapper>} />
+      <Route path="/category/books" element={<PageWrapper pageName="Books"><BooksPage /></PageWrapper>} />
+      <Route path="/category/gifts" element={<PageWrapper pageName="Gifts"><GiftsPage /></PageWrapper>} />
+      <Route path="/category/kitchen" element={<PageWrapper pageName="Kitchen"><KitchenPage /></PageWrapper>} />
+      <Route path="/category/jewelry" element={<PageWrapper pageName="Jewelry"><JewelryPage /></PageWrapper>} />
+      <Route path="/category/art" element={<PageWrapper pageName="Art"><ArtPage /></PageWrapper>} />
+      <Route path="/category/office" element={<PageWrapper pageName="Office"><OfficePage /></PageWrapper>} />
+      <Route path="/category/travel" element={<PageWrapper pageName="Travel"><TravelPage /></PageWrapper>} />
+      <Route path="/category/pets" element={<PageWrapper pageName="Pets"><PetsPage /></PageWrapper>} />
+      <Route path="/category/beauty" element={<PageWrapper pageName="Beauty"><BeautyPage /></PageWrapper>} />
+      <Route path="/category/eyewear" element={<PageWrapper pageName="Eyewear"><EyewearPage /></PageWrapper>} />
+      <Route path="/category/sports" element={<PageWrapper pageName="Sports"><SportsPage /></PageWrapper>} />
+      <Route path="/category/musical" element={<PageWrapper pageName="Musical"><MusicalPage /></PageWrapper>} />
+      <Route path="/category/tools" element={<PageWrapper pageName="Tools"><ToolsPage /></PageWrapper>} />
       
       {/* Search & Discovery */}
       <Route path="/search" element={<PageWrapper pageName="Search"><SearchPage /></PageWrapper>} />
