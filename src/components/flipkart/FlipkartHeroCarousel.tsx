@@ -31,6 +31,48 @@ const banners = [
     subtitle: 'Latest Tech at Best Prices',
     gradient: 'from-emerald-500 to-teal-500',
   },
+  {
+    id: 5,
+    image: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1200&h=400&fit=crop',
+    title: 'Book Festival',
+    subtitle: 'Bestsellers Starting at ₹99',
+    gradient: 'from-indigo-600 to-blue-500',
+  },
+  {
+    id: 6,
+    image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=1200&h=400&fit=crop',
+    title: 'Pet Paradise Sale',
+    subtitle: 'Everything for Your Furry Friends',
+    gradient: 'from-yellow-500 to-amber-500',
+  },
+  {
+    id: 7,
+    image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=1200&h=400&fit=crop',
+    title: 'Beauty Bonanza',
+    subtitle: 'Skincare & Makeup Up to 70% Off',
+    gradient: 'from-fuchsia-500 to-pink-500',
+  },
+  {
+    id: 8,
+    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=1200&h=400&fit=crop',
+    title: 'Jewelry Collection',
+    subtitle: 'Exclusive Designs at Amazing Prices',
+    gradient: 'from-purple-600 to-violet-600',
+  },
+  {
+    id: 9,
+    image: 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=1200&h=400&fit=crop',
+    title: 'Tool Time Sale',
+    subtitle: 'Power Tools & Equipment Deals',
+    gradient: 'from-slate-600 to-gray-700',
+  },
+  {
+    id: 10,
+    image: 'https://images.unsplash.com/photo-1565026057447-bc90a3dceb87?w=1200&h=400&fit=crop',
+    title: 'Travel Essentials',
+    subtitle: 'Luggage & Accessories from ₹499',
+    gradient: 'from-cyan-500 to-blue-500',
+  },
 ];
 
 const FlipkartHeroCarousel: React.FC = () => {
