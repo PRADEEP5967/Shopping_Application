@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import ModernProductGrid from "@/components/ModernProductGrid";
 import ProductCarousel from '@/components/product/ProductCarousel';
+import CategoryProductsSection from '@/components/category/CategoryProductsSection';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -109,23 +108,13 @@ const KitchenPage = () => {
         {bestsellers.length > 0 && <ProductCarousel products={bestsellers} title="Bestselling Kitchen" subtitle="Most popular picks" icon={<TrendingUp className="w-6 h-6 text-orange-500" />} badge="Bestseller" badgeVariant="bestseller" viewAllLink="/category/kitchen" gradient="from-orange-950/10 to-red-950/10" />}
         {relatedProducts.length > 0 && <ProductCarousel products={relatedProducts} title="Related Products" subtitle="Smart Home & Electronics" icon={<Package className="w-6 h-6 text-amber-500" />} badge="Related" badgeVariant="trending" viewAllLink="/products" gradient="from-amber-950/10 to-red-950/10" />}
 
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-3xl font-bold mb-4 text-foreground">All Kitchen Products</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Browse our complete kitchen collection.</p>
-            </motion.div>
-            {kitchenProducts.length > 0 ? (
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}><ModernProductGrid products={kitchenProducts} /></motion.div>
-            ) : (
-              <div className="text-center py-12 bg-card rounded-2xl border border-border">
-                <Utensils className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground mb-4">No kitchen products available yet. Check back soon!</p>
-                <Link to="/products"><Button className="bg-gradient-to-r from-red-600 to-orange-600">View All Products</Button></Link>
-              </div>
-            )}
-          </div>
-        </section>
+        <CategoryProductsSection
+          products={kitchenProducts}
+          title="All Kitchen Products"
+          subtitle="Browse our complete kitchen collection with filters."
+          emptyIcon={Utensils}
+          emptyMessage="No kitchen products available yet. Check back soon!"
+        />
 
         <section className="py-16 bg-gradient-to-br from-red-600 to-orange-600">
           <div className="container mx-auto px-4 text-center">

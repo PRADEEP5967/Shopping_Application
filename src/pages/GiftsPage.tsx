@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartFlyout from '@/components/CartFlyout';
-import ModernProductGrid from "@/components/ModernProductGrid";
 import ProductCarousel from '@/components/product/ProductCarousel';
+import CategoryProductsSection from '@/components/category/CategoryProductsSection';
 import { getAllProducts } from '@/data/products';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -109,23 +108,13 @@ const GiftsPage = () => {
         {bestsellers.length > 0 && <ProductCarousel products={bestsellers} title="Bestselling Gifts" subtitle="Most popular picks" icon={<TrendingUp className="w-6 h-6 text-pink-500" />} badge="Bestseller" badgeVariant="bestseller" viewAllLink="/category/gifts" gradient="from-pink-950/10 to-fuchsia-950/10" />}
         {relatedProducts.length > 0 && <ProductCarousel products={relatedProducts} title="Related Products" subtitle="Accessories & Jewelry" icon={<Package className="w-6 h-6 text-purple-500" />} badge="Related" badgeVariant="trending" viewAllLink="/products" gradient="from-purple-950/10 to-fuchsia-950/10" />}
 
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <h2 className="text-3xl font-bold mb-4 text-foreground">All Gifts</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Browse our complete gift collection.</p>
-            </motion.div>
-            {giftsProducts.length > 0 ? (
-              <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}><ModernProductGrid products={giftsProducts} /></motion.div>
-            ) : (
-              <div className="text-center py-12 bg-card rounded-2xl border border-border">
-                <Gift className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-muted-foreground mb-4">No gifts available yet. Check back soon!</p>
-                <Link to="/products"><Button className="bg-gradient-to-r from-fuchsia-600 to-pink-600">View All Products</Button></Link>
-              </div>
-            )}
-          </div>
-        </section>
+        <CategoryProductsSection
+          products={giftsProducts}
+          title="All Gifts"
+          subtitle="Browse our complete gift collection with filters."
+          emptyIcon={Gift}
+          emptyMessage="No gifts available yet. Check back soon!"
+        />
 
         <section className="py-16 bg-gradient-to-br from-fuchsia-600 to-pink-600">
           <div className="container mx-auto px-4 text-center">

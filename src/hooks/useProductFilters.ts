@@ -61,9 +61,22 @@ export const useProductFilters = ({
       case 'rating':
         filteredProducts.sort((a, b) => b.rating - a.rating);
         break;
+      case 'name-asc':
+        filteredProducts.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case 'name-desc':
+        filteredProducts.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      case 'newest':
+        // Sort by id descending (newer products have higher ids typically)
+        filteredProducts.sort((a, b) => b.id.localeCompare(a.id));
+        break;
+      case 'popular':
+        filteredProducts.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        break;
       case 'featured':
       default:
-        // Default sorting can be based on an ID or could be randomized
+        // Default sorting - keep original order
         break;
     }
 
