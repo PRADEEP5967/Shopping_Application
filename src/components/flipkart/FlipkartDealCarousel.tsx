@@ -13,81 +13,6 @@ interface Deal {
   rating: number;
 }
 
-const flashDeals: Deal[] = [
-  {
-    id: 'f1',
-    name: 'Wireless Earbuds Pro',
-    image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&h=300&fit=crop',
-    price: 1999,
-    originalPrice: 4999,
-    discount: 60,
-    rating: 4.3,
-  },
-  {
-    id: 'f2',
-    name: 'Smart Fitness Band',
-    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=300&h=300&fit=crop',
-    price: 1499,
-    originalPrice: 3999,
-    discount: 63,
-    rating: 4.2,
-  },
-  {
-    id: 'f3',
-    name: 'Portable Bluetooth Speaker',
-    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop',
-    price: 999,
-    originalPrice: 2999,
-    discount: 67,
-    rating: 4.4,
-  },
-  {
-    id: 'f4',
-    name: 'Gaming Mouse RGB',
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=300&fit=crop',
-    price: 799,
-    originalPrice: 1999,
-    discount: 60,
-    rating: 4.5,
-  },
-  {
-    id: 'f5',
-    name: 'Mechanical Keyboard',
-    image: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=300&h=300&fit=crop',
-    price: 2499,
-    originalPrice: 5999,
-    discount: 58,
-    rating: 4.6,
-  },
-  {
-    id: 'f6',
-    name: 'USB-C Power Bank 20000mAh',
-    image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=300&h=300&fit=crop',
-    price: 1299,
-    originalPrice: 2999,
-    discount: 57,
-    rating: 4.3,
-  },
-  {
-    id: 'f7',
-    name: 'Webcam HD 1080p',
-    image: 'https://images.unsplash.com/photo-1587826080692-f439cd0b70da?w=300&h=300&fit=crop',
-    price: 1999,
-    originalPrice: 4499,
-    discount: 56,
-    rating: 4.1,
-  },
-  {
-    id: 'f8',
-    name: 'LED Desk Lamp Smart',
-    image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=300&h=300&fit=crop',
-    price: 899,
-    originalPrice: 1999,
-    discount: 55,
-    rating: 4.4,
-  },
-];
-
 interface FlipkartDealCarouselProps {
   title?: string;
   icon?: React.ReactNode;
@@ -99,7 +24,7 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
   title = 'Flash Deals',
   icon = <Zap className="w-5 h-5 text-yellow-400 fill-yellow-400" />,
   bgColor = 'bg-gradient-to-r from-purple-600 to-blue-600',
-  deals = flashDeals,
+  deals = [],
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -167,10 +92,10 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
                   </h3>
                   <div className="flex items-center gap-1 mb-1">
                     <span className="text-sm sm:text-base font-bold text-gray-900">
-                      ₹{deal.price.toLocaleString()}
+                      ${deal.price.toFixed(2)}
                     </span>
                     <span className="text-[10px] sm:text-xs text-gray-400 line-through">
-                      ₹{deal.originalPrice.toLocaleString()}
+                      ${deal.originalPrice.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
