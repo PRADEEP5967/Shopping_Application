@@ -21,21 +21,23 @@ import { useWishlist } from '@/contexts/WishlistContext';
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
   const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [loading, setLoading] = useState(true);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
   const { items: wishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
 
   useEffect(() => {
+    setLoading(true);
     if (productId) {
       const foundProduct = getProductById(productId);
       setProduct(foundProduct);
       
-      // Set default variant if product has variants
       if (foundProduct?.variants && foundProduct.variants.length > 0) {
         setSelectedVariant(foundProduct.variants[0]);
       }
     }
+    setLoading(false);
   }, [productId]);
 
   const isProductInWishlist = product ? wishlist.some(item => item.id === product.id) : false;
@@ -66,6 +68,19 @@ const ProductDetail = () => {
   const handleVariantSelect = (variant: ProductVariant) => {
     setSelectedVariant(variant);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Header />
+        <CartFlyout />
+        <main className="flex-grow" role="main">
+          <ProductDetailSkeleton />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!product) {
     return (
