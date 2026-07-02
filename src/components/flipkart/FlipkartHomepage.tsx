@@ -41,7 +41,7 @@ const FlipkartHomepage: React.FC = () => {
   const specialDeals = getSlice(24, 8);
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-transparent">
       <FlipkartHeroCarousel />
       <FlipkartCategoryGrid />
 

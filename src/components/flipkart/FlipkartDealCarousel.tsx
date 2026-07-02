@@ -23,7 +23,7 @@ interface FlipkartDealCarouselProps {
 const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
   title = 'Flash Deals',
   icon = <Zap className="w-5 h-5 text-yellow-400 fill-yellow-400" />,
-  bgColor = 'bg-gradient-to-r from-purple-600 to-blue-600',
+  bgColor = '',
   deals = [],
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,17 +39,19 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
   };
 
   return (
-    <section className={`${bgColor} py-4 sm:py-6`}>
+    <section className="py-10 sm:py-14 border-b border-border/40">
       <div className="container mx-auto px-2 sm:px-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            {icon}
-            <h2 className="text-lg sm:text-xl font-bold text-white">{title}</h2>
+        <div className="flex items-end justify-between mb-8 border-b border-border/60 pb-4">
+          <div className="flex items-center gap-4">
+            <span className="opacity-80">{icon}</span>
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-foreground tracking-tight uppercase">{title}</h2>
           </div>
-          <button className="text-white/80 hover:text-white font-semibold text-sm">
-            View All →
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="hidden sm:block text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground hover:text-primary transition-colors">
+              View All
+            </button>
+          </div>
         </div>
 
         {/* Carousel Container */}
@@ -57,9 +59,9 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
           {/* Left Arrow */}
           <button
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg -ml-2 sm:-ml-4"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-card/80 backdrop-blur border border-border hover:bg-primary hover:border-primary rounded-full p-2.5 -ml-2 sm:-ml-4 transition-all"
           >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
+            <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
 
           {/* Scrollable Container */}
@@ -71,35 +73,35 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
               <Link
                 key={deal.id}
                 to={`/product/${deal.id}`}
-                className="min-w-[140px] sm:min-w-[180px] bg-white rounded-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                className="min-w-[160px] sm:min-w-[220px] bg-card border border-border rounded-md overflow-hidden hover:border-primary/70 hover:shadow-[0_0_40px_hsl(var(--primary)/0.2)] transition-all group"
               >
                 {/* Image */}
-                <div className="relative aspect-square p-3 bg-gray-50">
+                <div className="relative aspect-square p-3 bg-background/40 overflow-hidden">
                   <img
                     src={deal.image}
                     alt={deal.name}
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform"
+                    className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
                   />
-                  <Badge className="absolute top-2 left-2 bg-red-500 text-white text-[10px] sm:text-xs font-bold">
+                  <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground text-[10px] sm:text-xs font-bold rounded-none uppercase tracking-widest px-2">
                     {deal.discount}% OFF
                   </Badge>
                 </div>
 
                 {/* Content */}
-                <div className="p-2 sm:p-3">
-                  <h3 className="text-xs sm:text-sm font-medium text-gray-800 line-clamp-2 mb-1">
+                <div className="p-3 sm:p-4">
+                  <h3 className="text-xs sm:text-sm font-medium text-foreground line-clamp-2 mb-2">
                     {deal.name}
                   </h3>
-                  <div className="flex items-center gap-1 mb-1">
-                    <span className="text-sm sm:text-base font-bold text-gray-900">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm sm:text-base font-bold text-foreground">
                       ${deal.price.toFixed(2)}
                     </span>
-                    <span className="text-[10px] sm:text-xs text-gray-400 line-through">
+                    <span className="text-[10px] sm:text-xs text-muted-foreground line-through">
                       ${deal.originalPrice.toFixed(2)}
                     </span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <div className="flex items-center bg-green-600 text-white text-[10px] px-1 py-0.5 rounded">
+                    <div className="flex items-center bg-primary/15 border border-primary/30 text-primary text-[10px] px-1.5 py-0.5 rounded-sm">
                       <span>{deal.rating}</span>
                       <Star className="w-2.5 h-2.5 ml-0.5 fill-current" />
                     </div>
@@ -112,9 +114,9 @@ const FlipkartDealCarousel: React.FC<FlipkartDealCarouselProps> = ({
           {/* Right Arrow */}
           <button
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg -mr-2 sm:-mr-4"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-card/80 backdrop-blur border border-border hover:bg-primary hover:border-primary rounded-full p-2.5 -mr-2 sm:-mr-4 transition-all"
           >
-            <ChevronRight className="w-5 h-5 text-gray-700" />
+            <ChevronRight className="w-5 h-5 text-foreground" />
           </button>
         </div>
       </div>

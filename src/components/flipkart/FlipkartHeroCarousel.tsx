@@ -90,7 +90,7 @@ const FlipkartHeroCarousel: React.FC = () => {
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % banners.length);
 
   return (
-    <div className="relative w-full h-[200px] sm:h-[300px] md:h-[400px] overflow-hidden bg-gray-100">
+    <div className="relative w-full h-[380px] sm:h-[480px] md:h-[620px] overflow-hidden bg-background">
       {/* Slides */}
       <div
         className="flex transition-transform duration-500 ease-out h-full"
@@ -101,19 +101,33 @@ const FlipkartHeroCarousel: React.FC = () => {
             <img
               src={banner.image}
               alt={banner.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover opacity-70"
             />
-            <div className={`absolute inset-0 bg-gradient-to-r ${banner.gradient} opacity-60`} />
-            <div className="absolute inset-0 flex flex-col justify-center items-start px-6 sm:px-12 md:px-20">
-              <h2 className="text-xl sm:text-3xl md:text-5xl font-bold text-white drop-shadow-lg mb-2">
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/40 to-transparent" />
+            <div className="absolute inset-0 flex flex-col justify-center items-start px-6 sm:px-12 md:px-24 max-w-5xl">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="h-px w-10 bg-primary" />
+                <span className="text-[10px] sm:text-xs font-semibold tracking-[0.4em] uppercase text-primary/90">Collection · 2026</span>
+              </div>
+              <h2 className="font-display text-4xl sm:text-6xl md:text-8xl font-extrabold text-foreground leading-[0.9] mb-4 tracking-tight uppercase">
                 {banner.title}
               </h2>
-              <p className="text-sm sm:text-lg md:text-2xl text-white/90 drop-shadow-md">
+              <p className="text-sm sm:text-lg md:text-xl text-muted-foreground max-w-lg mb-8">
                 {banner.subtitle}
               </p>
-              <Button className="mt-4 bg-white text-gray-900 hover:bg-gray-100 font-semibold px-6">
-                Shop Now
-              </Button>
+              <div className="flex items-center gap-8">
+                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold px-8 py-6 uppercase tracking-widest text-xs rounded-none shadow-[0_0_40px_hsl(var(--primary)/0.5)]">
+                  Shop Collection
+                </Button>
+                <div className="hidden sm:flex items-center gap-3 text-foreground/70">
+                  <span className="text-xs font-mono tabular-nums">{String(currentSlide+1).padStart(2,'0')}</span>
+                  <span className="w-24 h-px bg-foreground/20 relative overflow-hidden">
+                    <span className="absolute inset-y-0 left-0 bg-primary transition-all duration-500" style={{width: `${((currentSlide+1)/banners.length)*100}%`}} />
+                  </span>
+                  <span className="text-xs font-mono tabular-nums text-muted-foreground">{String(banners.length).padStart(2,'0')}</span>
+                </div>
+              </div>
             </div>
           </div>
         ))}
@@ -122,25 +136,25 @@ const FlipkartHeroCarousel: React.FC = () => {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
+        className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-card/60 backdrop-blur border border-border hover:bg-primary hover:border-primary rounded-full p-3 transition-all"
       >
-        <ChevronLeft className="h-5 w-5 text-gray-700" />
+        <ChevronLeft className="h-5 w-5 text-foreground" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white rounded-full p-2 shadow-lg transition-all"
+        className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-card/60 backdrop-blur border border-border hover:bg-primary hover:border-primary rounded-full p-3 transition-all"
       >
-        <ChevronRight className="h-5 w-5 text-gray-700" />
+        <ChevronRight className="h-5 w-5 text-foreground" />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
         {banners.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              currentSlide === index ? 'bg-white w-6' : 'bg-white/50'
+            className={`h-1 rounded-full transition-all ${
+              currentSlide === index ? 'bg-primary w-10 shadow-[0_0_12px_hsl(var(--primary))]' : 'bg-foreground/30 w-4'
             }`}
           />
         ))}
