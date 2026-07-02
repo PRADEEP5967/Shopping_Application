@@ -75,7 +75,7 @@ type Props = {
   currentCategorySlug: string;
 };
 
-const containerVariants = {
+const containerVariants: import('framer-motion').Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -85,14 +85,14 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: import('framer-motion').Variants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 15,
     },
