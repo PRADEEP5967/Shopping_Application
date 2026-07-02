@@ -5,32 +5,33 @@
 
 @layer base {
   :root {
-    /* Modern Dark Theme - Deep Space Colors */
-    --background: 222 47% 7%;
-    --foreground: 210 40% 98%;
+    /* Pradeep Mart — Midnight Indigo */
+    /* #0a0a1a base, #141432 panels, #1e1e5a rails, #4f46e5 primary */
+    --background: 240 44% 6%;         /* #0a0a1a */
+    --foreground: 220 30% 96%;
 
-    --card: 224 47% 9%;
-    --card-foreground: 210 40% 98%;
+    --card: 240 45% 11%;              /* #141432 */
+    --card-foreground: 220 30% 96%;
 
-    --popover: 224 47% 9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 240 45% 11%;
+    --popover-foreground: 220 30% 96%;
 
-    /* Primary - Electric Blue */
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --primary-glow: 217 91% 70%;
+    /* Primary - Indigo Electric */
+    --primary: 244 76% 59%;           /* #4f46e5 */
+    --primary-foreground: 220 30% 98%;
+    --primary-glow: 244 90% 72%;
 
-    /* Secondary - Deep Purple */
-    --secondary: 262 83% 58%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Deep Indigo Rail */
+    --secondary: 240 51% 24%;         /* #1e1e5a */
+    --secondary-foreground: 220 30% 98%;
 
-    /* Accent - Cyan */
-    --accent: 189 94% 43%;
-    --accent-foreground: 222 47% 11%;
+    /* Accent - Aurora Violet */
+    --accent: 258 90% 66%;
+    --accent-foreground: 240 45% 8%;
 
-    /* Muted - Subtle Gray */
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
+    /* Muted */
+    --muted: 240 30% 14%;
+    --muted-foreground: 230 15% 68%;
 
     /* Destructive - Vibrant Red */
     --destructive: 0 84% 60%;
@@ -45,26 +46,27 @@
     --warning-foreground: 222 47% 11%;
 
     /* Borders & Inputs */
-    --border: 217 33% 20%;
-    --input: 217 33% 17%;
-    --ring: 217 91% 60%;
+    --border: 240 35% 20%;
+    --input: 240 35% 16%;
+    --ring: 244 76% 59%;
 
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(262 83% 58%) 100%);
-    --gradient-secondary: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(189 94% 43%) 100%);
-    --gradient-dark: linear-gradient(180deg, hsl(222 47% 7%) 0%, hsl(222 47% 5%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(224 47% 9%) 0%, hsl(224 47% 11%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(244 76% 59%) 0%, hsl(258 90% 66%) 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(240 51% 24%) 0%, hsl(244 76% 59%) 100%);
+    --gradient-dark: linear-gradient(180deg, hsl(240 44% 6%) 0%, hsl(240 50% 4%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(240 45% 11%) 0%, hsl(240 45% 13%) 100%);
+    --gradient-hero: radial-gradient(ellipse at top, hsl(244 76% 30% / 0.5), transparent 60%), linear-gradient(180deg, hsl(240 44% 6%), hsl(240 50% 4%));
 
     /* Shadows & Glows */
     --shadow-sm: 0 2px 4px hsla(222 47% 0% / 0.3);
     --shadow-md: 0 4px 12px hsla(222 47% 0% / 0.4);
     --shadow-lg: 0 8px 24px hsla(222 47% 0% / 0.5);
     --shadow-xl: 0 16px 48px hsla(222 47% 0% / 0.6);
-    --glow-primary: 0 0 24px hsla(217 91% 60% / 0.4);
-    --glow-secondary: 0 0 24px hsla(262 83% 58% / 0.4);
-    --glow-accent: 0 0 24px hsla(189 94% 43% / 0.4);
+    --glow-primary: 0 0 32px hsla(244 76% 59% / 0.45);
+    --glow-secondary: 0 0 24px hsla(258 90% 66% / 0.35);
+    --glow-accent: 0 0 24px hsla(258 90% 66% / 0.4);
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
   }
 }
 
@@ -75,7 +77,12 @@
   
   body {
     @apply bg-background text-foreground;
-    background: hsl(var(--background));
+    background:
+      radial-gradient(ellipse 1200px 800px at 10% -10%, hsl(244 76% 20% / 0.35), transparent 60%),
+      radial-gradient(ellipse 900px 600px at 100% 0%, hsl(258 90% 30% / 0.25), transparent 60%),
+      hsl(var(--background));
+    background-attachment: fixed;
+    font-family: 'Figtree', system-ui, sans-serif;
     transition: background-color 0.3s ease, color 0.3s ease;
     font-feature-settings: "kern" 1, "liga" 1;
     -webkit-font-smoothing: antialiased;
@@ -84,24 +91,9 @@
   
   /* Modern Typography */
   h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', system-ui, sans-serif;
     @apply font-bold tracking-tight;
     text-wrap: balance;
-  }
-  
-  h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  h2 {
-    @apply text-3xl md:text-4xl lg:text-5xl;
-  }
-  
-  h3 {
-    @apply text-2xl md:text-3xl lg:text-4xl;
   }
 }
 

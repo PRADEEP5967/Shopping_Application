@@ -19,18 +19,21 @@ const FlipkartProductGrid: React.FC<FlipkartProductGridProps> = ({
   }, []);
 
   return (
-    <section className="bg-white py-4 sm:py-6">
+    <section className="py-14 sm:py-20 border-b border-border/40">
       <div className="container mx-auto px-2 sm:px-4">
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">{title}</h2>
+        <div className="flex items-end justify-between mb-10 border-b border-border/60 pb-4">
+          <div>
+            <p className="text-[10px] font-semibold tracking-[0.4em] uppercase text-primary/80 mb-2">Curated Selection</p>
+            <h2 className="font-display text-2xl sm:text-4xl font-extrabold text-foreground uppercase tracking-tight">{title}</h2>
+          </div>
           {showViewAll && (
-            <button className="text-blue-600 hover:text-blue-700 font-semibold text-sm sm:text-base">
-              View All →
+            <button className="hidden sm:block text-[10px] uppercase tracking-[0.3em] font-bold text-muted-foreground hover:text-primary transition-colors">
+              View All
             </button>
           )}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
           {products.map((product) => (
             <FlipkartProductCard
               key={product.id}

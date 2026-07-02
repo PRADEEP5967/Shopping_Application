@@ -26,7 +26,7 @@ const AddressAutofill: React.FC<AddressAutofillProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Mock address suggestions (in real implementation, this would use Google Places API)
   const mockAddresses = [

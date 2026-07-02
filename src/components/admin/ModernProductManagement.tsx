@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const tableRowVariants = {
+const tableRowVariants: import('framer-motion').Variants = {
   hidden: { opacity: 0, x: -20 },
   visible: (i: number) => ({
     opacity: 1,
@@ -27,7 +27,7 @@ const tableRowVariants = {
     transition: {
       delay: i * 0.05,
       duration: 0.3,
-      ease: "easeOut"
+      ease: "easeOut" as const
     }
   }),
   exit: { opacity: 0, x: 20, transition: { duration: 0.2 } }

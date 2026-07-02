@@ -38,26 +38,27 @@ const banners = [
 
 const FlipkartBannerStrip: React.FC = () => {
   return (
-    <section className="bg-gray-100 py-4">
+    <section className="py-10 border-y border-border/40">
       <div className="container mx-auto px-2 sm:px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
           {banners.map((banner) => (
             <Link
               key={banner.id}
               to={banner.link}
-              className="relative rounded-lg overflow-hidden group h-24 sm:h-32 md:h-40"
+              className="relative rounded-md overflow-hidden group h-32 sm:h-44 md:h-56 border border-border hover:border-primary/60 transition-all"
             >
               <img
                 src={banner.image}
                 alt={banner.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover opacity-60 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700"
               />
-              <div className={`absolute inset-0 bg-gradient-to-r ${banner.gradient} opacity-70`} />
-              <div className="absolute inset-0 flex flex-col justify-center items-center text-center p-2">
-                <h3 className="text-white font-bold text-sm sm:text-lg md:text-xl drop-shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end items-start text-left p-4 sm:p-6">
+                <span className="text-[9px] font-semibold uppercase tracking-[0.3em] text-primary/90 mb-2">Featured</span>
+                <h3 className="font-display text-foreground font-extrabold text-base sm:text-xl md:text-2xl uppercase tracking-tight leading-tight">
                   {banner.title}
                 </h3>
-                <p className="text-white/90 text-xs sm:text-sm md:text-base drop-shadow-md">
+                <p className="text-muted-foreground text-xs sm:text-sm mt-1">
                   {banner.subtitle}
                 </p>
               </div>

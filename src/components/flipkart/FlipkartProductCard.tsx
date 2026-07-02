@@ -43,71 +43,71 @@ const FlipkartProductCard: React.FC<FlipkartProductCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100 hover:shadow-lg transition-all duration-300 group overflow-hidden">
-      <div className="relative aspect-square p-4 bg-gray-50">
+    <div className="bg-card rounded-md border border-border hover:border-primary/60 hover:shadow-[0_0_40px_hsl(var(--primary)/0.15)] transition-all duration-500 group overflow-hidden">
+      <div className="relative aspect-square p-4 bg-background/50 overflow-hidden">
         <Link to={`/product/${id}`}>
           <img
             src={image}
             alt={name}
-            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700"
           />
         </Link>
         
         {discount && (
-          <Badge className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-2 py-1">
+          <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground text-[10px] font-bold px-2.5 py-1 uppercase tracking-widest rounded-none border-0">
             {discount}% OFF
           </Badge>
         )}
         
         {badge && (
-          <Badge className="absolute top-2 right-2 bg-blue-600 text-white text-xs">
+          <Badge className="absolute top-3 right-3 bg-accent text-accent-foreground text-[10px] rounded-none uppercase tracking-widest">
             {badge}
           </Badge>
         )}
         
-        <button className="absolute bottom-2 right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-50">
-          <Heart className="w-4 h-4 text-gray-400 hover:text-red-500" />
+        <button className="absolute bottom-3 right-3 w-9 h-9 bg-card/80 backdrop-blur border border-border rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:border-primary">
+          <Heart className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
         </button>
       </div>
       
-      <div className="p-3 sm:p-4">
+      <div className="p-4 sm:p-5">
         <div className="flex items-center gap-1 mb-2">
-          <div className="flex items-center bg-green-600 text-white text-xs px-1.5 py-0.5 rounded">
+          <div className="flex items-center bg-primary/15 text-primary text-xs px-2 py-0.5 rounded-sm border border-primary/30">
             <span className="font-semibold">{rating}</span>
             <Star className="w-3 h-3 ml-0.5 fill-current" />
           </div>
-          <span className="text-gray-500 text-xs">({reviews.toLocaleString()})</span>
+          <span className="text-muted-foreground text-xs">({reviews.toLocaleString()})</span>
         </div>
         
         <Link to={`/product/${id}`}>
-          <h3 className="font-medium text-gray-800 text-sm sm:text-base line-clamp-2 hover:text-blue-600 transition-colors mb-2">
+          <h3 className="font-heading font-semibold text-foreground text-sm sm:text-base line-clamp-2 hover:text-primary transition-colors mb-2">
             {name}
           </h3>
         </Link>
         
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-lg sm:text-xl font-bold text-gray-900">
+          <span className="text-lg sm:text-xl font-bold text-foreground">
             ${price.toFixed(2)}
           </span>
           {originalPrice && (
-            <span className="text-sm text-gray-400 line-through">
+            <span className="text-sm text-muted-foreground line-through">
               ${originalPrice.toFixed(2)}
             </span>
           )}
           {discount && (
-            <span className="text-sm font-medium text-green-600">
+            <span className="text-sm font-medium text-primary">
               {discount}% off
             </span>
           )}
         </div>
         
         {freeDelivery && (
-          <p className="text-xs text-gray-500 mt-2">Free Delivery</p>
+          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-2">Complimentary Delivery</p>
         )}
         
         <Button 
           size="sm" 
-          className="w-full mt-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
+          className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold uppercase tracking-widest text-xs rounded-none py-5 shadow-[0_0_24px_hsl(var(--primary)/0.35)]"
           onClick={handleAddToCart}
         >
           <ShoppingCart className="w-4 h-4 mr-2" />
