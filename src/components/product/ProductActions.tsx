@@ -1,7 +1,8 @@
 
 import React from 'react';
-import { ShoppingCart, Heart, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Heart, Plus, Minus, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 import { Product, ProductVariant } from '@/types';
 
 interface ProductActionsProps {
@@ -27,6 +28,13 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   onIncrementQuantity,
   onDecrementQuantity
 }) => {
+  const navigate = useNavigate();
+
+  const handleBuyNow = () => {
+    onAddToCart();
+    navigate('/checkout');
+  };
+
   return (
     <div className="space-y-4">
       {/* Quantity */}
@@ -53,9 +61,9 @@ const ProductActions: React.FC<ProductActionsProps> = ({
       </div>
 
       {/* Actions */}
-      <div className="flex gap-3">
-        <Button 
-          className="flex-1" 
+      <div className="grid grid-cols-2 gap-3">
+        <Button
+          variant="outline"
           size="lg"
           onClick={onAddToCart}
           disabled={!isInStock}
@@ -63,14 +71,25 @@ const ProductActions: React.FC<ProductActionsProps> = ({
           <ShoppingCart className="h-5 w-5 mr-2" />
           Add to Cart
         </Button>
-        <Button 
-          variant={isProductInWishlist ? "default" : "outline"}
+        <Button
           size="lg"
-          onClick={onWishlistToggle}
+          onClick={handleBuyNow}
+          disabled={!isInStock}
+          className="bg-primary hover:bg-primary/90 shadow-[0_0_24px_hsl(var(--primary)/0.35)]"
         >
-          <Heart className={`h-5 w-5 ${isProductInWishlist ? 'fill-current' : ''}`} />
+          <Zap className="h-5 w-5 mr-2" />
+          Buy Now
         </Button>
       </div>
+      <Button
+        variant={isProductInWishlist ? 'default' : 'outline'}
+        size="lg"
+        onClick={onWishlistToggle}
+        className="w-full"
+      >
+        <Heart className={`h-5 w-5 mr-2 ${isProductInWishlist ? 'fill-current' : ''}`} />
+        {isProductInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+      </Button>
     </div>
   );
 };
