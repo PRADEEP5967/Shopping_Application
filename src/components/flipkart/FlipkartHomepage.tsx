@@ -5,6 +5,7 @@ import FlipkartCategoryGrid from './FlipkartCategoryGrid';
 import FlipkartProductGrid from './FlipkartProductGrid';
 import FlipkartDealCarousel from './FlipkartDealCarousel';
 import FlipkartBannerStrip from './FlipkartBannerStrip';
+import RecentlyViewedSection from './RecentlyViewedSection';
 import { getAllProducts } from '@/data/products';
 
 const FlipkartHomepage: React.FC = () => {
@@ -44,6 +45,8 @@ const FlipkartHomepage: React.FC = () => {
     <div className="min-h-screen bg-transparent">
       <FlipkartHeroCarousel />
       <FlipkartCategoryGrid />
+
+      <RecentlyViewedSection />
 
       <FlipkartDealCarousel
         title="⚡ Flash Deals - Ending Soon!"

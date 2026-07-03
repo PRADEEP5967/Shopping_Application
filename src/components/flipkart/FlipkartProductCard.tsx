@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Star, Heart, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -32,6 +32,7 @@ const FlipkartProductCard: React.FC<FlipkartProductCardProps> = ({
   freeDelivery = true,
 }) => {
   const { addItem } = useCart();
+  const navigate = useNavigate();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,6 +40,16 @@ const FlipkartProductCard: React.FC<FlipkartProductCardProps> = ({
     const product = getProductById(id);
     if (product) {
       addItem(product, 1);
+    }
+  };
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const product = getProductById(id);
+    if (product) {
+      addItem(product, 1);
+      navigate('/checkout');
     }
   };
 
@@ -105,14 +116,24 @@ const FlipkartProductCard: React.FC<FlipkartProductCardProps> = ({
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-2">Complimentary Delivery</p>
         )}
         
-        <Button 
-          size="sm" 
-          className="w-full mt-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold uppercase tracking-widest text-xs rounded-none py-5 shadow-[0_0_24px_hsl(var(--primary)/0.35)]"
-          onClick={handleAddToCart}
-        >
-          <ShoppingCart className="w-4 h-4 mr-2" />
-          Add to Cart
-        </Button>
+        <div className="grid grid-cols-2 gap-2 mt-4">
+          <Button
+            size="sm"
+            variant="outline"
+            className="border-primary/50 text-foreground hover:bg-primary/10 font-semibold uppercase tracking-widest text-xs rounded-none py-5"
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="w-4 h-4 mr-1" />
+            Cart
+          </Button>
+          <Button
+            size="sm"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold uppercase tracking-widest text-xs rounded-none py-5 shadow-[0_0_24px_hsl(var(--primary)/0.35)]"
+            onClick={handleBuyNow}
+          >
+            Buy Now
+          </Button>
+        </div>
       </div>
     </div>
   );

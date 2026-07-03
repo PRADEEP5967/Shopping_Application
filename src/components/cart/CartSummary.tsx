@@ -8,14 +8,18 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { ShoppingBag, Truck, Shield, CreditCard } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import CouponSection, { AppliedCoupon, getAppliedCoupon } from './CouponSection';
+import { useState } from 'react';
 
 const CartSummary = () => {
   const { items, subtotal, totalItems } = useCart();
-  
+  const [coupon, setCoupon] = useState<AppliedCoupon | null>(() => getAppliedCoupon());
+
   // Calculate shipping (free over $50)
   const shippingCost = subtotal >= 50 ? 0 : 8.99;
   const tax = subtotal * 0.08; // 8% tax
-  const total = subtotal + shippingCost + tax;
+  const discount = coupon ? (subtotal * coupon.percent) / 100 : 0;
+  const total = Math.max(0, subtotal - discount + shippingCost + tax);
   
   // Calculate estimated delivery
   const getDeliveryRange = () => {
@@ -42,6 +46,13 @@ const CartSummary = () => {
               <span>Subtotal ({totalItems} items)</span>
               <span>{formatCurrency(subtotal)}</span>
             </div>
+
+            {coupon && (
+              <div className="flex justify-between text-sm text-primary">
+                <span>Coupon ({coupon.code})</span>
+                <span>-{formatCurrency(discount)}</span>
+              </div>
+            )}
             
             <div className="flex justify-between text-sm">
               <span>Shipping</span>
@@ -66,6 +77,8 @@ const CartSummary = () => {
               <span>{formatCurrency(total)}</span>
             </div>
           </div>
+
+          <CouponSection onChange={setCoupon} />
 
           {/* Free Shipping Progress */}
           {subtotal < 50 && (

@@ -11,12 +11,14 @@ import ProductVariantSelector from '@/components/product/ProductVariantSelector'
 import AIRecommendations from '@/components/AIRecommendations';
 import ProductFeatures from '@/components/product/ProductFeatures';
 import ProductSubscription from '@/components/ProductSubscription';
+import PincodeCheck from '@/components/product/PincodeCheck';
 import SEOHead, { generateProductSchema } from '@/components/seo/SEOHead';
 import { ProductDetailSkeleton } from '@/components/ui/product-skeleton';
 import { getAllProducts, getProductById } from '@/data/products';
 import { Product, ProductVariant } from '@/types';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
+import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 
 const ProductDetail = () => {
   const { productId } = useParams<{ productId: string }>();
@@ -26,6 +28,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const { addItem } = useCart();
   const { items: wishlist, addItem: addToWishlist, removeItem: removeFromWishlist } = useWishlist();
+  const { track } = useRecentlyViewed();
 
   useEffect(() => {
     setLoading(true);
@@ -36,9 +39,12 @@ const ProductDetail = () => {
       if (foundProduct?.variants && foundProduct.variants.length > 0) {
         setSelectedVariant(foundProduct.variants[0]);
       }
+      if (foundProduct) {
+        track(foundProduct.id);
+      }
     }
     setLoading(false);
-  }, [productId]);
+  }, [productId, track]);
 
   const isProductInWishlist = product ? wishlist.some(item => item.id === product.id) : false;
   const isInStock = selectedVariant ? selectedVariant.inStock : product?.inStock || false;
@@ -161,6 +167,9 @@ const ProductDetail = () => {
               onIncrementQuantity={handleIncrementQuantity}
               onDecrementQuantity={handleDecrementQuantity}
             />
+
+            {/* Pincode Delivery Check */}
+            <PincodeCheck />
             
             {/* Product Subscription */}
             <ProductSubscription 
