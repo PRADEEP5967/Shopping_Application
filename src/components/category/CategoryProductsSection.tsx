@@ -1,10 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ModernProductGrid from "@/components/ModernProductGrid";
 import ModernCategoryFilters from '@/components/category/ModernCategoryFilters';
 import ProductsHeader from '@/components/category/ProductsHeader';
 import QuickFiltersBar from '@/components/category/QuickFiltersBar';
 import NoProductsFound from '@/components/category/NoProductsFound';
+import ActiveFilterChips from '@/components/category/ActiveFilterChips';
+import ProductGridSkeleton from '@/components/category/ProductGridSkeleton';
+import CategoryPagination from '@/components/category/CategoryPagination';
 import { useProductFilters } from '@/hooks/useProductFilters';
 import { Product } from '@/types';
 import { LucideIcon } from 'lucide-react';
@@ -36,6 +39,9 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
     onSale: false,
     highRated: false,
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const PAGE_SIZE = 20;
 
   // Extract unique brands from products
   const brands = useMemo(() => {
@@ -54,6 +60,27 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
     quickFilters,
     sortOption
   });
+
+  // Reset to first page whenever filters change and briefly show a skeleton
+  useEffect(() => {
+    setCurrentPage(1);
+    setIsLoading(true);
+    const t = setTimeout(() => setIsLoading(false), 350);
+    return () => clearTimeout(t);
+  }, [priceRange, selectedBrands, minRating, quickFilters, sortOption, products]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filteredProducts.slice(start, start + PAGE_SIZE);
+  }, [filteredProducts, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const handleBrandToggle = (brand: string) => {
     setSelectedBrands(prev => 
@@ -144,13 +171,35 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
               handleRatingChange={setMinRating}
             />
 
-            {filteredProducts.length > 0 ? (
-              <motion.div 
-                initial={{ opacity: 0 }} 
-                whileInView={{ opacity: 1 }} 
-                viewport={{ once: true }}
+            <ActiveFilterChips
+              priceRange={priceRange}
+              selectedBrands={selectedBrands}
+              minRating={minRating}
+              quickFilters={quickFilters}
+              onRemoveBrand={handleBrandToggle}
+              onResetPrice={() => setPriceRange([0, 1000])}
+              onResetRating={() => setMinRating(0)}
+              onToggleQuick={handleQuickFilter}
+              onClearAll={clearFilters}
+            />
+
+            {isLoading ? (
+              <ProductGridSkeleton count={10} viewMode={viewMode} />
+            ) : filteredProducts.length > 0 ? (
+              <motion.div
+                key={currentPage}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
               >
-                <ModernProductGrid products={filteredProducts} viewMode={viewMode} />
+                <ModernProductGrid products={paginatedProducts} viewMode={viewMode} />
+                <CategoryPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                  totalItems={filteredProducts.length}
+                  pageSize={PAGE_SIZE}
+                />
               </motion.div>
             ) : products.length > 0 ? (
               <NoProductsFound onClearFilters={clearFilters} />
