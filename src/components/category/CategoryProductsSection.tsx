@@ -1,5 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { X } from 'lucide-react';
 import ModernProductGrid from "@/components/ModernProductGrid";
 import ModernCategoryFilters from '@/components/category/ModernCategoryFilters';
 import ProductsHeader from '@/components/category/ProductsHeader';
@@ -29,19 +32,84 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
   emptyIcon: EmptyIcon,
   emptyMessage = 'No products available yet. Check back soon!'
 }) => {
-  const [priceRange, setPriceRange] = useState<number[]>([0, 1000]);
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [sortOption, setSortOption] = useState('featured');
-  const [minRating, setMinRating] = useState<number>(0);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [quickFilters, setQuickFilters] = useState({
-    inStock: false,
-    onSale: false,
-    highRated: false,
-  });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const storageKey = `plp:${pathname}`;
   const PAGE_SIZE = 20;
+
+  type PersistedState = {
+    priceRange: number[];
+    selectedBrands: string[];
+    sortOption: string;
+    minRating: number;
+    viewMode: 'grid' | 'list';
+    quickFilters: { inStock: boolean; onSale: boolean; highRated: boolean };
+    currentPage: number;
+  };
+
+  const defaults: PersistedState = {
+    priceRange: [0, 1000],
+    selectedBrands: [],
+    sortOption: 'featured',
+    minRating: 0,
+    viewMode: 'grid',
+    quickFilters: { inStock: false, onSale: false, highRated: false },
+    currentPage: 1,
+  };
+
+  // Initial state: URL > localStorage > defaults
+  const initial = useMemo<PersistedState>(() => {
+    const fromUrl = (): Partial<PersistedState> => {
+      const p: Partial<PersistedState> = {};
+      const min = searchParams.get('minPrice');
+      const max = searchParams.get('maxPrice');
+      if (min !== null || max !== null) {
+        p.priceRange = [Number(min ?? 0), Number(max ?? 1000)];
+      }
+      const brands = searchParams.get('brands');
+      if (brands) p.selectedBrands = brands.split(',').filter(Boolean);
+      const sort = searchParams.get('sort');
+      if (sort) p.sortOption = sort;
+      const rating = searchParams.get('rating');
+      if (rating) p.minRating = Number(rating);
+      const view = searchParams.get('view');
+      if (view === 'grid' || view === 'list') p.viewMode = view;
+      const quick = searchParams.get('quick');
+      if (quick) {
+        const parts = new Set(quick.split(','));
+        p.quickFilters = {
+          inStock: parts.has('inStock'),
+          onSale: parts.has('onSale'),
+          highRated: parts.has('highRated'),
+        };
+      }
+      const page = searchParams.get('page');
+      if (page) p.currentPage = Math.max(1, Number(page));
+      return p;
+    };
+
+    const fromStorage = (): Partial<PersistedState> => {
+      if (typeof window === 'undefined') return {};
+      try {
+        const raw = window.localStorage.getItem(storageKey);
+        return raw ? (JSON.parse(raw) as Partial<PersistedState>) : {};
+      } catch {
+        return {};
+      }
+    };
+
+    return { ...defaults, ...fromStorage(), ...fromUrl() };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [priceRange, setPriceRange] = useState<number[]>(initial.priceRange);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(initial.selectedBrands);
+  const [sortOption, setSortOption] = useState(initial.sortOption);
+  const [minRating, setMinRating] = useState<number>(initial.minRating);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>(initial.viewMode);
+  const [quickFilters, setQuickFilters] = useState(initial.quickFilters);
+  const [currentPage, setCurrentPage] = useState(initial.currentPage);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Extract unique brands from products
   const brands = useMemo(() => {
@@ -61,13 +129,73 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
     sortOption
   });
 
-  // Reset to first page whenever filters change and briefly show a skeleton
+  // Reset to first page whenever filter inputs change (skip on very first render
+  // so we can honor a `page` restored from URL/localStorage). Show a brief skeleton.
+  const isFirstRender = React.useRef(true);
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setCurrentPage(1);
+  }, [priceRange, selectedBrands, minRating, quickFilters, sortOption, products]);
+
+  useEffect(() => {
     setIsLoading(true);
     const t = setTimeout(() => setIsLoading(false), 350);
     return () => clearTimeout(t);
   }, [priceRange, selectedBrands, minRating, quickFilters, sortOption, products]);
+
+  // Sync state -> URL + localStorage (shareable + refresh-restorable)
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    const setOrDelete = (key: string, value: string | null) => {
+      if (value === null || value === '') params.delete(key);
+      else params.set(key, value);
+    };
+
+    setOrDelete('minPrice', priceRange[0] !== 0 ? String(priceRange[0]) : null);
+    setOrDelete('maxPrice', priceRange[1] !== 1000 ? String(priceRange[1]) : null);
+    setOrDelete('brands', selectedBrands.length ? selectedBrands.join(',') : null);
+    setOrDelete('sort', sortOption !== 'featured' ? sortOption : null);
+    setOrDelete('rating', minRating > 0 ? String(minRating) : null);
+    setOrDelete('view', viewMode !== 'grid' ? viewMode : null);
+    const quickList = Object.entries(quickFilters)
+      .filter(([, v]) => v)
+      .map(([k]) => k);
+    setOrDelete('quick', quickList.length ? quickList.join(',') : null);
+    setOrDelete('page', currentPage > 1 ? String(currentPage) : null);
+
+    setSearchParams(params, { replace: true });
+
+    try {
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(
+          storageKey,
+          JSON.stringify({
+            priceRange,
+            selectedBrands,
+            sortOption,
+            minRating,
+            viewMode,
+            quickFilters,
+            currentPage,
+          } satisfies PersistedState),
+        );
+      }
+    } catch {
+      // ignore quota/serialization errors
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    priceRange,
+    selectedBrands,
+    sortOption,
+    minRating,
+    viewMode,
+    quickFilters,
+    currentPage,
+  ]);
 
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
   const paginatedProducts = useMemo(() => {
@@ -105,6 +233,7 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
       onSale: false,
       highRated: false,
     });
+    setCurrentPage(1);
   };
 
   const activeFiltersCount = useMemo(() => {
@@ -136,6 +265,20 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
           activeFiltersCount={activeFiltersCount}
           clearFilters={clearFilters}
         />
+
+        {activeFiltersCount > 0 && (
+          <div className="flex justify-end mb-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              className="gap-2"
+            >
+              <X className="h-4 w-4" />
+              Clear all filters ({activeFiltersCount})
+            </Button>
+          </div>
+        )}
 
         <div className="flex items-start gap-8">
           {/* Desktop Sidebar Filters */}
@@ -206,7 +349,11 @@ const CategoryProductsSection: React.FC<CategoryProductsSectionProps> = ({
                 />
               </motion.div>
             ) : products.length > 0 ? (
-              <NoProductsFound onClearFilters={clearFilters} />
+              <NoProductsFound
+                onClearFilters={clearFilters}
+                onResetSort={() => setSortOption('featured')}
+                onBroadenPrice={() => setPriceRange([0, 1000])}
+              />
             ) : (
               <div className="text-center py-12 bg-card rounded-2xl border border-border">
                 {EmptyIcon && <EmptyIcon className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />}
