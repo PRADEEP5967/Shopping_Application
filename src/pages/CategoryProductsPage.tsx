@@ -163,12 +163,16 @@ const CategoryProductsPage = () => {
               sortOption={sortOption}
               setSortOption={setSortOption}
               priceRange={priceRange}
-              handlePriceChange={setPriceRange}
               brands={brands}
               selectedBrands={selectedBrands}
-              handleBrandToggle={handleBrandToggle}
               selectedRating={minRating}
-              handleRatingChange={setMinRating}
+              activeFiltersCount={activeFiltersCount}
+              onApplyMobileFilters={({ priceRange: pr, selectedBrands: sb, selectedRating: sr }) => {
+                setPriceRange(pr);
+                setSelectedBrands(sb);
+                setMinRating(sr);
+              }}
+              onResetMobileFilters={clearFilters}
             />
 
             {filteredProducts.length > 0 ? (
