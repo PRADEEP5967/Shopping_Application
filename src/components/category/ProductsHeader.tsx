@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { LayoutGrid, List } from 'lucide-react';
-import MobileFilterSheet from './MobileFilterSheet';
+import MobileFilterSheet, { MobileFilterValues } from './MobileFilterSheet';
 import SortDropdown from './SortDropdown';
 
 interface ProductsHeaderProps {
@@ -13,12 +13,12 @@ interface ProductsHeaderProps {
   sortOption: string;
   setSortOption: (option: string) => void;
   priceRange: number[];
-  handlePriceChange: (value: number[]) => void;
   brands: string[];
   selectedBrands: string[];
-  handleBrandToggle: (brand: string) => void;
   selectedRating: number;
-  handleRatingChange: (rating: number) => void;
+  activeFiltersCount: number;
+  onApplyMobileFilters: (values: MobileFilterValues) => void;
+  onResetMobileFilters: () => void;
 }
 
 const ProductsHeader: React.FC<ProductsHeaderProps> = ({
@@ -29,24 +29,24 @@ const ProductsHeader: React.FC<ProductsHeaderProps> = ({
   sortOption,
   setSortOption,
   priceRange,
-  handlePriceChange,
   brands,
   selectedBrands,
-  handleBrandToggle,
   selectedRating,
-  handleRatingChange,
+  activeFiltersCount,
+  onApplyMobileFilters,
+  onResetMobileFilters,
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6 bg-white p-3 sm:p-4 rounded-lg shadow-sm gap-3 sm:gap-4">
       <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-        <MobileFilterSheet 
+        <MobileFilterSheet
           priceRange={priceRange}
-          handlePriceChange={handlePriceChange}
           brands={brands}
           selectedBrands={selectedBrands}
-          handleBrandToggle={handleBrandToggle}
           selectedRating={selectedRating}
-          handleRatingChange={handleRatingChange}
+          activeFiltersCount={activeFiltersCount}
+          onApply={onApplyMobileFilters}
+          onReset={onResetMobileFilters}
         />
         <p className="text-xs sm:text-sm text-gray-600 hidden md:block">
           Showing {filteredProductsCount} of {totalProductsCount} products
