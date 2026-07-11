@@ -1,40 +1,78 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Package, SearchX } from 'lucide-react';
+import { Package, SearchX, ArrowUpDown, Sliders, Lightbulb } from 'lucide-react';
 
 interface NoProductsFoundProps {
   onClearFilters: () => void;
+  onResetSort?: () => void;
+  onBroadenPrice?: () => void;
 }
 
-const NoProductsFound: React.FC<NoProductsFoundProps> = ({ onClearFilters }) => {
+const NoProductsFound: React.FC<NoProductsFoundProps> = ({
+  onClearFilters,
+  onResetSort,
+  onBroadenPrice,
+}) => {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-center">
-      <div className="relative">
-        <div className="absolute inset-0 bg-purple-200 rounded-full blur-xl opacity-60 animate-pulse"></div>
-        <div className="relative bg-gradient-to-r from-purple-100 to-indigo-100 p-10 rounded-full mb-6 shadow-md border border-purple-200">
-          <SearchX className="h-24 w-24 text-indigo-500" strokeWidth={1.5} />
+    <div className="flex flex-col items-center justify-center py-14 px-4 text-center rounded-2xl border border-border bg-card/40">
+      <div className="relative mb-6">
+        <div className="absolute inset-0 bg-primary/20 rounded-full blur-2xl opacity-60 animate-pulse" />
+        <div className="relative bg-primary/10 p-8 rounded-full border border-primary/30">
+          <SearchX className="h-16 w-16 text-primary" strokeWidth={1.5} />
         </div>
       </div>
-      <h2 className="text-2xl font-semibold mb-2 text-gray-800">No products found</h2>
-      <p className="text-gray-600 mb-8 max-w-md">
-        We couldn't find any products matching your current filters. Try adjusting your search or browse our other categories.
+
+      <h2 className="text-2xl font-semibold mb-2 text-foreground">
+        No products match your filters
+      </h2>
+      <p className="text-muted-foreground mb-6 max-w-md">
+        Don't worry — try one of the suggestions below to see more results.
       </p>
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Button 
+
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-2xl mb-6">
+        <button
           onClick={onClearFilters}
-          className="bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
-          size="lg"
+          className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-background hover:border-primary/50 hover:bg-primary/5 transition-all text-left"
         >
-          <Package className="mr-2 h-5 w-5" />
-          Clear Filters
-        </Button>
+          <Sliders className="h-5 w-5 text-primary" />
+          <span className="text-sm font-medium text-foreground">Clear all filters</span>
+          <span className="text-xs text-muted-foreground">
+            Remove brands, ratings & quick filters
+          </span>
+        </button>
+
+        {onBroadenPrice && (
+          <button
+            onClick={onBroadenPrice}
+            className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-background hover:border-primary/50 hover:bg-primary/5 transition-all text-left"
+          >
+            <Lightbulb className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-foreground">Broaden price range</span>
+            <span className="text-xs text-muted-foreground">
+              Reset to $0 – $1000
+            </span>
+          </button>
+        )}
+
+        {onResetSort && (
+          <button
+            onClick={onResetSort}
+            className="group flex flex-col items-center gap-2 p-4 rounded-xl border border-border bg-background hover:border-primary/50 hover:bg-primary/5 transition-all text-left"
+          >
+            <ArrowUpDown className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium text-foreground">Change sort order</span>
+            <span className="text-xs text-muted-foreground">
+              Switch back to Featured
+            </span>
+          </button>
+        )}
       </div>
-      <div className="mt-8 text-gray-500 text-sm flex items-center gap-2">
-        <span className="w-12 h-px bg-gray-200"></span>
-        Or try using different search terms
-        <span className="w-12 h-px bg-gray-200"></span>
-      </div>
+
+      <Button onClick={onClearFilters} size="lg" className="gap-2">
+        <Package className="h-4 w-4" />
+        Reset & show all products
+      </Button>
     </div>
   );
 };
