@@ -22,6 +22,21 @@ export interface ApiResponse<T> {
   limit?: number;
 }
 
+const normalizeCategoryName = (category: unknown): string => {
+  if (typeof category === 'string') return category;
+  if (category && typeof category === 'object') {
+    const candidate = category as { name?: unknown; slug?: unknown };
+    if (typeof candidate.name === 'string') return candidate.name;
+    if (typeof candidate.slug === 'string') return candidate.slug;
+  }
+  return '';
+};
+
+const normalizeCategories = (categories: unknown): string[] => {
+  if (!Array.isArray(categories)) return [];
+  return categories.map(normalizeCategoryName).filter(Boolean);
+};
+
 export class ECommerceAPIService {
   private baseUrls = {
     fakeStore: 'https://fakestoreapi.com',
@@ -40,7 +55,7 @@ export class ECommerceAPIService {
         title: product.title,
         description: product.description,
         price: product.price,
-        category: product.category,
+        category: normalizeCategoryName(product.category),
         image: product.image,
         rating: product.rating,
         stock: Math.floor(Math.random() * 100) + 10
@@ -54,7 +69,7 @@ export class ECommerceAPIService {
   async getFakeStoreCategories(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrls.fakeStore}/products/categories`);
-      return await response.json();
+      return normalizeCategories(await response.json());
     } catch (error) {
       console.error('Error fetching FakeStore categories:', error);
       return [];
@@ -71,7 +86,7 @@ export class ECommerceAPIService {
         title: product.title,
         description: product.description,
         price: product.price,
-        category: product.category,
+        category: normalizeCategoryName(product.category),
         image: product.image,
         rating: product.rating,
         stock: Math.floor(Math.random() * 100) + 10
@@ -93,7 +108,7 @@ export class ECommerceAPIService {
         title: product.title,
         description: product.description,
         price: product.price,
-        category: product.category,
+        category: normalizeCategoryName(product.category),
         image: product.thumbnail,
         rating: {
           rate: product.rating,
@@ -118,7 +133,7 @@ export class ECommerceAPIService {
   async getDummyJsonCategories(): Promise<string[]> {
     try {
       const response = await fetch(`${this.baseUrls.dummyJson}/products/categories`);
-      return await response.json();
+      return normalizeCategories(await response.json());
     } catch (error) {
       console.error('Error fetching DummyJSON categories:', error);
       return [];
@@ -135,7 +150,7 @@ export class ECommerceAPIService {
         title: product.title,
         description: product.description,
         price: product.price,
-        category: product.category,
+        category: normalizeCategoryName(product.category),
         image: product.thumbnail,
         rating: {
           rate: product.rating,
